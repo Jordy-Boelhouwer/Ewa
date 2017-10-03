@@ -1,0 +1,15 @@
+.header_drawer{
+  background: #03A9F4;
+  border-color: #03A9F4;
+}
+
+@media (min-width: 1020px) {
+  .header_drawer{
+      box-shadow: 20px 0px 50px #040507;
+  }
+}
+
+.mdl-layout__drawer-button .material-icons {
+  line-height: 1.5 !important;
+  font-size: 30px;
+}
