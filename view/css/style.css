@@ -13,3 +13,7 @@
   line-height: 1.5 !important;
   font-size: 30px;
 }
+
+.mdl-card__media{
+  margin: 0;
+}
