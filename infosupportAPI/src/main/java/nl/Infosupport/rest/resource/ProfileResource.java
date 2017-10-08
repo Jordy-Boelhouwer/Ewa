@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import nl.Infosupport.model.Profile;
+import nl.Infosupport.rest.model.ClientError;
 import nl.Infosupport.service.RepositoryService;
 import nl.Infosupport.service.impl.RepositoryServiceImpl;
 
@@ -49,8 +50,12 @@ public class ProfileResource {
         
         if(profile == null){
             return Response.status(Response.Status.NOT_FOUND).
-                    entity("Profile with id " + id + " was not found").build();
+                    entity(new ClientError("Profile with id " + id + " was not found")).build();
         }
         return Response.status(Response.Status.OK).entity(profile).build();
+    }
+    @Path("/{profileId}/posts")
+    public PostResource getPostResource(){
+        return new PostResource();
     }
 }
