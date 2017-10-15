@@ -14,6 +14,13 @@
   font-size: 30px;
 }
 
-.mdl-card__media{
-  margin: 0;
+@media (min-width: 715px) {
+  .mdl-cell--12-col, .mdl-cell--12-col-tablet.mdl-cell--12-col-tablet{
+    max-width: 800px;
+  }
+}
+
+.mdl-textfield{
+  width: 120%;
+  margin: 20px;
 }

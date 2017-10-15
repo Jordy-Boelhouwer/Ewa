@@ -6,6 +6,8 @@
 package nl.Infosupport.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
@@ -15,6 +17,7 @@ public class Post implements Serializable {
     private int id;
     private String title;
     private String content;
+    private LocalDateTime dateTime;
     
     public Post() {}
     
@@ -22,6 +25,7 @@ public class Post implements Serializable {
         setId(id);
         setTitle(title);
         setContent(content);
+        setDateTime(dateTime);
     }
 
     public int getId() {
@@ -35,6 +39,10 @@ public class Post implements Serializable {
     public String getContent() {
         return content;
     }
+    
+    public LocalDateTime getDateTime(){
+        return dateTime;
+    }
 
     public final void setId(int id) {
         this.id = id;
@@ -46,6 +54,10 @@ public class Post implements Serializable {
 
     public final void setContent(String content) {
         this.content = content;
+    }
+
+    private void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = LocalDateTime.now();
     }
     
     
