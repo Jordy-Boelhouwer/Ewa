@@ -24,7 +24,6 @@ import nl.Infosupport.service.impl.RepositoryServiceImpl;
  *
  * @author Jordy
  */
-@Path("/")
 public class PostResource {
 
     private RepositoryService service;
@@ -38,6 +37,7 @@ public class PostResource {
     }
 
     @GET
+    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllPosts(@PathParam("profileId") int profileId) {
         Profile profile = service.getProfileFromId(profileId);
@@ -81,6 +81,7 @@ public class PostResource {
     }
     
     @POST
+    @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addQuestion(@PathParam("profileId") int profileId,
