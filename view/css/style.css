@@ -14,16 +14,13 @@
   font-size: 30px;
 }
 
-.mdl-card__media{
-  margin: 20px;
-
-}
 @media (min-width: 715px) {
   .mdl-cell--12-col, .mdl-cell--12-col-tablet.mdl-cell--12-col-tablet{
     max-width: 800px;
   }
 }
 
-.mdl-button .mdl-js-button .mdl-button--fab .mdl-js-ripple-effect .mdl-button--colored{
-  margin-right: 70%;
+.mdl-textfield{
+  width: 120%;
+  margin: 20px;
 }
