@@ -80,7 +80,26 @@ public class Profile implements Serializable {
         this.posts = posts;
     }
     
-    public void addPost(Post p){
+    /**
+     *
+     * @param p
+     * @return
+     */
+    public boolean addPost(Post p){
+         if(checkDuplicates(p)) {
+            return false;
+        }
         getPosts().add(p);
+        return true;
     }
+    
+    public boolean checkDuplicates(Post p) {
+        for(Post check : getPosts()) {
+            if(check.getId() == p.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

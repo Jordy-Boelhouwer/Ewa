@@ -84,15 +84,22 @@ public class PostResource {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addQuestion(@PathParam("profileId") int profileId,
+    public Response addProfile(@PathParam("profileId") int profileId,
             Post post) {
         Profile profile = service.getProfileFromId(profileId);
         
         if(profile == null) {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Profile not found for id " + profileId)).build();
-        } else {
+        } 
+        
+        boolean created = service.addPost(profile, post);
+        
+        if(created){
             return Response.status(Response.Status.CREATED).build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).
+                entity(new ClientError("post already exists for id " + post.getId())).build();
         }
     }
 }

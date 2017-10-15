@@ -58,8 +58,5 @@ public class Post implements Serializable {
 
     private void setDateTime(LocalDateTime dateTime) {
         this.dateTime = LocalDateTime.now();
-    }
-    
-    
-    
+    }      
 }

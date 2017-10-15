@@ -15,8 +15,13 @@ public class ClientError implements Serializable{
     private String errorMessage;
     
     public ClientError(String errorMessage) {
-        this.errorMessage = errorMessage;
+        setMessage(errorMessage);
     }
+    
+     public final void setMessage(String message) {
+        this.errorMessage = message;
+    }
+
 
     public String getErrorMessage() {
         return errorMessage;

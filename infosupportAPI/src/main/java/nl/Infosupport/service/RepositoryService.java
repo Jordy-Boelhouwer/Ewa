@@ -41,8 +41,9 @@ public interface RepositoryService {
      * add post to profile
      * @param profile profile to add the post to
      * @param post post to be added
+     * @return 
      */
-    void addPost(Profile profile, Post post);
+    boolean addPost(Profile profile, Post post);
     
     /**
      * Get posts from a profile

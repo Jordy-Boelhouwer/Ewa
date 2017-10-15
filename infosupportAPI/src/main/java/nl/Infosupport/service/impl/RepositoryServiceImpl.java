@@ -53,8 +53,8 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public void addPost(Profile profile, Post post) {
-        profile.addPost(post);
+    public boolean addPost(Profile profile, Post post) {
+        return profile.addPost(post);
     }
 
     @Override
