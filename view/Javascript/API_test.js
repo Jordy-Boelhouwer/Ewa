@@ -2,7 +2,7 @@ $( document ).ready(function() {
 console.log("ads");
 
     var posts;
-    let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
+    let url="http://localhost:8084/infosupportAPI/services/rest/profiles";
 
     //let promise = fetch(url);
 
@@ -48,16 +48,17 @@ console.log("ads");
 
       var newPost = {
         id: 5,
-        title: newtitle.val(),
-        content: newpost.val()
+        "title": newtitle.val(),
+        "content": newpost.val()
       };
 
       $.ajax({
         type: 'POST',
-        url: "http://localhost:8080/infosupportAPI/services/rest/profiles/1/posts",
-        dataType: 'json',
-        data: newPost,
-        success: function(newPost){
+        url: "http://localhost:8084/infosupportAPI/services/rest/profiles/1/posts",
+		contentType: "application/json",
+		dataType: "json",
+        data: formToJSON(),
+        success: function(data, textStatus, jqXHR){
           console.log(newPost.content);
         },
         error: function(request, status, error){
@@ -65,5 +66,13 @@ console.log("ads");
         }
       });
     });
+	
+	function formToJSON() {
+    return JSON.stringify({
+        "id": 6,
+		"title": $('#newPostTitle').val(),
+		"content": $('#newPost').val()
+        });
+}
 
 });
