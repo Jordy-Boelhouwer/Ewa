@@ -2,7 +2,7 @@ $( document ).ready(function() {
 console.log("ads");
 
     var posts;
-    let url="http://localhost:8084/infosupportAPI/services/rest/profiles";
+    let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
 
     //let promise = fetch(url);
 
@@ -54,7 +54,7 @@ console.log("ads");
 
       $.ajax({
         type: 'POST',
-        url: "http://localhost:8084/infosupportAPI/services/rest/profiles/1/posts",
+        url: "http://localhost:8080/infosupportAPI/services/rest/profiles/1/posts",
 		contentType: "application/json",
 		dataType: "json",
         data: formToJSON(),
@@ -66,7 +66,7 @@ console.log("ads");
         }
       });
     });
-	
+
 	function formToJSON() {
     return JSON.stringify({
         "id": 6,
