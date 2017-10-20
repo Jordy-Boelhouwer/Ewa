@@ -69,7 +69,7 @@ console.log("ads");
 
 	function formToJSON() {
     return JSON.stringify({
-        "id": 7,
+        "id": 6,
 		"title": $('#newPostTitle').val(),
 		"content": $('#newPost').val()
         });
