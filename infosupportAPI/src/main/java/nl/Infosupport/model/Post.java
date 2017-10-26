@@ -5,6 +5,7 @@
  */
 package nl.Infosupport.model;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -18,14 +19,21 @@ public class Post implements Serializable {
     private String title;
     private String content;
     private LocalDateTime dateTime;
-    
-    public Post() {}
+    private InputStream uploadedInputStream;
     
     public Post(int id, String title, String content){
         setId(id);
         setTitle(title);
         setContent(content);
         setDateTime(dateTime);
+    }
+    
+    public Post(int id, String title, String content, InputStream uploadedInputStream) {
+        setId(id);
+        setTitle(title);
+        setContent(content);
+        setDateTime(dateTime);
+        
     }
 
     public int getId() {
@@ -44,6 +52,10 @@ public class Post implements Serializable {
         return dateTime;
     }
 
+    public InputStream getUploadedInputStream() {
+        return uploadedInputStream;
+    }
+
     public final void setId(int id) {
         this.id = id;
     }
@@ -58,5 +70,9 @@ public class Post implements Serializable {
 
     private void setDateTime(LocalDateTime dateTime) {
         this.dateTime = LocalDateTime.now();
-    }      
+    } 
+
+    public void setUploadedInputStream(InputStream uploadedInputStream) {
+        this.uploadedInputStream = uploadedInputStream;
+    }
 }
