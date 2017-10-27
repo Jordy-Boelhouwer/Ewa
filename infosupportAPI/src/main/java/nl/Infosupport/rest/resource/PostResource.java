@@ -5,10 +5,12 @@
  */
 package nl.Infosupport.rest.resource;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -26,6 +28,7 @@ import nl.Infosupport.rest.model.ClientError;
 import nl.Infosupport.service.RepositoryService;
 import nl.Infosupport.service.impl.RepositoryServiceImpl;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 /**
  *
@@ -91,8 +94,8 @@ public class PostResource {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addPost(@PathParam("profileId") int profileId,
-            Post post) {
+    public Response addPost(@PathParam("profileId") int profileId, Post post
+    ) {
         Profile profile = service.getProfileFromId(profileId);
 
         if (profile == null) {
@@ -111,28 +114,43 @@ public class PostResource {
     }
 
     @POST
-    @Path("/fileupload")
+    @Path("/file")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addFile(@PathParam("profileId") int profileId,
-            Post post,
-            @PathParam("file") InputStream in,
-            @PathParam("file") FormDataContentDisposition fileDetail) throws Exception {
-        String UPLOAD_PATH = "c:/temp/";
+    public Response addFile(
+            @FormDataParam("file") InputStream uploadedInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileDetail) {
+        String uploadedFileLocation = "D:\\Users\\Jordy\\Documents\\HvA\\Jaar 2\\ewa\\infosupportAPI\\src\\main\\webapp\\images" 
+                + fileDetail.getFileName();
+
+        // save it
+        writeToFile(uploadedInputStream, uploadedFileLocation);
+
+        String output = "File uploaded to : " + uploadedFileLocation;
+
+        return Response.status(200).entity(output).build();
+    }
+
+    // save uploaded file to new location
+    private void writeToFile(InputStream uploadedInputStream,
+            String uploadedFileLocation) {
+
         try {
+            OutputStream out = new FileOutputStream(new File(
+                    uploadedFileLocation));
             int read = 0;
             byte[] bytes = new byte[1024];
 
-            OutputStream out = new FileOutputStream(new File(UPLOAD_PATH + fileDetail.getFileName()));
-            while ((read = in.read(bytes)) != -1) {
+            out = new FileOutputStream(new File(uploadedFileLocation));
+            while ((read = uploadedInputStream.read(bytes)) != -1) {
                 out.write(bytes, 0, read);
             }
             out.flush();
             out.close();
-
         } catch (IOException e) {
-            throw new WebApplicationException("Error while uploading file. Please try again !!");
+
+            e.printStackTrace();
         }
-        return Response.status(Response.Status.CREATED).build();
+
     }
 }

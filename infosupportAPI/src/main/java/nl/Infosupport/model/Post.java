@@ -19,7 +19,7 @@ public class Post implements Serializable {
     private String title;
     private String content;
     private LocalDateTime dateTime;
-    private InputStream uploadedInputStream;
+    private String imagePath;
     
     public Post(int id, String title, String content){
         setId(id);
@@ -28,12 +28,12 @@ public class Post implements Serializable {
         setDateTime(dateTime);
     }
     
-    public Post(int id, String title, String content, InputStream uploadedInputStream) {
+    public Post(int id, String title, String content, String imagePath) {
         setId(id);
         setTitle(title);
         setContent(content);
         setDateTime(dateTime);
-        
+        setImagePath(imagePath);
     }
 
     public int getId() {
@@ -52,8 +52,8 @@ public class Post implements Serializable {
         return dateTime;
     }
 
-    public InputStream getUploadedInputStream() {
-        return uploadedInputStream;
+    public String getImagePath() {
+        return imagePath;
     }
 
     public final void setId(int id) {
@@ -72,7 +72,7 @@ public class Post implements Serializable {
         this.dateTime = LocalDateTime.now();
     } 
 
-    public void setUploadedInputStream(InputStream uploadedInputStream) {
-        this.uploadedInputStream = uploadedInputStream;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }
