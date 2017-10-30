@@ -31,6 +31,7 @@ $( document ).ready(function() {
                           <div class="mdl-card__supporting-text">
                             <p>`+postsArr.posts[i].content+`</p>
                           </div>
+                           <img src=`+postsArr.posts[i].imagePath+` alt="Smiley face" height="42" width="42"> 
                           <div class="mdl-card__actions mdl-card--border">
                             <h6>Written by: `+ + " " + +`</h6>
                           </div>
@@ -54,7 +55,7 @@ $( document ).ready(function() {
 		dataType: "json",
         data: formToJSON(),
         success: function(data, textStatus, jqXHR){
-          console.log(newPost.content);
+          console.log(formToJson());
         },
         error: function(request, status, error){
           alert(request.responseText);
@@ -64,9 +65,9 @@ $( document ).ready(function() {
 
 	function formToJSON() {
     return JSON.stringify({
-        "id": 6,
+        "id": 7,
 		"title": $('#newPostTitle').val(),
-		"content": $('#newPost').val()
+		"content": $('#newPost').val(),
         });
 }
 
