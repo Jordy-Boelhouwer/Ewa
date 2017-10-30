@@ -1,40 +1,41 @@
 $( document ).ready(function() {
-console.log("ads");
-
-    var posts;
+        
     let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
 
-    //let promise = fetch(url);
-
-    // promise.then(function(resp){
-    //     return resp.json();
-    // }).then(function(json){
-    //     posts=json;
-    //     display();
-    // });
-    //
-    // promise.catch(function(err){console.log("jammer")});
+    var postsArr = { posts:[]};
+    var namesArr = { names:[]};
 
     $.ajax({
       type: 'GET',
       url: url,
       dataType:'json',
       success: function(data){
-          $.each(data, function(i, post){
-            for (var i = 0; i < post.posts.length; i++) {
+          profile = data;
+           $.each(data, function(i, profile){
+               namesArr.names.push(profile.first_name);
+                    for (var i = 0; i < profile.posts.length; i++) {
+                        postsArr.posts.push(profile.posts[i]);
+                        
+                    }
+                postsArr.posts.sort(function(a, b){
+                    return b.id - a.id;
+                });   
+            });   
+            
+            for (var i = 0; i < postsArr.posts.length; i++) {
+              console.log(namesArr.names);
               $("#grid").append( `<div class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp">
                       <div class="mdl-card__title">
-                        <h2 class="mdl-card__title-text">`+ post.posts[i].title +`</h2>
+                        <h2 class="mdl-card__title-text">`+ postsArr.posts[i].title +`</h2>
                       </div>
                           <div class="mdl-card__supporting-text">
-                            <p>`+post.posts[i].content+`</p>
+                            <p>`+postsArr.posts[i].content+`</p>
                           </div>
                           <div class="mdl-card__actions mdl-card--border">
-                            <h6>Written by: `+ post.first_name + " " + post.last_name +`</h6>
+                            <h6>Written by: `+ + " " + +`</h6>
                           </div>
                     </div>`);
             };
-          });
         },
         error: function(){
           alert('error loading messages');
@@ -45,12 +46,6 @@ console.log("ads");
 
       var newtitle = $('#newPostTitle');
       var newpost =  $('#newPost');
-
-      var newPost = {
-        id: 5,
-        "title": newtitle.val(),
-        "content": newpost.val()
-      };
 
       $.ajax({
         type: 'POST',
@@ -74,5 +69,7 @@ console.log("ads");
 		"content": $('#newPost').val()
         });
 }
+
+
 
 });
