@@ -62,6 +62,32 @@ $( document ).ready(function() {
         }
       });
     });
+    
+    $('#addFile').on('click', function(){
+        var file = $('input[name="uploadfile"').get(0).files[0];
+ 
+  var formData = new FormData();
+  formData.append('uploadfile', file);
+ 
+  $.ajax({
+      url: "http://localhost:8080/infosupportAPI/services/rest/profiles/1/posts/file",
+      type: 'POST',
+      xhr: function() {  // Custom XMLHttpRequest
+        var myXhr = $.ajaxSettings.xhr();
+        return myXhr;
+      },
+      // beforeSend: beforeSendHandler,
+      success: function(data) {
+        alert('successfully uploaded file with '+data+' lines');
+      },
+      // Form data
+      data: formData,
+      //Options to tell jQuery not to process data or worry about content-type.
+      cache: false,
+      contentType: false,
+      processData: false
+    });
+    });
 
 	function formToJSON() {
     return JSON.stringify({

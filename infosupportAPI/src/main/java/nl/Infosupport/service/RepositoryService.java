@@ -6,6 +6,7 @@
 package nl.Infosupport.service;
 
 import java.util.List;
+import nl.Infosupport.model.Comment;
 import nl.Infosupport.model.Post;
 import nl.Infosupport.model.Profile;
 
@@ -59,4 +60,6 @@ public interface RepositoryService {
      * @return post with specified id
      */
     Post getPostOffProfile(Profile profile, int postId);
+    
+    List<Comment> getAllCommentsOfPosts(Post post);
 }

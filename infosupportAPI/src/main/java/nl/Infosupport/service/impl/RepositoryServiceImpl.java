@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import nl.Infosupport.model.Comment;
 import nl.Infosupport.model.Post;
 import nl.Infosupport.model.Profile;
 import nl.Infosupport.service.RepositoryService;
@@ -79,6 +80,11 @@ public class RepositoryServiceImpl implements RepositoryService {
             }
         }
         return found;
+    }
+    
+    @Override
+    public List<Comment> getAllCommentsOfPosts(Post post) {
+        return post.getComments();
     }
     
     private void loadExamples(){

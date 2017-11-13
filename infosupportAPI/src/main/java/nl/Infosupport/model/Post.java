@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -20,6 +21,9 @@ public class Post implements Serializable {
     private String content;
     private LocalDateTime dateTime;
     private String imagePath;
+    private List<Comment> comments;
+    
+    public Post(){};
     
     public Post(int id, String title, String content){
         setId(id);
@@ -74,5 +78,17 @@ public class Post implements Serializable {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+    
+    public void addComment(Comment c){
+        getComments().add(c);
     }
 }

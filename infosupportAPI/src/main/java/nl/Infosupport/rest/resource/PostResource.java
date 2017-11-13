@@ -5,12 +5,10 @@
  */
 package nl.Infosupport.rest.resource;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -19,7 +17,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import nl.Infosupport.model.Post;
@@ -27,8 +24,9 @@ import nl.Infosupport.model.Profile;
 import nl.Infosupport.rest.model.ClientError;
 import nl.Infosupport.service.RepositoryService;
 import nl.Infosupport.service.impl.RepositoryServiceImpl;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
+import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.multipart.FormDataParam;
+
 
 /**
  *
@@ -40,6 +38,7 @@ public class PostResource {
 
     public PostResource() {
         service = RepositoryServiceImpl.getInstance();
+        
     }
 
     public String test() {
@@ -47,7 +46,6 @@ public class PostResource {
     }
 
     @GET
-    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllPosts(@PathParam("profileId") int profileId) {
         Profile profile = service.getProfileFromId(profileId);
@@ -91,7 +89,6 @@ public class PostResource {
     }
 
     @POST
-    @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addPost(@PathParam("profileId") int profileId, Post post
@@ -116,7 +113,6 @@ public class PostResource {
     @POST
     @Path("/file")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response addFile(
             @FormDataParam("file") InputStream uploadedInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail) {
@@ -128,7 +124,8 @@ public class PostResource {
 
         String output = "File uploaded to : " + uploadedFileLocation;
 
-        return Response.status(200).entity(output).build();
+       return Response.status(200).entity(output).build();
+     //return null;
     }
 
     // save uploaded file to new location
@@ -152,5 +149,9 @@ public class PostResource {
             e.printStackTrace();
         }
 
+    }
+    @Path("/{postId}/comments")
+    public CommentResource getComments() {
+        return new CommentResource();
     }
 }
