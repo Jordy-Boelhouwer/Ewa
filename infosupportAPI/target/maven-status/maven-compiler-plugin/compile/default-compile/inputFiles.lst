@@ -2,7 +2,9 @@ D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupp
 D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\service\impl\RepositoryServiceImpl.java
 D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\model\Post.java
 D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\PostResource.java
+D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\model\Comment.java
 D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\config\App.java
+D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\CommentResource.java
 D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\HelloResource.java
 D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\CorsFilter.java
 D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\model\ClientError.java

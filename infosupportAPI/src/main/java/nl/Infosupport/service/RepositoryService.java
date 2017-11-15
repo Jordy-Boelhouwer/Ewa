@@ -61,5 +61,9 @@ public interface RepositoryService {
      */
     Post getPostOffProfile(Profile profile, int postId);
     
-    List<Comment> getAllCommentsOfPosts(Post post);
+    List<Comment> getCommentsOfPost(Post post);
+    
+    Comment getCommentOfPost(Post post, int commentId);
+    
+    boolean addComment(Post post, Comment comment);
 }

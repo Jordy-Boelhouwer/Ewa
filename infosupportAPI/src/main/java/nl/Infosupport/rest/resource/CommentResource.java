@@ -7,6 +7,7 @@ package nl.Infosupport.rest.resource;
 
 import java.util.List;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -31,19 +32,18 @@ public class CommentResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getComments(@PathParam("profileId") int profileId,
+    public Response getAllComments(@PathParam("profileId") int profileId,
             @PathParam("postId") int postId) {
         
         //Getting the Profile
         Profile profile = service.getProfileFromId(profileId);
         
+        Post post = service.getPostOffProfile(profile, postId);
+        
         if(profile == null) {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Profile not found for id " + profileId)).build();
         }
-        
-        //Getting the Post
-        Post post = service.getPostOffProfile(profile, postId);
         
         if(post == null) {
             return Response.status(Response.Status.NOT_FOUND).
@@ -51,9 +51,36 @@ public class CommentResource {
         }
         
         //Retrieving the comments
-        List<Comment> comments = service.getAllCommentsOfPosts(post);
+        List<Comment> comments = service.getCommentsOfPost(post);
         
         return Response.status(Response.Status.OK).entity(comments).build();
+    }
+    
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addComment(@PathParam("profileId") int profileId, @PathParam("postId") int postId, Comment comment) {
+        Profile profile = service.getProfileFromId(profileId);
+        
+        Post post = service.getPostOffProfile(profile, postId);
+        
+        if(profile == null){
+            return Response.status(Response.Status.NOT_FOUND).
+                    entity(new ClientError("Profile not found for id " + profileId)).build();
+        }
+        
+        if(post == null){
+            return Response.status(Response.Status.NOT_FOUND).
+                    entity(new ClientError("Post not found for id " + postId)).build();
+        }
+        
+        boolean created = service.addComment(post, comment);
+        
+        if(created){
+            return Response.status(Response.Status.CREATED).build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).
+                    entity(new ClientError("Comment already exists for id " + comment.getId())).build();
+        }
     }
 
 }

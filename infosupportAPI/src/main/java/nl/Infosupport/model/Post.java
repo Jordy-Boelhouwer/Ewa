@@ -8,6 +8,7 @@ package nl.Infosupport.model;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class Post implements Serializable {
         setTitle(title);
         setContent(content);
         setDateTime(dateTime);
+        setComments(new ArrayList<Comment>());
     }
     
     public Post(int id, String title, String content, String imagePath) {
@@ -88,7 +90,20 @@ public class Post implements Serializable {
         this.comments = comments;
     }
     
-    public void addComment(Comment c){
+    public boolean addComment(Comment c){
+        if(checkDuplicates(c)) {
+            return false;
+        }
         getComments().add(c);
+        return true;
+    }
+    
+    public boolean checkDuplicates(Comment c) {
+        for(Comment check : getComments()) {
+            if(check.getId() == c.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -110,46 +110,6 @@ public class PostResource {
         }
     }
 
-    @POST
-    @Path("/file")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response addFile(
-            @FormDataParam("file") InputStream uploadedInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileDetail) {
-        String uploadedFileLocation = "D:\\Users\\Jordy\\Documents\\HvA\\Jaar 2\\ewa\\infosupportAPI\\src\\main\\webapp\\images" 
-                + fileDetail.getFileName();
-
-        // save it
-        writeToFile(uploadedInputStream, uploadedFileLocation);
-
-        String output = "File uploaded to : " + uploadedFileLocation;
-
-       return Response.status(200).entity(output).build();
-     //return null;
-    }
-
-    // save uploaded file to new location
-    private void writeToFile(InputStream uploadedInputStream,
-            String uploadedFileLocation) {
-
-        try {
-            OutputStream out = new FileOutputStream(new File(
-                    uploadedFileLocation));
-            int read = 0;
-            byte[] bytes = new byte[1024];
-
-            out = new FileOutputStream(new File(uploadedFileLocation));
-            while ((read = uploadedInputStream.read(bytes)) != -1) {
-                out.write(bytes, 0, read);
-            }
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
-
-    }
     @Path("/{postId}/comments")
     public CommentResource getComments() {
         return new CommentResource();

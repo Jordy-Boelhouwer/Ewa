@@ -83,7 +83,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
     
     @Override
-    public List<Comment> getAllCommentsOfPosts(Post post) {
+    public List<Comment> getCommentsOfPost(Post post) {
         return post.getComments();
     }
     
@@ -93,8 +93,10 @@ public class RepositoryServiceImpl implements RepositoryService {
         Post post1 = new Post(1, "titel1", "Hallo!");
         Post post2 = new Post(2, "titel2", "Weer hallo!");
         Post post3 = new Post(3, "titel3", "doei!");
+        Comment comment1 = new Comment("Goede post!");
         
         p.addPost(post1);
+        post1.addComment(comment1);
         p.addPost(post2);
         p.addPost(post3);
         
@@ -102,5 +104,29 @@ public class RepositoryServiceImpl implements RepositoryService {
         addProfile(p2);
         Post post4 = new Post(4, "titel4", "Ola!");
         p2.addPost(post4);
+    }
+
+    @Override
+    public Comment getCommentOfPost(Post post, int commentId) {
+        List<Comment> comments = getCommentsOfPost(post);
+        
+        if(comments == null) {
+            return null;
+        }
+        
+        Comment found = null;
+        
+        for(Comment c : comments) {
+            if(c.getId() == commentId) {
+                found = c;
+                break;
+            }
+        }
+        return found;
+    }
+
+    @Override
+    public boolean addComment(Post post, Comment comment) {
+        return post.addComment(comment);
     }
 }
