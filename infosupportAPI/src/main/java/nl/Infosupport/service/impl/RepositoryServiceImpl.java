@@ -12,6 +12,7 @@ import java.util.Map;
 import nl.Infosupport.model.Comment;
 import nl.Infosupport.model.Post;
 import nl.Infosupport.model.Profile;
+import nl.Infosupport.model.UpVote;
 import nl.Infosupport.service.RepositoryService;
 
 /**
@@ -90,9 +91,9 @@ public class RepositoryServiceImpl implements RepositoryService {
     private void loadExamples(){
         Profile p = new Profile(1, "Jordy", "Boelhouwer", "Jordybo", "123");
         addProfile(p);
-        Post post1 = new Post("titel1", "Hallo!", p);
-        Post post2 = new Post("titel2", "Weer hallo!", p);
-        Post post3 = new Post("titel3", "doei!", p);
+        Post post1 = new Post(1, "titel1", "Hallo!", p);
+        Post post2 = new Post(2, "titel2", "Weer hallo!", p);
+        Post post3 = new Post(3, "titel3", "doei!", p);
         Comment comment1 = new Comment("Goede post!");
         Comment sub = new Comment("Vind ik ook!");
         
@@ -104,8 +105,10 @@ public class RepositoryServiceImpl implements RepositoryService {
         
         Profile p2 = new Profile(2, "Mohamed", "Boujou", "Mobo", "456");
         addProfile(p2);
-        Post post4 = new Post("titel4", "Ola!", p2);
+        Post post4 = new Post(4, "titel4", "Ola!", p2);
         p2.addPost(post4);
+        
+        post1.getVotes().upVote(p2);
     }
 
     @Override

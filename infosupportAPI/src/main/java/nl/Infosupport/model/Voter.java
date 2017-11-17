@@ -18,8 +18,6 @@ public class Voter {
 
     public Voter() {
     }
-
-    ;
     
     public boolean hasProfileUpvoted(Profile profile) {
         if (profile == null) {

@@ -22,12 +22,12 @@ public class Post implements Serializable {
     private LocalDateTime dateTime;
     private String imagePath;
     private List<Comment> comments;
-    private int currentId = 0;
+    //private int currentId = 0;
     Voter votes = new Voter();
     
     public Post(){};
     
-    public Post(String title, String content, Profile profile){
+    public Post(int id, String title, String content, Profile profile){
         setId(id);
         setTitle(title);
         setContent(content);
@@ -72,8 +72,8 @@ public class Post implements Serializable {
     }
 
     public final void setId(int id) {
-        currentId++;
-        this.id = currentId;
+        //currentId++;
+        this.id = id;
     }
 
     public final void setTitle(String title) {
