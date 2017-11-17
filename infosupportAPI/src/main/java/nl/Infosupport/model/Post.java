@@ -5,11 +5,9 @@
  */
 package nl.Infosupport.model;
 
-import java.io.InputStream;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,13 +18,16 @@ public class Post implements Serializable {
     private int id;
     private String title;
     private String content;
+    private Profile profile;
     private LocalDateTime dateTime;
     private String imagePath;
     private List<Comment> comments;
+    private int currentId = 0;
+    Voter votes = new Voter();
     
     public Post(){};
     
-    public Post(int id, String title, String content){
+    public Post(String title, String content, Profile profile){
         setId(id);
         setTitle(title);
         setContent(content);
@@ -34,7 +35,7 @@ public class Post implements Serializable {
         setComments(new ArrayList<Comment>());
     }
     
-    public Post(int id, String title, String content, String imagePath) {
+    public Post(String title, String content, String imagePath) {
         setId(id);
         setTitle(title);
         setContent(content);
@@ -50,6 +51,14 @@ public class Post implements Serializable {
         return title;
     }
 
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
     public String getContent() {
         return content;
     }
@@ -63,7 +72,8 @@ public class Post implements Serializable {
     }
 
     public final void setId(int id) {
-        this.id = id;
+        currentId++;
+        this.id = currentId;
     }
 
     public final void setTitle(String title) {
@@ -105,5 +115,9 @@ public class Post implements Serializable {
             }
         }
         return false;
+    }
+
+    public Voter getVotes() {
+        return votes;
     }
 }

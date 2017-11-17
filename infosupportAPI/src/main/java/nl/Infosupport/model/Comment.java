@@ -7,6 +7,8 @@ package nl.Infosupport.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -17,6 +19,7 @@ public class Comment implements Serializable {
     private String content;
     private LocalDateTime dateTime;
     private int currentId = 0;
+    private List<Comment> subComments;
     
     public Comment(){};
     
@@ -24,6 +27,7 @@ public class Comment implements Serializable {
         setId();
         setContent(content);
         setDateTime(dateTime);
+        setSubComments(new ArrayList<Comment>());
     }
 
     public int getId() {
@@ -49,5 +53,30 @@ public class Comment implements Serializable {
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = LocalDateTime.now();
+    }
+
+    public List<Comment> getSubComments() {
+        return subComments;
+    }
+
+    public void setSubComments(List<Comment> subComments) {
+        this.subComments = subComments;
+    }
+    
+    public boolean addSubComment(Comment c){
+        if(checkDuplicates(c)) {
+            return false;
+        }
+        getSubComments().add(c);
+        return true;
+    }
+    
+    public boolean checkDuplicates(Comment c) {
+        for(Comment check : getSubComments()) {
+            if(check.getId() == c.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 }
