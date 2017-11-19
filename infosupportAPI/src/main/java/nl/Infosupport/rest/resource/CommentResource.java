@@ -8,6 +8,7 @@ package nl.Infosupport.rest.resource;
 import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -56,6 +57,42 @@ public class CommentResource {
         return Response.status(Response.Status.OK).entity(comments).build();
     }
     
+    @GET
+    @Path("/{commentId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getComment(
+            @PathParam("profileId") int profileId,
+            @PathParam("postId") int postId,
+            @PathParam("commentId") int commentId) {
+        Response resp;
+
+        //Getting the profile
+        Profile profile = service.getProfileFromId(profileId);
+
+        if (profile == null) {
+            return Response.status(Response.Status.NOT_FOUND).
+                    entity(new ClientError("Profile not found for id " + profileId)).build();
+        }
+
+        Post post = service.getPostOffProfile(profile, postId);
+        
+        if (post == null) {
+            return Response.status(Response.Status.NOT_FOUND).
+                    entity(new ClientError("Post not found for id " + postId)).build();
+        }
+        
+        Comment comment = service.getCommentOfPost(post, commentId);
+
+        if (comment == null) {
+            resp = Response.status(Response.Status.NOT_FOUND).
+                    entity(new ClientError("Resource not found for post id " + commentId)).build();
+        } else {
+            resp = Response.status(Response.Status.OK).entity(comment).build();
+        }
+
+        return resp;
+    }
+    
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response addComment(@PathParam("profileId") int profileId, @PathParam("postId") int postId, Comment comment) {
@@ -82,5 +119,4 @@ public class CommentResource {
                     entity(new ClientError("Comment already exists for id " + comment.getId())).build();
         }
     }
-
 }

@@ -26,6 +26,7 @@ import nl.Infosupport.service.RepositoryService;
 import nl.Infosupport.service.impl.RepositoryServiceImpl;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
+import nl.Infosupport.model.Voter;
 
 
 /**
@@ -108,6 +109,69 @@ public class PostResource {
             return Response.status(Response.Status.BAD_REQUEST).
                     entity(new ClientError("post already exists for id " + post.getId())).build();
         }
+    }
+    @POST
+    @Path("/{postId}/upvote")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addUpVote(@PathParam("profileId") int profileId,
+            @PathParam("postId") int postId, Profile votingProfile){
+        Profile profile = service.getProfileFromId(profileId);
+        Post post = service.getPostOffProfile(profile, postId);
+        Voter votes = new Voter();
+        if(profile == null) {
+            return Response.status(Response.Status.NOT_FOUND).
+                    entity(new ClientError("Profile not found for id " + profileId)).build();
+        }
+        
+        if(post == null) {
+            return Response.status(Response.Status.NOT_FOUND).
+                    entity(new ClientError("Post not found for id " + postId)).build();
+        }
+        
+        if(votingProfile == null) {
+            return Response.status(Response.Status.NOT_FOUND).
+                    entity(new ClientError("Voting profile not found for id " + votingProfile)).build();
+        }
+        
+        votes.upVote(votingProfile);
+        
+        if(!votes.hasProfileUpvoted(votingProfile)){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.status(Response.Status.OK).build();
+    }
+    
+    @POST
+    @Path("/{postId}/downvote")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addDownVote(@PathParam("profileId") int profileId,
+            @PathParam("postId") int postId, Profile votingProfile){
+        Profile profile = service.getProfileFromId(profileId);
+        Post post = service.getPostOffProfile(profile, postId);
+        Voter votes = new Voter();
+        if(profile == null) {
+            return Response.status(Response.Status.NOT_FOUND).
+                    entity(new ClientError("Profile not found for id " + profileId)).build();
+        }
+        
+        if(post == null) {
+            return Response.status(Response.Status.NOT_FOUND).
+                    entity(new ClientError("Post not found for id " + postId)).build();
+        }
+        
+        if(votingProfile == null) {
+            return Response.status(Response.Status.NOT_FOUND).
+                    entity(new ClientError("Profile not found for id " + votingProfile)).build();
+        }
+        
+        votes.downVote(votingProfile);
+        
+        if(!votes.hasProfileDownvoted(votingProfile)){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.status(Response.Status.OK).build();
     }
 
     @Path("/{postId}/comments")

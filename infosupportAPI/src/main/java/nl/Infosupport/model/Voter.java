@@ -49,7 +49,7 @@ public class Voter {
         return upVotes;
     }
 
-    public void addUpVote(UpVote upVotes) {
+    private void addUpVote(UpVote upVotes) {
         this.upVotes.add(upVotes);
     }
 
@@ -57,7 +57,7 @@ public class Voter {
         return downVotes;
     }
 
-    public void addDownVote(DownVote downVotes) {
+    private void addDownVote(DownVote downVotes) {
         this.downVotes.add(downVotes);
     }
 
