@@ -3,7 +3,6 @@ $( document ).ready(function() {
     let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
 
     var postsArr = { posts:[]};
-    var namesArr = { names:[]};
 
     $.ajax({
       type: 'GET',
@@ -12,7 +11,6 @@ $( document ).ready(function() {
       success: function(data){
           profile = data;
            $.each(data, function(i, profile){
-               namesArr.names.push(profile.first_name);
                     for (var i = 0; i < profile.posts.length; i++) {
                         postsArr.posts.push(profile.posts[i]);
                         
@@ -23,7 +21,6 @@ $( document ).ready(function() {
             });   
             
             for (var i = 0; i < postsArr.posts.length; i++) {
-              console.log(namesArr.names);
               $("#grid").append( `<div class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp">
                       <div class="mdl-card__title">
                         <h2 class="mdl-card__title-text">`+ postsArr.posts[i].title +`</h2>
@@ -31,9 +28,13 @@ $( document ).ready(function() {
                           <div class="mdl-card__supporting-text">
                             <p>`+postsArr.posts[i].content+`</p>
                           </div>
-                           <img src=`+postsArr.posts[i].imagePath+` alt="Smiley face" height="42" width="42"> 
+                           
                           <div class="mdl-card__actions mdl-card--border">
-                            <h6>Written by: `+ + " " + +`</h6>
+                            <h6>Written by: `+postsArr.posts[i].username+`</h6>
+                            <input class="mdl-textfield__input" type="text" id="addCommentTF" placeholder="Write a comment" style="float-left">
+                            <button type="submit" value="addComment" id="addComment"class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" style="float: right;">
+                                <b>Place Comment</b>
+                            </button>
                           </div>
                     </div>`);
             };
@@ -44,9 +45,6 @@ $( document ).ready(function() {
     });
 
     $('#addPost').on('click', function(){
-
-      var newtitle = $('#newPostTitle');
-      var newpost =  $('#newPost');
 
       $.ajax({
         type: 'POST',
