@@ -117,9 +117,11 @@ public class PostResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addUpVote(@PathParam("profileId") int profileId,
-            @PathParam("postId") int postId, Profile votingProfile){
+            @PathParam("postId") int postId, int votingProfileId){
         Profile profile = service.getProfileFromId(profileId);
+        Profile votingProfile = service.getProfileFromId(votingProfileId);
         Post post = service.getPostOffProfile(profile, postId);
+        
         if(profile == null) {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Profile not found for id " + profileId)).build();
