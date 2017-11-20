@@ -31,6 +31,9 @@ $( document ).ready(function() {
                            
                           <div class="mdl-card__actions mdl-card--border">
                             <h6>Written by: `+postsArr.posts[i].username+`</h6>
+                             <button type="submit" value="addLike" id="addLike"class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" style="float: right;">
+                                <b>Like!</b>
+                            </button>
                             <input class="mdl-textfield__input" type="text" id="addCommentTF" placeholder="Write a comment" style="float-left">
                             <button type="submit" value="addComment" id="addComment"class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" style="float: right;">
                                 <b>Place Comment</b>
