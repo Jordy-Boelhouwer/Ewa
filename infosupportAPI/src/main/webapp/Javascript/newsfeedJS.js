@@ -12,8 +12,7 @@ $( document ).ready(function() {
           profile = data;
            $.each(data, function(i, profile){
                     for (var i = 0; i < profile.posts.length; i++) {
-                        postsArr.posts.push(profile.posts[i]);
-                        
+                        postsArr.posts.push(profile.posts[i]); 
                     }
                 postsArr.posts.sort(function(a, b){
                     return b.id - a.id;
@@ -48,7 +47,6 @@ $( document ).ready(function() {
     });
 
     $('#addPost').on('click', function(){
-
       $.ajax({
         type: 'POST',
         url: "http://localhost:8080/infosupportAPI/services/rest/profiles/1/posts",
@@ -62,6 +60,24 @@ $( document ).ready(function() {
           alert(request.responseText);
         }
       });
+    });
+    
+    $('#addComment').on('click', function(){
+        console.log("test");
+        $.ajax({
+            type: 'POST',
+            url: "http://localhost:8080/infosupportAPI/services/rest/profiles/2/posts/4/comments",
+            contentType: "application/json",
+            dataType: "json",
+        data: commentFormToJSON(),
+        success: function(data, textStatus, jqXHR){
+          console.log(commentFormToJSON());
+        },
+        error: function(request, status, error){
+            console.log(request.responseText);
+          alert(request.responseText);
+        }
+        });
     });
     
     $('#addFile').on('click', function(){
@@ -97,8 +113,12 @@ $( document ).ready(function() {
 		"content": $('#newPost').val(),
                 "username": 'Jordybo'
         });
-}
-
-
+        }
+    function commentFormToJSON() {
+    return JSON.stringify({
+        "id": 2,
+		"content": $('#addCommentTF').val()
+        });
+    }
 
 });
