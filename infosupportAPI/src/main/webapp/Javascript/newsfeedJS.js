@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-        
+        alert("hoi");
     let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
 
     var postsArr = { posts:[]};
@@ -35,7 +35,7 @@ $( document ).ready(function() {
                                 <b>Like!</b>
                             </button>
                             <input class="mdl-textfield__input" type="text" id="addCommentTF" placeholder="Write a comment" style="float-left">
-                            <button type="submit" value="addComment" id="addComment"class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" style="float: right;">
+                            <button type="submit" value="addComment" id="addComment" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" style="float: right;">
                                 <b>Place Comment</b>
                             </button>
                           </div>
