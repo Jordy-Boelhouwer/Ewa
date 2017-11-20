@@ -94,6 +94,7 @@ $( document ).ready(function() {
         "id": 7,
 		"title": $('#newPostTitle').val(),
 		"content": $('#newPost').val(),
+                "username": 'Jordybo'
         });
 }
 

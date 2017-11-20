@@ -31,6 +31,10 @@ public class Profile implements Serializable {
         setPassword(password);
         setPosts(new ArrayList<Post>());
     }
+    
+    public Profile(String username) {
+        setUsername(username);
+    }
 
     public int getId() {
         return id;

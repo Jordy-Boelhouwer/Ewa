@@ -18,16 +18,13 @@ public class Comment implements Serializable {
     private int id;
     private String content;
     private LocalDateTime dateTime;
-    private int currentId = 0;
-    private List<Comment> subComments;
     
     public Comment(){};
     
-    public Comment(String content){
-        setId();
+    public Comment(int id, String content){
+        setId(id);
         setContent(content);
         setDateTime(dateTime);
-        setSubComments(new ArrayList<Comment>());
     }
 
     public int getId() {
@@ -42,41 +39,15 @@ public class Comment implements Serializable {
         return dateTime;
     }
 
-    public void setId() {
-        currentId++;
-        id = currentId;
+    public void setId(int id) {
+        this.id = id;
     }
-
+    
     public void setContent(String content) {
         this.content = content;
     }
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = LocalDateTime.now();
-    }
-
-    public List<Comment> getSubComments() {
-        return subComments;
-    }
-
-    public void setSubComments(List<Comment> subComments) {
-        this.subComments = subComments;
-    }
-    
-    public boolean addSubComment(Comment c){
-        if(checkDuplicates(c)) {
-            return false;
-        }
-        getSubComments().add(c);
-        return true;
-    }
-    
-    public boolean checkDuplicates(Comment c) {
-        for(Comment check : getSubComments()) {
-            if(check.getId() == c.getId()) {
-                return true;
-            }
-        }
-        return false;
     }
 }

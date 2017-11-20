@@ -91,21 +91,19 @@ public class RepositoryServiceImpl implements RepositoryService {
     private void loadExamples(){
         Profile p = new Profile(1, "Jordy", "Boelhouwer", "Jordybo", "123");
         addProfile(p);
-        Post post1 = new Post(1, "titel1", "Hallo!", p);
-        Post post2 = new Post(2, "titel2", "Weer hallo!", p);
-        Post post3 = new Post(3, "titel3", "doei!", p);
-        Comment comment1 = new Comment("Goede post!");
-        Comment sub = new Comment("Vind ik ook!");
+        Post post1 = new Post(1, "titel1", "Hallo!", "Jordybo");
+        Post post2 = new Post(2, "titel2", "Weer hallo!", "Jordybo");
+        Post post3 = new Post(3, "titel3", "doei!", "Jordybo");
+        Comment comment1 = new Comment(1, "Goede post!");
         
         p.addPost(post1);
         post1.addComment(comment1);
-        comment1.addSubComment(sub);
         p.addPost(post2);
         p.addPost(post3);
         
         Profile p2 = new Profile(2, "Mohamed", "Boujou", "Mobo", "456");
         addProfile(p2);
-        Post post4 = new Post(4, "titel4", "Ola!", p2);
+        Post post4 = new Post(4, "titel4", "Ola!", "Mobo");
         p2.addPost(post4);
         
         post1.getVotes().downVote(p2);

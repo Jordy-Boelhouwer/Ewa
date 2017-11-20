@@ -18,29 +18,21 @@ public class Post implements Serializable {
     private int id;
     private String title;
     private String content;
-    private Profile profile;
+    private String username;
     private LocalDateTime dateTime;
-    private String imagePath;
     private List<Comment> comments;
     //private int currentId = 0;
     Voter votes = new Voter();
     
     public Post(){};
     
-    public Post(int id, String title, String content, Profile profile){
+    public Post(int id, String title, String content, String username){
         setId(id);
         setTitle(title);
         setContent(content);
         setDateTime(dateTime);
         setComments(new ArrayList<Comment>());
-    }
-    
-    public Post(String title, String content, String imagePath) {
-        setId(id);
-        setTitle(title);
-        setContent(content);
-        setDateTime(dateTime);
-        setImagePath(imagePath);
+        setUsername(username);
     }
 
     public int getId() {
@@ -51,12 +43,12 @@ public class Post implements Serializable {
         return title;
     }
 
-    public Profile getProfile() {
-        return profile;
+    public String getUsername() {
+        return username;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getContent() {
@@ -65,10 +57,6 @@ public class Post implements Serializable {
     
     public LocalDateTime getDateTime(){
         return dateTime;
-    }
-
-    public String getImagePath() {
-        return imagePath;
     }
 
     public final void setId(int id) {
@@ -87,10 +75,6 @@ public class Post implements Serializable {
     private void setDateTime(LocalDateTime dateTime) {
         this.dateTime = LocalDateTime.now();
     } 
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
 
     public List<Comment> getComments() {
         return comments;
