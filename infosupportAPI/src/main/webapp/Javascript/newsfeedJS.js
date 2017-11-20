@@ -80,6 +80,22 @@ $( document ).ready(function() {
         });
     });
     
+    $('#addLike').on('click', function(){
+      $.ajax({
+        type: 'POST',
+        url: "http://localhost:8080/infosupportAPI/services/rest/profiles/1/posts/1/upvote",
+		contentType: "application/json",
+		dataType: "json",
+        data: 1,
+        success: function(data, textStatus, jqXHR){
+          console.log("success");
+        },
+        error: function(request, status, error){
+          alert(request.responseText);
+        }
+      });
+    });
+    
     $('#addFile').on('click', function(){
         var file = $('input[name="uploadfile"').get(0).files[0];
  
