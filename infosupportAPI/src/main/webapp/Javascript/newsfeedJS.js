@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-        
+
     let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
 
     var postsArr = { posts:[]};
@@ -20,7 +20,12 @@ $( document ).ready(function() {
             });   
             
             for (var i = 0; i < postsArr.posts.length; i++) {
-              $("#grid").append( `<div class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp">
+                var comment = "";
+                for(var j = 0; j < postsArr.posts[i].comments.length; j++) {
+                    comment += '<p>'+postsArr.posts[i].comments[j].content+'</p>';
+                }
+                
+              $("#grid").append(`<div class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp">
                       <div class="mdl-card__title">
                         <h2 class="mdl-card__title-text">`+ postsArr.posts[i].title +`</h2>
                       </div>
@@ -30,14 +35,17 @@ $( document ).ready(function() {
                            
                           <div class="mdl-card__actions mdl-card--border">
                             <h6>Written by: `+postsArr.posts[i].username+`</h6>
-                             <button type="submit" value="addLike" id="addLike"class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" style="float: right;">
+                             <button type="submit" id="addLike" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" style="float: right;">
                                 <b>Like!</b>
                             </button>
                             <input class="mdl-textfield__input" type="text" id="addCommentTF" placeholder="Write a comment" style="float-left">
-                            <button type="submit" value="addComment" id="addComment"class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" style="float: right;">
+                            <button type="submit" id="addComment" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" style="float: right;">
                                 <b>Place Comment</b>
                             </button>
                           </div>
+                          <div id="comments">`
+                            ,comment,
+                          `</div>
                     </div>`);
             };
         },
@@ -62,23 +70,7 @@ $( document ).ready(function() {
       });
     });
     
-    $('#addComment').on('click', function(){
-        console.log("test");
-        $.ajax({
-            type: 'POST',
-            url: "http://localhost:8080/infosupportAPI/services/rest/profiles/2/posts/4/comments",
-            contentType: "application/json",
-            dataType: "json",
-        data: commentFormToJSON(),
-        success: function(data, textStatus, jqXHR){
-          console.log(commentFormToJSON());
-        },
-        error: function(request, status, error){
-            console.log(request.responseText);
-          alert(request.responseText);
-        }
-        });
-    });
+    
     
     $('#addLike').on('click', function(){
       $.ajax({
@@ -130,11 +122,5 @@ $( document ).ready(function() {
                 "username": 'Jordybo'
         });
         }
-    function commentFormToJSON() {
-    return JSON.stringify({
-        "id": 2,
-		"content": $('#addCommentTF').val()
-        });
-    }
 
 });
