@@ -113,6 +113,7 @@ public class PostResource {
     }
 
     @POST
+    @Path("/{postId}/upvote")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response UpVote(@PathParam("profileId") int profileId, @PathParam("postId") int postId) {
@@ -139,6 +140,7 @@ public class PostResource {
     }
     
     @POST
+    @Path("/{postId}/downvote")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response DownVote(@PathParam("profileId") int profileId, @PathParam("postId") int postId) {
