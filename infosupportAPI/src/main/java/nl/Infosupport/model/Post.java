@@ -22,7 +22,9 @@ public class Post implements Serializable {
     private LocalDateTime dateTime;
     private List<Comment> comments;
     //private int currentId = 0;
-    Voter votes = new Voter();
+    //Voter votes = new Voter();
+    private int votes;
+    private boolean voted;
     
     public Post(){};
     
@@ -33,6 +35,8 @@ public class Post implements Serializable {
         setDateTime(dateTime);
         setComments(new ArrayList<Comment>());
         setUsername(username);
+        setVotes();
+        setHasVoted();
     }
 
     public int getId() {
@@ -83,6 +87,22 @@ public class Post implements Serializable {
     public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
+
+    public int getVotes() {
+        return votes;
+    }
+
+    public void setVotes() {
+        votes = 0;
+    }
+
+    public boolean isVoted() {
+        return voted;
+    }
+
+    public void setHasVoted() {
+        this.voted = false;
+    }
     
     public boolean addComment(Comment c){
         if(checkDuplicates(c)) {
@@ -92,6 +112,24 @@ public class Post implements Serializable {
         return true;
     }
     
+    public void upVote(){
+        if(!voted){
+            votes++;
+            voted = true;
+        }
+    }
+    
+    public void downVote(){
+        if(!voted){
+            if(votes == 0){
+            votes = 0;
+        } else {
+            votes--;
+            voted = true;
+        }
+        }
+    }
+    
     public boolean checkDuplicates(Comment c) {
         for(Comment check : getComments()) {
             if(check.getId() == c.getId()) {
@@ -99,9 +137,5 @@ public class Post implements Serializable {
             }
         }
         return false;
-    }
-
-    public Voter getVotes() {
-        return votes;
     }
 }
