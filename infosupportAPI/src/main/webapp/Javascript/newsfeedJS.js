@@ -20,10 +20,8 @@ $( document ).ready(function() {
             });   
             
             for (var i = 0; i < postsArr.posts.length; i++) {
-                var comment = "";
-                for(var j = 0; j < postsArr.posts[i].comments.length; j++) {
-                    comment += '<p>'+postsArr.posts[i].comments[j].content+'</p>';
-                }
+                var commentArray = { comments:[]};
+
                 
               $("#grid").append(`<div class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp">
                       <div class="mdl-card__title">
@@ -38,15 +36,24 @@ $( document ).ready(function() {
                              <button type="submit" id="addLike" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" style="float: right;">
                                 <b>Like!</b>
                             </button>
-                            <input class="mdl-textfield__input" type="text" id="addCommentTF" placeholder="Write a comment" style="float-left">
+                            <input class="mdl-textfield__input" type="text" id="addCommentTF">
                             <button type="submit" id="addComment" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" style="float: right;">
                                 <b>Place Comment</b>
                             </button>
                           </div>
-                          <div id="comments">`
-                            ,comment,
-                          `</div>
+                          <div id="comments`+i+`">
+
+                          </div>
                     </div>`);
+               
+                  var comment = "";
+                 $.each(postsArr.posts[i].comments, function(j){
+//                    commentArray.comments.push( postsArr.posts[i].comments[j].content); 
+//                    console.log(commentArray.comments[j].content);
+                  comment += '<p>'+postsArr.posts[i].comments[j].content+'</p>';
+                });
+                alert("naar nieuwe post");
+                document.getElementById("comments"+i).innerHTML+= comment;
             };
         },
         error: function(){
