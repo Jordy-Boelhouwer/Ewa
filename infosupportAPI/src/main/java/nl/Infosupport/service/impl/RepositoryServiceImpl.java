@@ -106,7 +106,9 @@ public class RepositoryServiceImpl implements RepositoryService {
         Post post4 = new Post(4, "titel4", "Ola!", "Mobo");
         p2.addPost(post4);
         
-        post1.getVotes().downVote(p2);
+        post1.upVote();
+        post1.upVote();
+        post2.upVote();
     }
 
     @Override

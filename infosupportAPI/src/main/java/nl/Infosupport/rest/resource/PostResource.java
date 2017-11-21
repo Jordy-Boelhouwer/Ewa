@@ -30,7 +30,6 @@ import nl.Infosupport.model.DownVote;
 import nl.Infosupport.model.UpVote;
 import nl.Infosupport.model.Voter;
 
-
 /**
  *
  * @author Jordy
@@ -41,7 +40,7 @@ public class PostResource {
 
     public PostResource() {
         service = RepositoryServiceImpl.getInstance();
-        
+
     }
 
     public String test() {
@@ -112,117 +111,102 @@ public class PostResource {
                     entity(new ClientError("post already exists for id " + post.getId())).build();
         }
     }
+
     @POST
     @Path("/{postId}/upvote")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addUpVote(@PathParam("profileId") int profileId,
-            @PathParam("postId") int postId, int votingProfileId){
+    public Response UpVote(@PathParam("profileId") int profileId, @PathParam("postId") int postId) {
         Profile profile = service.getProfileFromId(profileId);
-        Profile votingProfile = service.getProfileFromId(votingProfileId);
-        Post post = service.getPostOffProfile(profile, postId);
-        
-        if(profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Profile not found for id " + profileId)).build();
-        }
-        
-        if(post == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Post not found for id " + postId)).build();
-        }
-        
-        if(votingProfile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Voting profile not found for id " + votingProfile)).build();
-        }
-        
-        post.getVotes().upVote(votingProfile);
-        
-        if(!post.getVotes().hasProfileUpvoted(votingProfile)){
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        return Response.status(Response.Status.OK).build();
-    }
-    
-    @GET
-    @Path("/{postId}/upvote")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getUpVotes(@PathParam("profileId") int profileId,
-            @PathParam("postId") int postId) {
-        Profile profile = service.getProfileFromId(profileId);
-        
+
         if (profile == null) {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Profile not found for id " + profileId)).build();
         }
-        
+
         Post post = service.getPostOffProfile(profile, postId);
-        if(post == null) {
+
+        if (post == null) {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Post not found for id " + postId)).build();
         }
         
-        List<UpVote> upVotes = post.getVotes().getUpVotes();
-        
-        return Response.status(Response.Status.OK).entity(upVotes).build();  
+        post.upVote();
+        if(post.isVoted()){
+            return Response.status(Response.Status.OK).build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
     
     @POST
     @Path("/{postId}/downvote")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addDownVote(@PathParam("profileId") int profileId,
-            @PathParam("postId") int postId, Profile votingProfile){
+    public Response DownVote(@PathParam("profileId") int profileId, @PathParam("postId") int postId) {
         Profile profile = service.getProfileFromId(profileId);
-        Post post = service.getPostOffProfile(profile, postId);
-        if(profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Profile not found for id " + profileId)).build();
-        }
-        
-        if(post == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Post not found for id " + postId)).build();
-        }
-        
-        if(votingProfile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Profile not found for id " + votingProfile)).build();
-        }
-        
-        post.getVotes().downVote(votingProfile);
-        
-        if(!post.getVotes().hasProfileDownvoted(votingProfile)){
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        return Response.status(Response.Status.OK).build();
-    }
-    
-    @GET
-    @Path("/{postId}/downvote")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getDownVotes(@PathParam("profileId") int profileId,
-            @PathParam("postId") int postId) {
-        Profile profile = service.getProfileFromId(profileId);
-        
+
         if (profile == null) {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Profile not found for id " + profileId)).build();
         }
-        
+
         Post post = service.getPostOffProfile(profile, postId);
-        
-        if(post == null) {
+
+        if (post == null) {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Post not found for id " + postId)).build();
         }
         
-        List<DownVote> downVotes = post.getVotes().getDownVotes();
-        
-        return Response.status(Response.Status.OK).entity(downVotes).build();  
+        post.downVote();
+        if(post.isVoted()){
+            return Response.status(Response.Status.OK).build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
 
+//    @POST
+//    @Path("/file/upload")
+//    @Consumes(MediaType.MULTIPART_FORM_DATA)
+//    public Response uploadFile(
+//            @FormDataParam("file") InputStream uploadedInputStream,
+//            @FormDataParam("file") FormDataContentDisposition fileDetail) {
+//
+//        String uploadedFileLocation = "D:\\Users\\Jordy\\Documents\\HvA\\Jaar 2\\ewa\\infosupportAPI\\src\\main\\webapp\\images"
+//                + fileDetail.getFileName();
+//
+//        // save it
+//        writeToFile(uploadedInputStream, uploadedFileLocation);
+//
+//        String output = "File uploaded to : " + uploadedFileLocation;
+//
+//        return Response.status(200).entity(output).build();
+//
+//    }
+//
+//    // save uploaded file to new location
+//    private void writeToFile(InputStream uploadedInputStream,
+//            String uploadedFileLocation) {
+//
+//        try {
+//            OutputStream out = new FileOutputStream(new File(
+//                    uploadedFileLocation));
+//            int read = 0;
+//            byte[] bytes = new byte[1024];
+//
+//            out = new FileOutputStream(new File(uploadedFileLocation));
+//            while ((read = uploadedInputStream.read(bytes)) != -1) {
+//                out.write(bytes, 0, read);
+//            }
+//            out.flush();
+//            out.close();
+//        } catch (IOException e) {
+//
+//            e.printStackTrace();
+//        }
+//
+//    }
     @Path("/{postId}/comments")
     public CommentResource getComments() {
         return new CommentResource();
