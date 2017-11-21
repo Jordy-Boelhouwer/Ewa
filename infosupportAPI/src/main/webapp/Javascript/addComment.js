@@ -19,10 +19,10 @@ $('#addComment').on('click', function(){
         });
     });
     
-        function commentFormToJSON() {
-    return JSON.stringify({
-        "id": 2,
-		"content": $('#addCommentTF').val()
-        });
-    }
+    function commentFormToJSON() {
+        return JSON.stringify({
+            "id": 2,
+                    "content": $('#addCommentTF').val()
+            });
+        }
     });
