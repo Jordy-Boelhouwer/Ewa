@@ -24,3 +24,13 @@
   width: 120%;
   margin: 20px;
 }
+
+.active a{
+    color: #0079C8 !important;
+}
+
+.navbar {
+    -webkit-box-shadow: 0px 10px 5px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 10px 5px 0px rgba(0,0,0,0.75);
+box-shadow: 0px 10px 5px 0px rgba(0,0,0,0.75);
+}
