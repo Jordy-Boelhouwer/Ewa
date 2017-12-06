@@ -5,14 +5,16 @@
  */
 package nl.Infosupport.service.impl;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 import nl.Infosupport.model.Comment;
 import nl.Infosupport.model.Post;
 import nl.Infosupport.model.Profile;
-import nl.Infosupport.model.UpVote;
 import nl.Infosupport.service.RepositoryService;
 
 /**
@@ -21,117 +23,209 @@ import nl.Infosupport.service.RepositoryService;
  */
 public class RepositoryServiceImpl implements RepositoryService {
 
+    private EntityManagerFactory entityManagerFactory;
+
     //a singleton reference
     private static RepositoryServiceImpl instance;
-
+    
+    // An instance of the service is created during class initialisation
     static {
         instance = new RepositoryServiceImpl();
         instance.loadExamples();
     }
-
+    
+    //  Method to get a reference to the instance (singleton)
     public static RepositoryService getInstance() {
         return instance;
     }
-
+    
+    // An attribute that stores all cards (in memory)
     private Map<Integer, Profile> elements;
 
     private RepositoryServiceImpl() {
-        elements = new LinkedHashMap<>();
+        entityManagerFactory = Persistence.createEntityManagerFactory("infosupportPU");
+        //elements = new LinkedHashMap<>();
+    }
+
+    private EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
     }
 
     @Override
     public List<Profile> getAllProfiles() {
-        return new ArrayList<>(elements.values());
+        EntityManager em = entityManagerFactory.createEntityManager();
+        List<Profile> profiles = em.createQuery("SELECT p FROM Profile p").getResultList();
+        em.close();
+        return profiles;
+        //return new ArrayList<>(elements.values());
     }
 
     @Override
     public Profile getProfileFromId(int profileId) {
-        return elements.get(profileId);
+        EntityManager em = getEntityManager();
+
+        Profile p = em.find(Profile.class, profileId);
+
+        em.close();
+
+        return p;
+
+        //return elements.get(profileId);
     }
 
     @Override
-    public void addProfile(Profile profile) {
-        elements.put(profile.getId(), profile);
+    public Profile addProfile(Profile profile) {
+        EntityManager em = getEntityManager();
+
+        em.getTransaction().begin();
+        em.persist(profile);
+        em.getTransaction().commit();
+
+        em.close();
+        
+        return profile;
+
+        //elements.put(profile.getId(), profile);
     }
 
     @Override
-    public boolean addPost(Profile profile, Post post) {
-        return profile.addPost(post);
+    public Post addPost(Profile profile, Post post) {
+        profile.addPost(post);
+
+        EntityManager em = getEntityManager();
+
+        em.getTransaction().begin();
+        em.persist(post);
+        em.getTransaction().commit();
+
+        em.close();
+
+        return post;
+
+        //return profile.addPost(post);
     }
 
     @Override
     public List<Post> getPostsOffProfile(Profile profile) {
-        return profile.getPosts();
+        EntityManager em = getEntityManager();
+
+        Query query = em.createQuery(
+                "SELECT p FROM Post p WHERE p.profile.id = :profileId");
+
+        query.setParameter("profileId", profile.getId());
+
+        List<Post> result = query.getResultList();
+
+        em.close();
+
+        return result;
+
+        //return profile.getPosts();
     }
 
     @Override
     public Post getPostOffProfile(Profile profile, int postId) {
-        List<Post> posts = getPostsOffProfile(profile);
-        
-        if (posts == null) {
-            return null;
+        EntityManager em = getEntityManager();
+
+        Query query = em.createQuery("SELECT p FROM Post p WHERE p.profile.id = :profileId AND"
+                + " p.id = :id");
+
+        query.setParameter("profileId", profile.getId());
+        query.setParameter("id", postId);
+
+        Post post = null;
+        try {
+            post = (Post) query.getSingleResult();
+        } catch (NoResultException e) {
+            post = null;
         }
-        
-        Post found = null;
-        
-        for (Post p : posts) {
-            if (p.getId() == postId) {
-                found = p;
-                break;
-            }
-        }
-        return found;
+
+        em.close();
+
+        return post;
+
+//        List<Post> posts = getPostsOffProfile(profile);
+//
+//        if (posts == null) {
+//            return null;
+//        }
+//
+//        Post found = null;
+//
+//        for (Post p : posts) {
+//            if (p.getId() == postId) {
+//                found = p;
+//                break;
+//            }
+//        }
+//        return found;
     }
-    
+
     @Override
     public List<Comment> getCommentsOfPost(Post post) {
-        return post.getComments();
+        EntityManager em = getEntityManager();
+
+        Query query = getEntityManager().createQuery("SELECT c FROM Comment c WHERE c.post.id = :postId");
+        query.setParameter("postId", post.getId());
+
+        List<Comment> comments = query.getResultList();
+
+        em.close();
+
+        return comments;
+
+        //return post.getComments();
     }
+
+//    @Override
+//    public Comment getCommentOfPost(Post post, int commentId) {
+//        EntityManager em = getEntityManager();
+//        
+//        Query query = em.createQuery("SELECT c FROM Comment c WHERE "
+//                + "c.post.id = :postId");
+//        query.setParameter("postId", post.getId());
+//        
+//        List<Comment> comments = query.getResultList();
+//        
+//        em.close();
+//        
+////        List<Comment> comments = getCommentsOfPost(post);
+////
+////        if (comments == null) {
+////            return null;
+////        }
+////
+////        Comment found = null;
+////
+////        for (Comment c : comments) {
+////            if (c.getId() == commentId) {
+////                found = c;
+////                break;
+////            }
+////        }
+////        return found;
+//   }
     
-    private void loadExamples(){
-        Profile p = new Profile(1, "Jordy", "Boelhouwer", "Jordybo", "123");
+    private void loadExamples() {
+
+        Profile p = new Profile("Jordy", "Boelhouwer", "Jordybo123", "Jordy1995");
+
+        Post p1 = new Post("Titel1", "Hallo!");
+        p1.addComment(new Comment("Hey!"));
+        p1.addComment(new Comment("Hi!"));
+
+        Post p2 = new Post("Titel2", "Ola!");
+        p2.addComment(new Comment("Amigo!"));
+
+        p.addPost(p1);
+        p.addPost(p2);
+
         addProfile(p);
-        Post post1 = new Post(1, "titel1", "Hallo!", "Jordybo");
-        Post post2 = new Post(2, "titel2", "Weer hallo!", "Jordybo");
-        Post post3 = new Post(3, "titel3", "doei!", "Jordybo");
-        Comment comment1 = new Comment(1, "Goede post!");
-        
-        p.addPost(post1);
-        post1.addComment(comment1);
-        p.addPost(post2);
-        p.addPost(post3);
-        
-        Profile p2 = new Profile(2, "Mohamed", "Boujou", "Mobo", "456");
-        addProfile(p2);
-        Post post4 = new Post(4, "titel4", "Ola!", "Mobo");
-        p2.addPost(post4);
-        
-        post1.upVote();
-        post1.upVote();
-        post2.upVote();
     }
+
 
     @Override
     public Comment getCommentOfPost(Post post, int commentId) {
-        List<Comment> comments = getCommentsOfPost(post);
-        
-        if(comments == null) {
-            return null;
-        }
-        
-        Comment found = null;
-        
-        for(Comment c : comments) {
-            if(c.getId() == commentId) {
-                found = c;
-                break;
-            }
-        }
-        return found;
-    }
-
-    @Override
-    public boolean addComment(Post post, Comment comment) {
-        return post.addComment(comment);
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -8,102 +8,159 @@ package nl.Infosupport.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
  * @author Jordy
  */
+@Entity
 public class Profile implements Serializable {
+    @Column(name = "profile_id")
+    @Id
+    @GeneratedValue
     private int id;
+    
     private String first_name;
+    
     private String last_name;
+    
     private String username;
+    
     private String password;
+    
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "profile_id")
     private List<Post> posts;
     
     public Profile(){}
     
-    public Profile(int id, String first_name, String last_name, String username, String password){
-        setId(id);
+    /**
+     *
+     * @param first_name First name 
+     * @param last_name Last name
+     * @param username Username for login
+     * @param password Password for login
+     */
+    public Profile(String first_name, String last_name, String username, String password){
         setFirst_name(first_name);
         setLast_name(last_name);
         setUsername(username);
         setPassword(password);
         setPosts(new ArrayList<Post>());
     }
-    
-    public Profile(String username) {
-        setUsername(username);
-    }
 
+    /**
+     * Get the id for the profile
+     * @return id of profile
+     */
     public int getId() {
         return id;
     }
 
-    public final void setId(int id) {
+    /**
+     * Set the id for the profile
+     * @param id id for profile
+     */
+    public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Get the first name from profile
+     * @return First name of profile
+     */
     public String getFirst_name() {
         return first_name;
     }
 
-    public final void setFirst_name(String first_name) {
+    /**
+     * Set first name for profile
+     * @param first_name
+     */
+    public void setFirst_name(String first_name) {
         this.first_name = first_name;
     }
 
+    /**
+     * Get last name from profile
+     * @return last_name
+     */
     public String getLast_name() {
         return last_name;
     }
 
-    public final void setLast_name(String last_name) {
+    /**
+     * Set last name for profile
+     * @param last_name
+     */
+    public void setLast_name(String last_name) {
         this.last_name = last_name;
     }
 
+    /**
+     * Get username for profile
+     * @return username
+     */
     public String getUsername() {
         return username;
     }
 
-    public final void setUsername(String username) {
+    /**
+     * Set username for profile
+     * @param username
+     */
+    public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * Get password from profile
+     * @return password
+     */
     public String getPassword() {
         return password;
     }
 
-    public final void setPassword(String password) {
+    /**
+     * Set password for profile
+     * @param password
+     */
+    public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * Get posts from profile
+     * @return posts
+     */
     public List<Post> getPosts() {
         return posts;
     }
 
-    public final void setPosts(List<Post> posts) {
+    /**
+     * Set the list of posts
+     * @param posts The list op posts
+     */
+    public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
     
     /**
-     *
-     * @param p
-     * @return
+     * Add the post to the list
+     * @param p The post to be added
      */
-    public boolean addPost(Post p){
-         if(checkDuplicates(p)) {
-            return false;
-        }
+    public void addPost(Post p){
         getPosts().add(p);
-        return true;
+        p.setProfile(this);
     }
-    
-    public boolean checkDuplicates(Post p) {
-        for(Post check : getPosts()) {
-            if(check.getId() == p.getId()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

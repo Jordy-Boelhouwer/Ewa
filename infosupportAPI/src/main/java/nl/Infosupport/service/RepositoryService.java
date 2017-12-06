@@ -17,7 +17,7 @@ import nl.Infosupport.model.Profile;
 public interface RepositoryService {
     
     /**
-     * method to get all profiles
+     * Get all profiles
      * @return List with all profiles
      */
     List<Profile> getAllProfiles();
@@ -35,7 +35,7 @@ public interface RepositoryService {
      * add a profile
      * @param profile profile to be added
      */
-    void addProfile(Profile profile);
+    Profile addProfile(Profile profile);
     
     
     /**
@@ -44,7 +44,7 @@ public interface RepositoryService {
      * @param post post to be added
      * @return 
      */
-    boolean addPost(Profile profile, Post post);
+    Post addPost(Profile profile, Post post);
     
     /**
      * Get posts from a profile
@@ -64,6 +64,4 @@ public interface RepositoryService {
     List<Comment> getCommentsOfPost(Post post);
     
     Comment getCommentOfPost(Post post, int commentId);
-    
-    boolean addComment(Post post, Comment comment);
 }

@@ -6,112 +6,185 @@
 package nl.Infosupport.model;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
  * @author Jordy
  */
+@Entity
 public class Post implements Serializable {
+    @Column(name = "post_id")
+    @Id
+    @GeneratedValue
     private int id;
+    
     private String title;
+    
     private String content;
-    private String username;
-    private LocalDateTime dateTime;
+    
+    private int votes;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_id")
+    @JsonIgnore
+    private Profile profile;
+    
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "post_id")
     private List<Comment> comments;
     //private int currentId = 0;
     //Voter votes = new Voter();
-    private int votes;
+   
+    @Transient
     private boolean voted;
     
+    /**
+     * No argument post constructor
+     */
     public Post(){};
     
-    public Post(int id, String title, String content, String username){
-        setId(id);
+    /**
+     * Post constructor
+     * @param title
+     * @param content
+     */
+    public Post(String title, String content){
         setTitle(title);
         setContent(content);
-        setDateTime(dateTime);
         setComments(new ArrayList<Comment>());
-        setUsername(username);
         setVotes();
-        setHasVoted();
     }
 
+    /**
+     * Set profile for post
+     * @param profile
+     */
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
+    /**
+     * Get profile which posted the post
+     * @return profile
+     */
+    public Profile getProfile() {
+        return profile;
+    }
+
+    /**
+     * Get id from post
+     * @return id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Get title of post
+     * @return title
+     */
     public String getTitle() {
         return title;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
+    /**
+     * Get content of post
+     * @return content
+     */
     public String getContent() {
         return content;
     }
-    
-    public LocalDateTime getDateTime(){
-        return dateTime;
-    }
 
-    public final void setId(int id) {
+    /**
+     * Set id for post
+     * @param id
+     */
+    public void setId(int id) {
         //currentId++;
         this.id = id;
     }
 
-    public final void setTitle(String title) {
+    /**
+     * Set title for post
+     * @param title
+     */
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    public final void setContent(String content) {
+    /**
+     * Set content for post
+     * @param content
+     */
+    public void setContent(String content) {
         this.content = content;
     }
 
-    private void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = LocalDateTime.now();
-    } 
-
+    /**
+     * Get list of comments from post
+     * @return comments
+     */
     public List<Comment> getComments() {
         return comments;
     }
 
+    /**
+     * Set the list of comments for post
+     * @param comments
+     */
     public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 
+    /**
+     * Get the votes from a profile
+     * @return votes
+     */
     public int getVotes() {
         return votes;
     }
 
+    /**
+     * Set the votes for a profile
+     */
     public void setVotes() {
         votes = 0;
     }
 
+    /**
+     * Check if profile has already voted
+     * @return voted
+     */
     public boolean isVoted() {
         return voted;
     }
-
-    public void setHasVoted() {
-        this.voted = false;
-    }
     
-    public boolean addComment(Comment c){
-        if(checkDuplicates(c)) {
-            return false;
-        }
+    /**
+     * Add a comment to the post
+     * @param c Comment to be added 
+     */
+    public void addComment(Comment c){
+        c.setPost(this);
         getComments().add(c);
-        return true;
     }
     
+    /**
+     * Add a upcote to a post
+     */
     public void upVote(){
         if(!voted){
             votes++;
@@ -119,6 +192,9 @@ public class Post implements Serializable {
         }
     }
     
+    /**
+     * Add a downvote to a post
+     */
     public void downVote(){
         if(!voted){
             if(votes == 0){
@@ -128,14 +204,5 @@ public class Post implements Serializable {
             voted = true;
         }
         }
-    }
-    
-    public boolean checkDuplicates(Comment c) {
-        for(Comment check : getComments()) {
-            if(check.getId() == c.getId()) {
-                return true;
-            }
-        }
-        return false;
     }
 }

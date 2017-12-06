@@ -21,7 +21,8 @@ import nl.Infosupport.service.RepositoryService;
 import nl.Infosupport.service.impl.RepositoryServiceImpl;
 
 /**
- *
+ * The Comment sub-resource
+ * Note that this is a sub-resource of Post
  * @author Jordy
  */
 public class CommentResource {
@@ -31,6 +32,12 @@ public class CommentResource {
         service = RepositoryServiceImpl.getInstance();
     } 
     
+    /**
+     * Get all comments from a specific post
+     * @param profileId The profile which created the post
+     * @param postId The post with comments
+     * @return A response, either a client error or a 200 message
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllComments(@PathParam("profileId") int profileId,
@@ -39,12 +46,12 @@ public class CommentResource {
         //Getting the Profile
         Profile profile = service.getProfileFromId(profileId);
         
-        Post post = service.getPostOffProfile(profile, postId);
-        
         if(profile == null) {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Profile not found for id " + profileId)).build();
         }
+        
+        Post post = service.getPostOffProfile(profile, postId);
         
         if(post == null) {
             return Response.status(Response.Status.NOT_FOUND).
@@ -57,6 +64,13 @@ public class CommentResource {
         return Response.status(Response.Status.OK).entity(comments).build();
     }
     
+    /**
+     * Get a specific comment
+     * @param profileId The profile which created the post
+     * @param postId The post with comments
+     * @param commentId The id of the comment to get
+     * @return
+     */
     @GET
     @Path("/{commentId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -93,6 +107,13 @@ public class CommentResource {
         return resp;
     }
     
+    /**
+     *
+     * @param profileId The profile which created the post
+     * @param postId The post with comments
+     * @param comment The id of the comment to get
+     * @return
+     */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response addComment(@PathParam("profileId") int profileId, @PathParam("postId") int postId, Comment comment) {
@@ -110,13 +131,9 @@ public class CommentResource {
                     entity(new ClientError("Post not found for id " + postId)).build();
         }
         
-        boolean created = service.addComment(post, comment);
+        post.addComment(comment);
         
-        if(created){
-            return Response.status(Response.Status.CREATED).build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).
-                    entity(new ClientError("Comment already exists for id " + comment.getId())).build();
-        }
+        return Response.status(Response.Status.CREATED).build();
+        
     }
 }

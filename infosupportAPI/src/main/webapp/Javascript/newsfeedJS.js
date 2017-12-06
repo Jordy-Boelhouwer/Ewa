@@ -52,12 +52,11 @@ $( document ).ready(function() {
 //                    console.log(commentArray.comments[j].content);
                   comment += '<p>'+postsArr.posts[i].comments[j].content+'</p>';
                 });
-                alert("naar nieuwe post");
                 document.getElementById("comments"+i).innerHTML+= comment;
             };
         },
-        error: function(){
-          alert('error loading messages');
+        error: function(status){
+          alert(status);
         }
     });
 
