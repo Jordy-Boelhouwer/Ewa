@@ -2,7 +2,6 @@ $( document ).ready(function() {
 
 
  $(document).on("click", "#addComment", function(){
-     alert($('#addCommentTF').val());
         $.ajax({
             type: 'POST',
             url: "http://localhost:8080/infosupportAPI/services/rest/profiles/2/posts/4/comments",
@@ -29,4 +28,4 @@ $( document ).ready(function() {
                     
             });
         }
-    });
+ });
