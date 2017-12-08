@@ -3,7 +3,7 @@
     <Resource	auth="Container"
                 driverClassName="com.mysql.jdbc.Driver"	maxActive="20"
                 maxIdle="10"	maxWait="-1"	name="jdbc/infosupportDb" type="javax.sql.DataSource"
-                url="jdbc:mysql://localhost:3306/ewa?serverTimezone=CET"	username="root"
-                password="Jordy1995"	/> 
+                url="jdbc:mysql://127.0.0.1:3306/?user=root"	username="root"
+                password="lappie"	/> 
 </Context>
 
