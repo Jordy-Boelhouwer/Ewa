@@ -1,29 +1,4 @@
 $( document ).ready(function() {
-        $('#addPost').on('click', function (e) {
-
-<<<<<<< HEAD
-        $.ajax({
-            type: 'POST',
-            url: "http://localhost:8080/infosupportAPI/services/rest/profiles/1/posts",
-            contentType: "application/json",
-            data: JSON.stringify({
-                "id": 16,
-                "title": $('#newPostTitle').val(),
-                "content": $('#newPost').val(),
-                "username": 'Jordybo'
-            }),
-            dataType: "text",
-            success: function (data, textStatus, jqXHR) {
-                       console.log("The ajax request succeeded!");
-                        console.log("The result is: ");  
-                        getPosts();
-            },
-            error: function () {
-                ("Posting ");
-            }
-        });
-    });
-    
 getPosts(); 
 });
 
@@ -31,24 +6,20 @@ getPosts();
 function getPosts(){
     $('#posts').html("");
     let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
-=======
 
 
 getPosts(); 
-    });
+    };
 $(function getPosts(){
     let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
     var postsArr = { posts:[]};
->>>>>>> cef5c65fbaf1e7ff2e515b8d27077aac177519f1
 
     $.ajax({
       type: 'GET',
       url: url,
       dataType:'json',
       success: function(data){
-<<<<<<< HEAD
         append(data);
-=======
           
           profile = data;
            $.each(data, function(i, profile){
@@ -150,42 +121,40 @@ $(function getPosts(){
         <div class="col-md-4"></div>`);
                document.getElementById("comments").innerHTML+= comment;
             };
->>>>>>> cef5c65fbaf1e7ff2e515b8d27077aac177519f1
         },
         error: function(){
           alert('error loading messages');
         }
     });
-<<<<<<< HEAD
-    };
+    }
 
 
 
-=======
+    );
+
+        $('#addPost').on('click', function (e) {
+
+        $.ajax({
+            type: 'POST',
+            url: "http://localhost:8080/infosupportAPI/services/rest/profiles/1/posts",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "title": $('#newPostTitle').val(),
+                "content": $('#newPost').val()
+            }),
+            dataType: "text",
+            success: function (data, textStatus, jqXHR) {
+                       console.log("The ajax request succeeded!");
+                        console.log("The result is: ");  
+                        getPosts();
+            },
+            error: function () {
+                ("Posting ");
+            }
+        });
     });
-
-    $('#addPost').on('click', function(e){
-        
-      $.ajax({
-        type: 'POST',
-        url: "http://localhost:8080/infosupportAPI/services/rest/profiles/1/posts",
-		contentType: "application/json",
-		dataType: "json",
-        data: formToJSON(),
-        success: function(data, textStatus, jqXHR){
-          console.log(formToJson());
-          alert('succes');
-        },
-        error: function(request, status, error){
-          alert(request.responseText);
-
-        }
-      });
-    });
     
     
-    
->>>>>>> cef5c65fbaf1e7ff2e515b8d27077aac177519f1
     $('#addLike').on('click', function(){
       $.ajax({
         type: 'POST',
@@ -228,23 +197,17 @@ $(function getPosts(){
     });
     });
 
-<<<<<<< HEAD
-
 function append(data) {
     var postsArr = { posts:[]};
     profile = data;
     $.each(data, function (i, profile) {
         for (var i = 0; i < profile.posts.length; i++) {
             postsArr.posts.push(profile.posts[i]);
-=======
 	function formToJSON() {
     return JSON.stringify({
-        "id": 11,
 		"title": $('#newPostTitle').val(),
-		"content": $('#newPost').val(),
-                "username": 'Jordybo'
+		"content": $('#newPost').val()
         });
->>>>>>> cef5c65fbaf1e7ff2e515b8d27077aac177519f1
         }
         postsArr.posts.sort(function (a, b) {
             return b.id - a.id;
@@ -343,7 +306,3 @@ function append(data) {
     };
 };
 
-<<<<<<< HEAD
-=======
-
->>>>>>> cef5c65fbaf1e7ff2e515b8d27077aac177519f1

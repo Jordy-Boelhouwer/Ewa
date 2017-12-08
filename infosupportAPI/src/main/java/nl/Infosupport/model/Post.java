@@ -13,9 +13,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -27,7 +27,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
  */
 @Entity
 public class Post implements Serializable {
-    @Column(name = "post_id")
     @Id
     @GeneratedValue
     private int id;
@@ -37,6 +36,10 @@ public class Post implements Serializable {
     private String content;
     
     private int votes;
+    
+    @Lob
+    @Column(columnDefinition="mediumblob")
+    private byte[] image;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")
@@ -163,6 +166,14 @@ public class Post implements Serializable {
      */
     public void setVotes() {
         votes = 0;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     /**

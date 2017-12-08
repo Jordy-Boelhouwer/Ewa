@@ -15,6 +15,7 @@ import javax.persistence.Query;
 import nl.Infosupport.model.Comment;
 import nl.Infosupport.model.Post;
 import nl.Infosupport.model.Profile;
+import nl.Infosupport.model.SubComment;
 import nl.Infosupport.service.RepositoryService;
 
 /**
@@ -27,24 +28,23 @@ public class RepositoryServiceImpl implements RepositoryService {
 
     //a singleton reference
     private static RepositoryServiceImpl instance;
-    
+
     // An instance of the service is created during class initialisation
     static {
         instance = new RepositoryServiceImpl();
         instance.loadExamples();
     }
-    
+
     //  Method to get a reference to the instance (singleton)
     public static RepositoryService getInstance() {
         return instance;
     }
-    
+
     // An attribute that stores all cards (in memory)
     private Map<Integer, Profile> elements;
 
     private RepositoryServiceImpl() {
         entityManagerFactory = Persistence.createEntityManagerFactory("infosupportPU");
-        //elements = new LinkedHashMap<>();
     }
 
     private EntityManager getEntityManager() {
@@ -57,7 +57,6 @@ public class RepositoryServiceImpl implements RepositoryService {
         List<Profile> profiles = em.createQuery("SELECT p FROM Profile p").getResultList();
         em.close();
         return profiles;
-        //return new ArrayList<>(elements.values());
     }
 
     @Override
@@ -69,8 +68,6 @@ public class RepositoryServiceImpl implements RepositoryService {
         em.close();
 
         return p;
-
-        //return elements.get(profileId);
     }
 
     @Override
@@ -82,10 +79,8 @@ public class RepositoryServiceImpl implements RepositoryService {
         em.getTransaction().commit();
 
         em.close();
-        
-        return profile;
 
-        //elements.put(profile.getId(), profile);
+        return profile;
     }
 
     @Override
@@ -101,8 +96,6 @@ public class RepositoryServiceImpl implements RepositoryService {
         em.close();
 
         return post;
-
-        //return profile.addPost(post);
     }
 
     @Override
@@ -119,8 +112,6 @@ public class RepositoryServiceImpl implements RepositoryService {
         em.close();
 
         return result;
-
-        //return profile.getPosts();
     }
 
     @Override
@@ -143,22 +134,6 @@ public class RepositoryServiceImpl implements RepositoryService {
         em.close();
 
         return post;
-
-//        List<Post> posts = getPostsOffProfile(profile);
-//
-//        if (posts == null) {
-//            return null;
-//        }
-//
-//        Post found = null;
-//
-//        for (Post p : posts) {
-//            if (p.getId() == postId) {
-//                found = p;
-//                break;
-//            }
-//        }
-//        return found;
     }
 
     @Override
@@ -173,46 +148,15 @@ public class RepositoryServiceImpl implements RepositoryService {
         em.close();
 
         return comments;
-
-        //return post.getComments();
     }
 
-//    @Override
-//    public Comment getCommentOfPost(Post post, int commentId) {
-//        EntityManager em = getEntityManager();
-//        
-//        Query query = em.createQuery("SELECT c FROM Comment c WHERE "
-//                + "c.post.id = :postId");
-//        query.setParameter("postId", post.getId());
-//        
-//        List<Comment> comments = query.getResultList();
-//        
-//        em.close();
-//        
-////        List<Comment> comments = getCommentsOfPost(post);
-////
-////        if (comments == null) {
-////            return null;
-////        }
-////
-////        Comment found = null;
-////
-////        for (Comment c : comments) {
-////            if (c.getId() == commentId) {
-////                found = c;
-////                break;
-////            }
-////        }
-////        return found;
-//   }
-    
     private void loadExamples() {
 
-        Profile p = new Profile("Jordy", "Boelhouwer", "Jordybo123", "Jordy1995");
+        Profile p = new Profile("Jor", "Boelhouwer", "Jordybo123", "Jordy1995");
 
-        Post p1 = new Post("Titel1", "Hallo!");
-        p1.addComment(new Comment("Hey!"));
-        p1.addComment(new Comment("Hi!"));
+        Post p1 = new Post("Titel1", "testie");
+        p1.addComment(new Comment("test1"));
+        p1.addComment(new Comment("test2"));
 
         Post p2 = new Post("Titel2", "Ola!");
         p2.addComment(new Comment("Amigo!"));
@@ -223,9 +167,69 @@ public class RepositoryServiceImpl implements RepositoryService {
         addProfile(p);
     }
 
-
     @Override
     public Comment getCommentOfPost(Post post, int commentId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManager em = getEntityManager();
+
+        Query query = em.createQuery("SELECT c FROM Comment c WHERE c.post.id = :postId AND"
+                + " c.id = :id");
+
+        query.setParameter("postId", post.getId());
+        query.setParameter("id", commentId);
+
+        Comment comment = null;
+        try {
+            comment = (Comment) query.getSingleResult();
+        } catch (NoResultException e) {
+            comment = null;
+        }
+
+        em.close();
+
+        return comment;
+    }
+
+    @Override
+    public List<SubComment> getSubCommentsOfComment(Comment comment) {
+        EntityManager em = getEntityManager();
+
+        Query query = getEntityManager().createQuery("SELECT s FROM SubComment s WHERE s.comment.id = :commentId");
+        query.setParameter("commentId", comment.getId());
+
+        List<SubComment> subComments = query.getResultList();
+
+        em.close();
+
+        return subComments;
+    }
+
+    @Override
+    public Comment addComment(Post post, Comment comment) {
+        post.addComment(comment);
+
+        EntityManager em = getEntityManager();
+
+        em.getTransaction().begin();
+        em.persist(comment);
+        em.getTransaction().commit();
+
+        em.close();
+
+        return comment;
+    }
+
+    @Override
+    public SubComment addSubComment(Comment comment, SubComment subComment) {
+        comment.addSubComment(subComment);
+
+        EntityManager em = getEntityManager();
+
+        em.getTransaction().begin();
+        em.persist(subComment);
+        em.getTransaction().commit();
+
+        em.close();
+
+        return subComment;
     }
 }

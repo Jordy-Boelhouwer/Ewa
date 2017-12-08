@@ -9,6 +9,7 @@ import java.util.List;
 import nl.Infosupport.model.Comment;
 import nl.Infosupport.model.Post;
 import nl.Infosupport.model.Profile;
+import nl.Infosupport.model.SubComment;
 
 /**
  *
@@ -47,6 +48,22 @@ public interface RepositoryService {
     Post addPost(Profile profile, Post post);
     
     /**
+     * Add a comment to a post
+     * @param post Post to add the comment to
+     * @param comment Comment to add
+     * @return
+     */
+    Comment addComment(Post post, Comment comment);
+    
+    /**
+     * Add a subcomment to a comment
+     * @param comment Comment to add the subcomment to
+     * @param subComment subcomment to add
+     * @return
+     */
+    SubComment addSubComment(Comment comment, SubComment subComment);
+    
+    /**
      * Get posts from a profile
      * @param profile profile to get posts from
      * @return List of posts from profile
@@ -61,7 +78,21 @@ public interface RepositoryService {
      */
     Post getPostOffProfile(Profile profile, int postId);
     
+    /**
+     * Get all the comments from a post
+     * @param post The post to get the comments from
+     * @return List of comments
+     */
     List<Comment> getCommentsOfPost(Post post);
     
+    /**
+     *
+     * @param post 
+     * @param commentId
+     * @return
+     */
     Comment getCommentOfPost(Post post, int commentId);
+    
+    List<SubComment> getSubCommentsOfComment(Comment comment);
+    
 }

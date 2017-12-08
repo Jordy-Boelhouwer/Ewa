@@ -6,14 +6,15 @@
 package nl.Infosupport.model;
 
 import java.io.Serializable;
-import javax.persistence.Column;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -24,7 +25,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @Entity
 @Table(name = "comment")
 public class Comment implements Serializable {
-    @Column(name = "comment_id")
     @Id
     @GeneratedValue
     private int id;
@@ -35,6 +35,10 @@ public class Comment implements Serializable {
     @JoinColumn(name = "post_id")
     @JsonIgnore
     private Post post;
+    
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "comment_id")
+    private List<SubComment> subComments;
     
     /**
      * No argument constructor for comment
@@ -95,5 +99,18 @@ public class Comment implements Serializable {
      */
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public List<SubComment> getSubComments() {
+        return subComments;
+    }
+
+    public void setSubComments(List<SubComment> subComments) {
+        this.subComments = subComments;
+    }
+    
+    public void addSubComment(SubComment s){
+        s.setComment(this);
+        getSubComments().add(s);
     }
 }
