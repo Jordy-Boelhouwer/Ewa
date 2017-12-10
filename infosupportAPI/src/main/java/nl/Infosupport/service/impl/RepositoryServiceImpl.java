@@ -5,6 +5,9 @@
  */
 package nl.Infosupport.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -152,9 +155,25 @@ public class RepositoryServiceImpl implements RepositoryService {
 
     private void loadExamples() {
 
+        File file = new File("C:\\smileyface.jpg");
+        byte[] bFile = new byte[(int) file.length()];
+
+        try {
+
+            FileInputStream fileInputStream = new FileInputStream(file);
+
+            fileInputStream.read(bFile);
+
+            fileInputStream.close();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
         Profile p = new Profile("Jor", "Boelhouwer", "Jordybo123", "Jordy1995");
 
-        Post p1 = new Post("Titel1", "testie");
+        Post p1 = new Post("Titel1", "testie", bFile);
         p1.addComment(new Comment("test1"));
         p1.addComment(new Comment("test2"));
 
@@ -165,6 +184,21 @@ public class RepositoryServiceImpl implements RepositoryService {
         p.addPost(p2);
 
         addProfile(p);
+
+        try {
+
+            //FileOutputStream fos = new FileOutputStream("images\\output.jpg");  //windows
+            FileOutputStream fos = new FileOutputStream("C:\\test.jpg");
+
+            fos.write(p1.getImage());
+
+            fos.close();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
     }
 
     @Override
@@ -231,5 +265,27 @@ public class RepositoryServiceImpl implements RepositoryService {
         em.close();
 
         return subComment;
+    }
+
+    @Override
+    public void addUpvote(Post post) {
+        EntityManager em = getEntityManager();
+        Query query = em.createQuery("UPDATE Post p set p.votes = p.votes + 1 WHERE p.id = :postId");
+        query.setParameter("postId", post.getId());
+        em.getTransaction().begin();
+        query.executeUpdate();
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    @Override
+    public void addDownVote(Post post) {
+        EntityManager em = getEntityManager();
+        Query query = em.createQuery("UPDATE Post p set p.votes = p.votes - 1 WHERE p.id = :postId");
+        query.setParameter("postId", post.getId());
+        em.getTransaction().begin();
+        query.executeUpdate();
+        em.getTransaction().commit();
+        em.close();
     }
 }

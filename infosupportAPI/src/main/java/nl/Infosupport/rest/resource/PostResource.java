@@ -130,12 +130,10 @@ public class PostResource {
                     entity(new ClientError("Post not found for id " + postId)).build();
         }
         
-        post.upVote();
-        if(post.isVoted()){
-            return Response.status(Response.Status.OK).build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        service.addUpvote(post);
+        
+        return Response.status(Response.Status.OK).build();
+        
     }
     
     @POST
@@ -157,12 +155,8 @@ public class PostResource {
                     entity(new ClientError("Post not found for id " + postId)).build();
         }
         
-        post.downVote();
-        if(post.isVoted()){
-            return Response.status(Response.Status.OK).build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        service.addDownVote(post);
+        return Response.status(Response.Status.OK).build();
     }
 
     /**

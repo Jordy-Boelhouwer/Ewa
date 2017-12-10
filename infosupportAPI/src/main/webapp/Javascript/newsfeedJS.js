@@ -6,9 +6,6 @@ getPosts();
 function getPosts(){
     $('#posts').html("");
     let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
-
-
-getPosts(); 
     };
 $(function getPosts(){
     let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
