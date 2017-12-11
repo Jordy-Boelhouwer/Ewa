@@ -1,15 +1,37 @@
 $( document ).ready(function() {
+getPosts(); 
+});
 
- 
+function getPosts(){
+     var scroll = $(window).scrollTop();
 
-        $('#addPost').on('click', function (e) {
+    $('#posts').html("");
+    let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
+
+    $.ajax({
+      type: 'GET',
+      url: url,
+      dataType:'json',
+      success: function(data){
+        append(data);
+        $(window).scrollTop(scroll);
+        },
+        error: function(request){
+          alert(request.responseText + 'door getposts');
+          alert('error loading messages');
+        }
+    });
+    };
+
+
+$('#addPost').on('click', function (e) {
         $.ajax({
             type: 'POST',
             url: "http://localhost:8080/infosupportAPI/services/rest/profiles/1/posts",
             contentType: "application/json",
             data: JSON.stringify({
                 "title": $('#newPostTitle').val(),
-                "content": $('#newPost').val()
+                "content": $('#newPost').val(),
             }),
             dataType: "text",
             success: function (data, textStatus, jqXHR) {
@@ -19,42 +41,7 @@ $( document ).ready(function() {
                 alert(request.responseText);
             }
         });
-    });
-    
-getPosts(); 
 });
-
-
-function getPosts(){
-<<<<<<< HEAD
-     var scroll = $(window).scrollTop();
-
-    $('#posts').html("");
-=======
-    $('#posts').html("");
-    let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
-    };
-$(function getPosts(){
->>>>>>> 46b0008368c05a5e40b4dfd4175828fd7d7ba8be
-    let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
-
-    $.ajax({
-      type: 'GET',
-      url: url,
-      dataType:'json',
-      success: function(data){
-        
-        append(data);
-        $(window).scrollTop(scroll);
-        },
-        error: function(request){
-            alert(request.responseText);
-          alert('error loading messages');
-        }
-    });
-    };
-
-
 
     $('#addLike').on('click', function(){
       $.ajax({
@@ -121,13 +108,12 @@ function append(data) {
 
           <!-- Title -->
           <h1 class="mt-4">` + postsArr.posts[i].title + `</h1>
-
           <!-- Author -->
           <p class="lead">
             by
             <a href="#">` + postsArr.posts[i].username + `</a>
           </p>
-
+        
           <hr>
 
           <!-- Date/Time -->
