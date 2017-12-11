@@ -95,4 +95,8 @@ public interface RepositoryService {
     
     List<SubComment> getSubCommentsOfComment(Comment comment);
     
+    void addUpvote(Post post);
+    
+    void addDownVote(Post post);
+    
 }

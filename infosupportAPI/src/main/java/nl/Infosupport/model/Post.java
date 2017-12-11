@@ -18,7 +18,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
@@ -38,7 +37,7 @@ public class Post implements Serializable {
     private int votes;
     
     @Lob
-    @Column(columnDefinition="mediumblob")
+    @Column(columnDefinition="longblob")
     private byte[] image;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -51,9 +50,6 @@ public class Post implements Serializable {
     private List<Comment> comments;
     //private int currentId = 0;
     //Voter votes = new Voter();
-   
-    @Transient
-    private boolean voted;
     
     /**
      * No argument post constructor
@@ -175,14 +171,6 @@ public class Post implements Serializable {
     public void setImage(byte[] image) {
         this.image = image;
     }
-
-    /**
-     * Check if profile has already voted
-     * @return voted
-     */
-    public boolean isVoted() {
-        return voted;
-    }
     
     /**
      * Add a comment to the post
@@ -191,29 +179,5 @@ public class Post implements Serializable {
     public void addComment(Comment c){
         c.setPost(this);
         getComments().add(c);
-    }
-    
-    /**
-     * Add a upcote to a post
-     */
-    public void upVote(){
-        if(!voted){
-            votes++;
-            voted = true;
-        }
-    }
-    
-    /**
-     * Add a downvote to a post
-     */
-    public void downVote(){
-        if(!voted){
-            if(votes == 0){
-            votes = 0;
-        } else {
-            votes--;
-            voted = true;
-        }
-        }
     }
 }

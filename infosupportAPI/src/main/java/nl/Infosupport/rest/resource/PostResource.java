@@ -5,6 +5,9 @@
  */
 package nl.Infosupport.rest.resource;
 
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -21,8 +24,8 @@ import nl.Infosupport.service.RepositoryService;
 import nl.Infosupport.service.impl.RepositoryServiceImpl;
 
 /**
- * The Post REST resource
- * Note that this is a sub-resource of Profile
+ * The Post REST resource Note that this is a sub-resource of Profile
+ *
  * @author Jordy
  */
 public class PostResource {
@@ -36,6 +39,7 @@ public class PostResource {
 
     /**
      * Get all the posts from a profile
+     *
      * @param profileId
      * @return A list of Posts
      */
@@ -56,6 +60,7 @@ public class PostResource {
 
     /**
      * Get a single post
+     *
      * @param profileId
      * @param postId
      * @return The response, either a client error or a 200 message
@@ -90,6 +95,7 @@ public class PostResource {
 
     /**
      * Add a post
+     *
      * @param profileId
      * @param post
      * @return A response, either a client error or a 200 message
@@ -129,15 +135,13 @@ public class PostResource {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Post not found for id " + postId)).build();
         }
-        
-        post.upVote();
-        if(post.isVoted()){
-            return Response.status(Response.Status.OK).build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+
+        service.addUpvote(post);
+
+        return Response.status(Response.Status.OK).build();
+
     }
-    
+
     @POST
     @Path("/{postId}/downvote")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -156,17 +160,54 @@ public class PostResource {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Post not found for id " + postId)).build();
         }
+
+        service.addDownVote(post);
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @POST
+    @Path("/{fileName}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response uploadFile(
+            @PathParam("profileId") int profileId, 
+            @PathParam("fileName") String fileName,
+            Post post) {
         
-        post.downVote();
-        if(post.isVoted()){
-            return Response.status(Response.Status.OK).build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        Profile profile = service.getProfileFromId(profileId);
+
+        if (profile == null) {
+            return Response.status(Response.Status.NOT_FOUND).
+                    entity(new ClientError("Profile not found for id " + profileId)).build();
         }
+
+        String uploadedFileLocation = "C:\\" + fileName;
+        
+        File file = new File(uploadedFileLocation);
+        byte[] bFile = new byte[(int) file.length()];
+        
+        try {
+
+            FileInputStream fileInputStream = new FileInputStream(file);
+
+            fileInputStream.read(bFile);
+
+            fileInputStream.close();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+        post.setImage(bFile);
+        
+        Post p = service.addPost(profile, post);
+        
+        return Response.status(Response.Status.CREATED).entity(p).build();
     }
 
     /**
      * Create a comment sub-resource
+     *
      * @return
      */
     @Path("/{postId}/comments")
