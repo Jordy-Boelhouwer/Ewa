@@ -21,8 +21,8 @@ import nl.Infosupport.service.RepositoryService;
 import nl.Infosupport.service.impl.RepositoryServiceImpl;
 
 /**
- * The Post REST resource
- * Note that this is a sub-resource of Profile
+ * The Post REST resource Note that this is a sub-resource of Profile
+ *
  * @author Jordy
  */
 public class PostResource {
@@ -36,6 +36,7 @@ public class PostResource {
 
     /**
      * Get all the posts from a profile
+     *
      * @param profileId
      * @return A list of Posts
      */
@@ -56,6 +57,7 @@ public class PostResource {
 
     /**
      * Get a single post
+     *
      * @param profileId
      * @param postId
      * @return The response, either a client error or a 200 message
@@ -90,6 +92,7 @@ public class PostResource {
 
     /**
      * Add a post
+     *
      * @param profileId
      * @param post
      * @return A response, either a client error or a 200 message
@@ -129,13 +132,13 @@ public class PostResource {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Post not found for id " + postId)).build();
         }
-        
+
         service.addUpvote(post);
-        
+
         return Response.status(Response.Status.OK).build();
-        
+
     }
-    
+
     @POST
     @Path("/{postId}/downvote")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -154,13 +157,54 @@ public class PostResource {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Post not found for id " + postId)).build();
         }
-        
+
         service.addDownVote(post);
         return Response.status(Response.Status.OK).build();
     }
 
+//    @POST
+//    @Path("/upload")
+//    @Consumes(MediaType.MULTIPART_FORM_DATA)
+//    public Response uploadFile(
+//            @PathParam("profileId") int profileId, 
+//            @FormDataParam("file") InputStream uploadedInputStream,
+//            @FormDataParam("file") FormDataContentDisposition fileDetail,
+//            Post post) {
+//        
+//        Profile profile = service.getProfileFromId(profileId);
+//
+//        if (profile == null) {
+//            return Response.status(Response.Status.NOT_FOUND).
+//                    entity(new ClientError("Profile not found for id " + profileId)).build();
+//        }
+//
+//        String uploadedFileLocation = "C:\\" + fileDetail.getFileName();
+//        
+//        File file = new File(uploadedFileLocation);
+//        byte[] bFile = new byte[(int) file.length()];
+//        
+//        try {
+//
+//            FileInputStream fileInputStream = new FileInputStream(file);
+//
+//            fileInputStream.read(bFile);
+//
+//            fileInputStream.close();
+//
+//        } catch (Exception e) {
+//
+//            e.printStackTrace();
+//        }
+//        
+//        
+//        
+//        return Response.status(200).entity(output).build();
+//
+//    }
+
     /**
      * Create a comment sub-resource
+     *
      * @return
      */
     @Path("/{postId}/comments")
