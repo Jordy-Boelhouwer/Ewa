@@ -18,7 +18,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
@@ -66,14 +65,6 @@ public class Post implements Serializable {
         setTitle(title);
         setContent(content);
         setComments(new ArrayList<Comment>());
-        setVotes();
-    }
-
-    public Post(String title, String content, byte[] image) {
-        setTitle(title);
-        setContent(content);
-        setComments(new ArrayList<Comment>());
-        setImage(image);
         setVotes();
     }
 

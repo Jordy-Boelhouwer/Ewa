@@ -5,6 +5,9 @@
  */
 package nl.Infosupport.rest.resource;
 
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -162,45 +165,45 @@ public class PostResource {
         return Response.status(Response.Status.OK).build();
     }
 
-//    @POST
-//    @Path("/upload")
-//    @Consumes(MediaType.MULTIPART_FORM_DATA)
-//    public Response uploadFile(
-//            @PathParam("profileId") int profileId, 
-//            @FormDataParam("file") InputStream uploadedInputStream,
-//            @FormDataParam("file") FormDataContentDisposition fileDetail,
-//            Post post) {
-//        
-//        Profile profile = service.getProfileFromId(profileId);
-//
-//        if (profile == null) {
-//            return Response.status(Response.Status.NOT_FOUND).
-//                    entity(new ClientError("Profile not found for id " + profileId)).build();
-//        }
-//
-//        String uploadedFileLocation = "C:\\" + fileDetail.getFileName();
-//        
-//        File file = new File(uploadedFileLocation);
-//        byte[] bFile = new byte[(int) file.length()];
-//        
-//        try {
-//
-//            FileInputStream fileInputStream = new FileInputStream(file);
-//
-//            fileInputStream.read(bFile);
-//
-//            fileInputStream.close();
-//
-//        } catch (Exception e) {
-//
-//            e.printStackTrace();
-//        }
-//        
-//        
-//        
-//        return Response.status(200).entity(output).build();
-//
-//    }
+    @POST
+    @Path("/{fileName}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response uploadFile(
+            @PathParam("profileId") int profileId, 
+            @PathParam("fileName") String fileName,
+            Post post) {
+        
+        Profile profile = service.getProfileFromId(profileId);
+
+        if (profile == null) {
+            return Response.status(Response.Status.NOT_FOUND).
+                    entity(new ClientError("Profile not found for id " + profileId)).build();
+        }
+
+        String uploadedFileLocation = "C:\\" + fileName;
+        
+        File file = new File(uploadedFileLocation);
+        byte[] bFile = new byte[(int) file.length()];
+        
+        try {
+
+            FileInputStream fileInputStream = new FileInputStream(file);
+
+            fileInputStream.read(bFile);
+
+            fileInputStream.close();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+        post.setImage(bFile);
+        
+        Post p = service.addPost(profile, post);
+        
+        return Response.status(Response.Status.CREATED).entity(p).build();
+    }
 
     /**
      * Create a comment sub-resource

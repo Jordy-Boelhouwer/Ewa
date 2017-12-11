@@ -173,7 +173,8 @@ public class RepositoryServiceImpl implements RepositoryService {
 
         Profile p = new Profile("Jor", "Boelhouwer", "Jordybo123", "Jordy1995");
 
-        Post p1 = new Post("Titel1", "testie", bFile);
+        Post p1 = new Post("Titel1", "testie");
+        p1.setImage(bFile);
         p1.addComment(new Comment("test1"));
         p1.addComment(new Comment("test2"));
 
