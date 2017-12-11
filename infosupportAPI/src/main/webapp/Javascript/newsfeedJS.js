@@ -26,16 +26,13 @@ getPosts();
 
 
 function getPosts(){
-<<<<<<< HEAD
      var scroll = $(window).scrollTop();
 
     $('#posts').html("");
-=======
     $('#posts').html("");
     let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
     };
 $(function getPosts(){
->>>>>>> 46b0008368c05a5e40b4dfd4175828fd7d7ba8be
     let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
 
     $.ajax({
