@@ -41,6 +41,25 @@ public class ProfileResource {
         return service.getAllProfiles();
     }
     
+     public Response addProfile(@PathParam("profileId") int profileId, Profile profile) {
+        
+
+       
+
+        boolean created = service.addProfile(profile, profile);
+
+        if (created) {
+            return Response.status(Response.Status.CREATED).build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).
+                    entity(new ClientError("post already exists for id " + post.getId())).build();
+        }
+    }
+    
+    
+    
+    
+    
     /**
      * Get a specific profile
      * @param id

@@ -36,7 +36,11 @@ public interface RepositoryService {
      * add a profile
      * @param profile profile to be added
      */
+<<<<<<< Updated upstream
     Profile addProfile(Profile profile);
+=======
+     boolean addProfile(Profile profile);
+>>>>>>> Stashed changes
     
     
     /**

@@ -71,6 +71,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
+<<<<<<< Updated upstream
     public Profile addProfile(Profile profile) {
         EntityManager em = getEntityManager();
 
@@ -80,7 +81,15 @@ public class RepositoryServiceImpl implements RepositoryService {
 
         em.close();
 
+<<<<<<< Updated upstream
         return profile;
+=======
+        //elements.put(profile.getId(), profile);
+=======
+    public boolean addProfile(Profile profile) {
+        elements.put(profile.getId(), profile);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     }
 
     @Override
