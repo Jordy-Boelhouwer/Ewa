@@ -3,14 +3,15 @@ C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\inf
 C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\nl\Infosupport\model\Post.java
 C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\nl\Infosupport\rest\model\ClientError.java
 C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\ProfileResource.java
+C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\SubCommentResource.java
 C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\PostResource.java
 C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\nl\Infosupport\service\RepositoryService.java
 C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\CommentResource.java
 C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\nl\Infosupport\model\DownVote.java
+C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\nl\Infosupport\model\SubComment.java
 C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\nl\Infosupport\model\Profile.java
 C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\nl\Infosupport\service\impl\RepositoryServiceImpl.java
 C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\nl\Infosupport\model\Vote.java
-C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\HelloResource.java
 C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\CorsFilter.java
 C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\nl\Infosupport\model\Voter.java
 C:\Users\Leonard\Documents\HvA Documenten\2017-2018\Info support project\git\infosupportAPI\src\main\java\nl\Infosupport\rest\config\App.java

@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/infosupportAPI">
     <Resource	auth="Container"
-<<<<<<< HEAD
+
                 driverClassName="com.mysql.jdbc.Driver"	maxActive="20"
                 maxIdle="10"	maxWait="-1"	name="jdbc/infosupportDb" type="javax.sql.DataSource"
-                url="jdbc:mysql://127.0.0.1:3306/?user=root"	username="root"
-                password="lappie"	/> 
-=======
-                driverClassName="com.mysql.jdbc.Driver"	maxTotal="20"
-                maxIdle="10"	maxWaitMillis="-1"	name="jdbc/infosupportDb" type="javax.sql.DataSource"
                 url="jdbc:mysql://localhost:3306/ewa?createDatabaseIfNotExist=true&amp;serverTimezone=CET"	username="root"
-                password="Jordy1995"	/> 
->>>>>>> aecb662749de2c16b086e9a387e30f3522538d06
+                password="lappie"	
+/>
 </Context>
 

@@ -1,183 +1,8 @@
 $( document ).ready(function() {
-<<<<<<< HEAD
-    alert("test");
-        $('#addPost').on('click', function (e) {
 
-        $.ajax({
-            type: 'POST',
-            url: "http://localhost:8080/infosupportAPI/services/rest/profiles/1/posts",
-            contentType: "application/json",
-            data: JSON.stringify({
-                "id": 16,
-                "title": $('#newPostTitle').val(),
-                "content": $('#newPost').val(),
-                "username": 'Jordybo'
-            }),
-            dataType: "text",
-            success: function (data, textStatus, jqXHR) {
-                       console.log("The ajax request succeeded!");
-                        console.log("The result is: ");  
-                        getPosts();
-            },
-            error: function () {
-                ("Posting ");
-            }
-        });
-    });
-    
-=======
->>>>>>> aecb662749de2c16b086e9a387e30f3522538d06
-getPosts(); 
-});
-
-
-function getPosts(){
-<<<<<<< HEAD
-
-    $('#posts').html("");
-    let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
-=======
-    $('#posts').html("");
-    let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
-
-
-getPosts(); 
-    };
-$(function getPosts(){
-    let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
-    var postsArr = { posts:[]};
->>>>>>> aecb662749de2c16b086e9a387e30f3522538d06
-
-    $.ajax({
-      type: 'GET',
-      url: url,
-      dataType:'json',
-      success: function(data){
-        append(data);
-<<<<<<< HEAD
-=======
-          
-          profile = data;
-           $.each(data, function(i, profile){
-                    for (var i = 0; i < profile.posts.length; i++) {
-                        postsArr.posts.push(profile.posts[i]); 
-                    }
-                postsArr.posts.sort(function(a, b){
-                    return b.id - a.id;
-                });   
-            });   
-            
-            for (var i = 0; i < postsArr.posts.length; i++) {
-                var commentArray = { comments:[]};
-                 var comment = "";
-                 $.each(postsArr.posts[i].comments, function(j){
-                  commentArray.comments.push( postsArr.posts[i].comments[j].content); 
-                  //console.log(commentArray.comments[j].content);
-                  comment += '<p>'+postsArr.posts[i].comments[j].content+'</p>';
-                });
-                
-                                
-                $("#postRow").append(`<!-- Post Content Column -->
-        <div class="col-lg-8 pull-right" >
-
-          <!-- Title -->
-          <h1 class="mt-4">`+postsArr.posts[i].title+`</h1>
-
-          <!-- Author -->
-          <p class="lead">
-            by
-            <a href="#">`+postsArr.posts[i].username+`</a>
-          </p>
-
-          <hr>
-
-          <!-- Date/Time -->
-          <p></p>
-
-          <hr>
-
-          <!-- Preview Image -->
-          <img class="img-fluid rounded" src="images/sample_img.jpg" height="200px;" alt="">
-
-          <hr>
-
-          <!-- Post Content -->
-          <p class="lead">`+postsArr.posts[i].content+`</p>
-          <hr>
-
-          <!-- Comments Form -->
-          <div class="card my-4">
-            <h5 class="card-header bg-dark text-white">Leave a Comment:</h5>
-            <div class="card-body">
-              <form>
-                <div class="form-group">
-                  <textarea class="form-control" rows="3"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
-            </div>
-          </div>
-
-          <!-- Single Comment -->
-          <div  class="media mb-4">
-            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-            <div id="comments" class="media-body">
-              <h5 class="mt-0">Commenter Name</h5>
-
-            </div>
-          </div>
-
-          <!-- Comment with nested comments -->
-          <div class="media mb-4">
-            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-            <div class="media-body">
-              <h5 class="mt-0">Commenter Name</h5>
-              Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-
-              <div class="media mt-4">
-                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-                <div class="media-body">
-                  <h5 class="mt-0">Commenter Name</h5>
-                  
-                </div>
-              </div>
-
-              <div class="media mt-4">
-                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-                <div class="media-body">
-                  <h5 class="mt-0">Commenter Name</h5>
-                  Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-        <div class="col-md-4"></div>`);
-               document.getElementById("comments").innerHTML+= comment;
-            };
->>>>>>> aecb662749de2c16b086e9a387e30f3522538d06
-        },
-        error: function(request, textStatus, error){
-             alert(request.responseText);
-          alert('error loading messages');
-        }
-    });
-<<<<<<< HEAD
-    };
-
-
-
-=======
-    }
-
-
-
-    );
+ 
 
         $('#addPost').on('click', function (e) {
-
         $.ajax({
             type: 'POST',
             url: "http://localhost:8080/infosupportAPI/services/rest/profiles/1/posts",
@@ -188,18 +13,42 @@ $(function getPosts(){
             }),
             dataType: "text",
             success: function (data, textStatus, jqXHR) {
-                       console.log("The ajax request succeeded!");
-                        console.log("The result is: ");  
-                        getPosts();
+                      getPosts();
             },
-            error: function () {
-                ("Posting ");
+            error: function (request) {
+                alert(request.responseText);
             }
         });
     });
     
-    
->>>>>>> aecb662749de2c16b086e9a387e30f3522538d06
+getPosts(); 
+});
+
+
+function getPosts(){
+     var scroll = $(window).scrollTop();
+
+    $('#posts').html("");
+    let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
+
+    $.ajax({
+      type: 'GET',
+      url: url,
+      dataType:'json',
+      success: function(data){
+        
+        append(data);
+        $(window).scrollTop(scroll);
+        },
+        error: function(request){
+            alert(request.responseText);
+          alert('error loading messages');
+        }
+    });
+    };
+
+
+
     $('#addLike').on('click', function(){
       $.ajax({
         type: 'POST',
@@ -242,40 +91,24 @@ $(function getPosts(){
     });
     });
 
-<<<<<<< HEAD
 
-=======
->>>>>>> aecb662749de2c16b086e9a387e30f3522538d06
 function append(data) {
     var postsArr = { posts:[]};
     profile = data;
     $.each(data, function (i, profile) {
         for (var i = 0; i < profile.posts.length; i++) {
             postsArr.posts.push(profile.posts[i]);
-<<<<<<< HEAD
-=======
-	function formToJSON() {
-    return JSON.stringify({
-		"title": $('#newPostTitle').val(),
-		"content": $('#newPost').val()
-        });
->>>>>>> aecb662749de2c16b086e9a387e30f3522538d06
         }
         postsArr.posts.sort(function (a, b) {
             return b.id - a.id;
         });
     });
 
+
+
     for (var i = 0; i < postsArr.posts.length; i++) {
-        var commentArray = {comments: []};
-        var comment = "";
-        $.each(postsArr.posts[i].comments, function (j) {
-            commentArray.comments.push(postsArr.posts[i].comments[j].content);
-            //console.log(commentArray.comments[j].content);
-            comment += '<p>' + postsArr.posts[i].comments[j].content + '</p>';
-        });
-
-
+        
+            
         $("#posts").append(`<!-- Post Content Column -->
         <div>
 
@@ -310,36 +143,23 @@ function append(data) {
             <div class="card-body">
               <form>
                 <div class="form-group">
-                  <textarea class="form-control" rows="3"></textarea>
+                  <textarea id="addComment`+i+`" type="text" class="form-control" rows="3" placeholder="Write here..."></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button id="addCommentBTN`+i+`" type="submit" class="btn btn-primary" onClick="addComment(`+postsArr.posts[i].id+`, addComment`+i+`.value)">Submit</button>
               </form>
             </div>
           </div>
 
           <!-- Single Comment -->
-          <div  class="media mb-4">
-            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-            <div id="comments" class="media-body">
-              <h5 class="mt-0">Commenter Name</h5>
-
-            </div>
-          </div>
-
+        <div id="comments`+i+`">
+          
+        </div>
           <!-- Comment with nested comments -->
           <div class="media mb-4">
             <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
             <div class="media-body">
               <h5 class="mt-0">Commenter Name</h5>
               Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-
-              <div class="media mt-4">
-                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-                <div class="media-body">
-                  <h5 class="mt-0">Commenter Name</h5>
-                  
-                </div>
-              </div>
 
               <div class="media mt-4">
                 <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
@@ -354,7 +174,27 @@ function append(data) {
 
         </div>
         <div class="col-md-4 mt-4"></div>`);
-        document.getElementById("comments").innerHTML += comment;
+        
+     
+        $.each(postsArr.posts[i].comments, function (j) {
+
+            //var commentArray = {comments: []};
+            //commentArray.comments.push(postsArr.posts[i].comments[j].content);
+            //console.log(commentArray.comments[j].content);
+            commentID = "#comments"+i
+            $(commentID).append(`<div  class="media mb-4">
+               <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+               <div id="comments" class="media-body">
+                 <h5 class="mt-0">Commenter Name</h5>
+                 <p>`+ postsArr.posts[i].comments[j].content +`</p>
+               </div>
+             </div>`
+
+            );
+         });
+ 
     };
+    
+    return;
 };
 
