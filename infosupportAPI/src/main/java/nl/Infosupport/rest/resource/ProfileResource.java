@@ -46,14 +46,9 @@ public class ProfileResource {
 
        
 
-        boolean created = service.addProfile(profile, profile);
+        Profile p = service.addProfile(profile);
 
-        if (created) {
-            return Response.status(Response.Status.CREATED).build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).
-                    entity(new ClientError("post already exists for id " + post.getId())).build();
-        }
+            return Response.status(Response.Status.OK).entity(p).build();
     }
     
     

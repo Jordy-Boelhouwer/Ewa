@@ -8,6 +8,7 @@ package nl.Infosupport.rest.resource;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -194,7 +195,7 @@ public class PostResource {
 
             fileInputStream.close();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
 
             e.printStackTrace();
         }
