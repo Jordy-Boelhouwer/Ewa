@@ -185,21 +185,6 @@ public class RepositoryServiceImpl implements RepositoryService {
         p.addPost(p2);
 
         addProfile(p);
-
-        try {
-
-            //FileOutputStream fos = new FileOutputStream("images\\output.jpg");  //windows
-            FileOutputStream fos = new FileOutputStream("C:\\test.jpg");
-
-            fos.write(p1.getImage());
-
-            fos.close();
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-        }
     }
 
     @Override

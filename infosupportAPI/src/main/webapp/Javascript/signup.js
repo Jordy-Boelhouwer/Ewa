@@ -3,9 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-$('#signup').on('click', function(e){
-        
+$( document ).ready(function() {
+    $('#signup').on('click', function(e){
+        signup(); 
+    });
+});
+function signup(){
       $.ajax({
         type: 'POST',
         url: "http://localhost:8080/infosupportAPI/services/rest/profiles",
@@ -20,14 +23,16 @@ $('#signup').on('click', function(e){
           alert(request.responseText);
         }
       });
-    });
+
     function formToJSON() {
-    return JSON.stringify({
-                  
-		"firstname": $('#firstname').val(),
-		"lastname": $('#lastname').val(),
+    return JSON.stringify({                 
+		"first_name": $('#firstname').val(),
+		"last_name": $('#lastname').val(),
                 "username": $('#username').val(),
-                "password": $('#password').val(),
-        })};
+                "password": $('#password').val()
+        });
+    };
+};
+
 
 
