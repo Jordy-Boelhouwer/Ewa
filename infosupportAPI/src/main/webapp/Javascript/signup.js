@@ -8,6 +8,10 @@ $( document ).ready(function() {
         signup(); 
     });
 });
+
+    $('#signup').on('click', function(e){
+        signup(); 
+    });
 function signup(){
       $.ajax({
         type: 'POST',
@@ -23,8 +27,9 @@ function signup(){
           alert(request.responseText);
         }
       });
+};
 
-    function formToJSON() {
+function formToJSON() {
     return JSON.stringify({                 
 		"first_name": $('#firstname').val(),
 		"last_name": $('#lastname').val(),
@@ -32,7 +37,6 @@ function signup(){
                 "password": $('#password').val()
         });
     };
-};
 
 
 

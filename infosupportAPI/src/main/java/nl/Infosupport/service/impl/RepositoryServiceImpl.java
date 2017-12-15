@@ -274,4 +274,20 @@ public class RepositoryServiceImpl implements RepositoryService {
         em.getTransaction().commit();
         em.close();
     }
+
+    @Override
+    public void editProfile(Profile updatedProfile, Profile profile) {
+        EntityManager em = getEntityManager();
+        Query query = em.createQuery("UPDATE Profile p set p.first_name = :firstname, "
+                + "p.last_name = :lastname, p.username = :user, p.password = :pass WHERE p.id = :profileId");
+        query.setParameter("firstname", profile.getFirst_name());
+        query.setParameter("lastname", profile.getLast_name());
+        query.setParameter("user", profile.getUsername());
+        query.setParameter("pass", profile.getPassword());
+        query.setParameter("profileId", updatedProfile.getId());
+        em.getTransaction().begin();
+        query.executeUpdate();
+        em.getTransaction().commit();
+        em.close();
+    }
 }

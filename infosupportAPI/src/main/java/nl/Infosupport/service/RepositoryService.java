@@ -39,6 +39,13 @@ public interface RepositoryService {
     Profile addProfile(Profile profile);  
     
     /**
+     * edit a profile
+     * @param profile Profile to be added
+     * @return profile
+     */
+    void editProfile(Profile updatedProfile, Profile profile);
+    
+    /**
      * add post to profile
      * @param profile profile to add the post to
      * @param post post to be added
