@@ -7,8 +7,15 @@ package nl.Infosupport.service.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
@@ -34,7 +41,13 @@ public class RepositoryServiceImpl implements RepositoryService {
     // An instance of the service is created during class initialisation
     static {
         instance = new RepositoryServiceImpl();
-        instance.loadExamples();
+        try {
+            instance.loadExamples();
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(RepositoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidKeySpecException ex) {
+            Logger.getLogger(RepositoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     //  Method to get a reference to the instance (singleton)
@@ -152,7 +165,7 @@ public class RepositoryServiceImpl implements RepositoryService {
         return comments;
     }
 
-    private void loadExamples() {
+    private void loadExamples() throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         File file = new File("C:\\smileyface.jpg");
         byte[] bFile = new byte[(int) file.length()];
@@ -169,8 +182,11 @@ public class RepositoryServiceImpl implements RepositoryService {
 
             e.printStackTrace();
         }
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
 
-        Profile p = new Profile("Jor", "Boelhouwer", "Jordybo123", "Jordy1995");
+        Profile p = new Profile("Jor", "Boelhouwer", "Super chille gast", 
+                dateFormat.format(date), "back-end developer", "Jordybo123", "Jordy123");
 
         Post p1 = new Post("Titel1", "testie");
         p1.setImage(bFile);
