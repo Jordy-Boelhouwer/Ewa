@@ -6,6 +6,8 @@
 package nl.Infosupport.model;
 
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -46,12 +48,15 @@ public class Profile implements Serializable {
      * @param last_name Last name
      * @param username Username for login
      * @param password Password for login
+     * @throws java.security.NoSuchAlgorithmException
+     * @throws java.security.spec.InvalidKeySpecException
      */
-    public Profile(String first_name, String last_name, String username, String password){
+    public Profile(String first_name, String last_name, String username, String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
         setFirst_name(first_name);
         setLast_name(last_name);
         setUsername(username);
-        setPassword(password);
+        HashFunction hash = new HashFunction(password);
+        setPassword(hash.getGeneratedSecuredPasswordHash());
         setPosts(new ArrayList<Post>());
     }
 
