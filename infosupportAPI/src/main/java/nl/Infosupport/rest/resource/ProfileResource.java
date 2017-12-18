@@ -45,13 +45,6 @@ public class ProfileResource {
         return service.getAllProfiles();
     }
 
-    public Response addProfile(@PathParam("profileId") int profileId, Profile profile) {
-
-        Profile p = service.addProfile(profile);
-
-        return Response.status(Response.Status.OK).entity(p).build();
-    }
-
     /**
      * Get a specific profile
      *
