@@ -7,7 +7,6 @@ package nl.Infosupport.service.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -175,11 +174,17 @@ public class RepositoryServiceImpl implements RepositoryService {
 
         Post p1 = new Post("Titel1", "testie");
         p1.setImage(bFile);
-        p1.addComment(new Comment("test1"));
-        p1.addComment(new Comment("test2"));
+        
+        Comment c1 = new Comment("test1");
+        p1.addComment(c1);
+        
+        Comment c2 = new Comment("test2");
+        p1.addComment(c2);
 
         Post p2 = new Post("Titel2", "Ola!");
-        p2.addComment(new Comment("Amigo!"));
+        
+        Comment c3 = new Comment("Amigo!");
+        p2.addComment(c3);
 
         p.addPost(p1);
         p.addPost(p2);
@@ -207,6 +212,26 @@ public class RepositoryServiceImpl implements RepositoryService {
         em.close();
 
         return comment;
+    }
+    
+     @Override
+    public int getVotesFromPost(int postId) {
+        EntityManager em = getEntityManager();
+
+        Query query = em.createQuery("SELECT p.votes FROM Post p WHERE p.id = :postId");
+
+        query.setParameter("postId", postId);
+
+        int votes = 0;
+        try {
+            votes = (int) query.getSingleResult();
+        } catch (NoResultException e) {
+            votes = 0;
+        }
+
+        em.close();
+
+        return votes;
     }
 
     @Override

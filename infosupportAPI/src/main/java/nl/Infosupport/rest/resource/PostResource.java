@@ -93,7 +93,42 @@ public class PostResource {
 
         return resp;
     }
+    
+    /**
+     * Get the writer of a post
+     * @param profileId id of the writer
+     * @return profile
+     */
+    @GET
+    @Path("/{postId}/writer")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getWriter(
+            @PathParam("profileId") int profileId) {
 
+        //Getting the profile
+        Profile profile = service.getProfileFromId(profileId);
+
+        if (profile == null) {
+            return Response.status(Response.Status.NOT_FOUND).
+                    entity(new ClientError("Profile not found for id " + profileId)).build();
+        }
+
+        return Response.status(Response.Status.OK).entity(profile.getUsername()).build();
+    }
+    
+    /**
+     * Get the votes from a post
+     * @param postId id of the post
+     * @return votes
+     */
+    @GET
+    @Path("/{postId}/votes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getVotes(@PathParam("postId") int postId) {    
+        int votes = service.getVotesFromPost(postId);
+        return Response.status(Response.Status.OK).entity(votes).build();
+    }
+    
     /**
      * Add a post
      *

@@ -55,6 +55,7 @@ public interface RepositoryService {
     
     /**
      * Add a comment to a post
+     * @param profile Writer of comment
      * @param post Post to add the comment to
      * @param comment Comment to add
      * @return
@@ -63,6 +64,7 @@ public interface RepositoryService {
     
     /**
      * Add a subcomment to a comment
+     * @param profile writer of subcomment
      * @param comment Comment to add the subcomment to
      * @param subComment subcomment to add
      * @return
@@ -105,4 +107,5 @@ public interface RepositoryService {
     
     void addDownVote(Post post);
     
+    int getVotesFromPost(int postId);
 }
