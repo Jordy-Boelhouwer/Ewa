@@ -36,7 +36,7 @@ public interface RepositoryService {
      * add a profile
      * @param profile profile to be added
      */
-    Profile addProfile(Profile profile);  
+    Boolean addProfile(Profile profile);  
     
     /**
      * edit a profile
@@ -55,7 +55,6 @@ public interface RepositoryService {
     
     /**
      * Add a comment to a post
-     * @param profile Writer of comment
      * @param post Post to add the comment to
      * @param comment Comment to add
      * @return

@@ -1,12 +1,13 @@
 $( document ).ready(function() {
 getPosts(); 
+getSlackUser();
 });
 
 function getPosts(){
      var scroll = $(window).scrollTop();
 
     $('#posts').html("");
-    let url="http://localhost:8080/infosupportAPI/services/rest/profiles";
+    let url="/infosupportAPI/services/rest/profiles";
 
     $.ajax({
       type: 'GET',
@@ -21,13 +22,12 @@ function getPosts(){
           alert('error loading messages');
         }
     });
-    };
-
+};
 
 $('#addPost').on('click', function (e) {
         $.ajax({
             type: 'POST',
-            url: "http://localhost:8080/infosupportAPI/services/rest/profiles/1/posts",
+            url: "/infosupportAPI/services/rest/profiles/1/posts",
             contentType: "application/json",
             data: JSON.stringify({
                 "title": $('#newPostTitle').val(),
@@ -190,4 +190,21 @@ function append(data) {
     
     return;
 };
+
+function getSlackUser() {
+    let url="https://slack.com/api/users.identity?token=xoxp-288788460883-289005432293-290997151330-4930cfd22d5c074565f5efd33030bb8b";
+    $.ajax({
+      type: 'GET',
+      url: url,
+      dataType:'json',
+      success: function(data){
+        var test = {data};
+        console.log(data);
+        },
+        error: function(request){
+          alert(request.responseText + 'door requestToken');
+          alert('error loading messages');
+        }
+    });
+}
 

@@ -5,17 +5,8 @@
  */
 package nl.Infosupport.service.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
@@ -41,13 +32,6 @@ public class RepositoryServiceImpl implements RepositoryService {
     // An instance of the service is created during class initialisation
     static {
         instance = new RepositoryServiceImpl();
-        try {
-            instance.loadExamples();
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(RepositoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidKeySpecException ex) {
-            Logger.getLogger(RepositoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     //  Method to get a reference to the instance (singleton)
@@ -86,18 +70,19 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public Profile addProfile(Profile profile) {
-        EntityManager em = getEntityManager();
+    public Boolean addProfile(Profile profile) {
+        if (!accessTokenExists(profile)) {
+            EntityManager em = getEntityManager();
 
-        em.getTransaction().begin();
-        em.persist(profile);
-        em.getTransaction().commit();
-
-        em.close();
-
-        return profile;
+            em.getTransaction().begin();
+            em.persist(profile);
+            em.getTransaction().commit();
+            em.close();
+            return true;
+        }
+        return false;
     }
-    
+
     @Override
     public Post addPost(Profile profile, Post post) {
         profile.addPost(post);
@@ -165,49 +150,6 @@ public class RepositoryServiceImpl implements RepositoryService {
         return comments;
     }
 
-    private void loadExamples() throws NoSuchAlgorithmException, InvalidKeySpecException {
-
-        File file = new File("C:\\smileyface.jpg");
-        byte[] bFile = new byte[(int) file.length()];
-
-        try {
-
-            FileInputStream fileInputStream = new FileInputStream(file);
-
-            fileInputStream.read(bFile);
-
-            fileInputStream.close();
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
-
-        Profile p = new Profile("Jor", "Boelhouwer", "Super chille gast", 
-                dateFormat.format(date), "back-end developer", "Jordybo123", "Jordy123");
-
-        Post p1 = new Post("Titel1", "testie");
-        p1.setImage(bFile);
-        
-        Comment c1 = new Comment("test1");
-        p1.addComment(c1);
-        
-        Comment c2 = new Comment("test2");
-        p1.addComment(c2);
-
-        Post p2 = new Post("Titel2", "Ola!");
-        
-        Comment c3 = new Comment("Amigo!");
-        p2.addComment(c3);
-
-        p.addPost(p1);
-        p.addPost(p2);
-
-        addProfile(p);
-    }
-
     @Override
     public Comment getCommentOfPost(Post post, int commentId) {
         EntityManager em = getEntityManager();
@@ -229,8 +171,8 @@ public class RepositoryServiceImpl implements RepositoryService {
 
         return comment;
     }
-    
-     @Override
+
+    @Override
     public int getVotesFromPost(int postId) {
         EntityManager em = getEntityManager();
 
@@ -262,6 +204,29 @@ public class RepositoryServiceImpl implements RepositoryService {
         em.close();
 
         return subComments;
+    }
+    
+    /**
+     *
+     * @param profile profile to be checked
+     * @return true or false
+     */
+    public boolean accessTokenExists(Profile profile){
+        EntityManager em = getEntityManager();
+        
+        Query query = getEntityManager().createQuery("SELECT p FROM Profile p WHERE p.access_token = :accessToken");
+        query.setParameter("accessToken", profile.getAccess_token());
+        
+        Profile profileWithToken = null;
+        try {
+            profileWithToken = (Profile) query.getSingleResult();
+            em.close();
+            return true;
+        } catch (NoResultException e) {
+            profileWithToken = null;
+            em.close();
+            return false;
+        }
     }
 
     @Override
@@ -319,12 +284,13 @@ public class RepositoryServiceImpl implements RepositoryService {
     @Override
     public void editProfile(Profile updatedProfile, Profile profile) {
         EntityManager em = getEntityManager();
-        Query query = em.createQuery("UPDATE Profile p set p.first_name = :firstname, "
-                + "p.last_name = :lastname, p.username = :user, p.password = :pass WHERE p.id = :profileId");
-        query.setParameter("firstname", profile.getFirst_name());
-        query.setParameter("lastname", profile.getLast_name());
-        query.setParameter("user", profile.getUsername());
-        query.setParameter("pass", profile.getPassword());
+        Query query = em.createQuery("UPDATE Profile p set p.name = :name, "
+                + " p.bio = :bio, p.job = :job, "
+                + "p.username = :user, p.password = :pass "
+                + "WHERE p.id = :profileId");
+        query.setParameter("name", profile.getName());
+        query.setParameter("bio", profile.getBio());
+        query.setParameter("job", profile.getJob());
         query.setParameter("profileId", updatedProfile.getId());
         em.getTransaction().begin();
         query.executeUpdate();

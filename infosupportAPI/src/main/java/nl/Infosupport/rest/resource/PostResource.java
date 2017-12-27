@@ -113,7 +113,7 @@ public class PostResource {
                     entity(new ClientError("Profile not found for id " + profileId)).build();
         }
 
-        return Response.status(Response.Status.OK).entity(profile.getUsername()).build();
+        return Response.status(Response.Status.OK).entity(profile.getName()).build();
     }
     
     /**

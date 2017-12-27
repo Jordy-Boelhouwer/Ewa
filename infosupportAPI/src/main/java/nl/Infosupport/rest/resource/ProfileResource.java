@@ -74,8 +74,14 @@ public class ProfileResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addProfile(Profile profile) {
-        Profile p = service.addProfile(profile);
-        return Response.status(Response.Status.CREATED).entity(p).build();
+        boolean created = service.addProfile(profile);
+        if (created) {
+            return Response.status(Response.Status.CREATED).build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).
+                    entity(new ClientError("token already exists")).build();
+
+        }
     }
 
     @PUT
@@ -88,7 +94,7 @@ public class ProfileResource {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Profile with id " + profileId + " was not found")).build();
         }
-        
+
         service.editProfile(updatedProfile, profile);
         return Response.status(Response.Status.CREATED).build();
     }

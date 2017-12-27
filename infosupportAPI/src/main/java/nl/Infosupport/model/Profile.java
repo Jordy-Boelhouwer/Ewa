@@ -6,8 +6,6 @@
 package nl.Infosupport.model;
 
 import java.io.Serializable;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,19 +30,15 @@ public class Profile implements Serializable {
     @GeneratedValue
     private int id;
 
-    private String first_name;
-
-    private String last_name;
+    private String name;
 
     private String bio;
 
     private String date_joined;
 
     private String job;
-
-    private String username;
-
-    private String password;
+    
+    private String access_token;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,
             fetch = FetchType.EAGER)
@@ -54,41 +48,18 @@ public class Profile implements Serializable {
     public Profile() {
     }
 
-    public Profile(String first_name, String last_name, String username,
-            String password) throws NoSuchAlgorithmException,
-            InvalidKeySpecException {
-        setFirst_name(first_name);
-        setLast_name(last_name);
-        setDate_joined();
-        setUsername(username);
-        HashFunction hash = new HashFunction(password);
-        setPassword(hash.getGeneratedSecuredPasswordHash());
-        setPosts(new ArrayList<Post>());
-    }
-
     /**
      *
-     * @param first_name First name
-     * @param last_name Last name
-     * @param bio biography of profile
+     * @param name name of the user
+     * @param access_token access token provided by Slack
      * @param date_joined Date the profile was created
-     * @param job Job description of profile
-     * @param username Username for login
-     * @param password Password for login
-     * @throws java.security.NoSuchAlgorithmException
-     * @throws java.security.spec.InvalidKeySpecException
      */
-    public Profile(String first_name, String last_name, String bio,
-            String date_joined, String job, String username, String password)
-            throws NoSuchAlgorithmException, InvalidKeySpecException {
-        setFirst_name(first_name);
-        setLast_name(last_name);
-        setBio(bio);
+    public Profile(String name,
+            String date_joined, 
+            String access_token) {
+        setName(name);
         setDate_joined();
-        setJob(job);
-        setUsername(username);
-        HashFunction hash = new HashFunction(password);
-        setPassword(hash.getGeneratedSecuredPasswordHash());
+        setAccess_token(access_token);
         setPosts(new ArrayList<Post>());
     }
 
@@ -108,42 +79,6 @@ public class Profile implements Serializable {
      */
     public void setId(int id) {
         this.id = id;
-    }
-
-    /**
-     * Get the first name from profile
-     *
-     * @return First name of profile
-     */
-    public String getFirst_name() {
-        return first_name;
-    }
-
-    /**
-     * Set first name for profile
-     *
-     * @param first_name
-     */
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
-    }
-
-    /**
-     * Get last name from profile
-     *
-     * @return last_name
-     */
-    public String getLast_name() {
-        return last_name;
-    }
-
-    /**
-     * Set last name for profile
-     *
-     * @param last_name
-     */
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
     }
 
     /**
@@ -196,41 +131,13 @@ public class Profile implements Serializable {
     public void setJob(String job) {
         this.job = job;
     }
-
-    /**
-     * Get username for profile
-     *
-     * @return username
-     */
-    public String getUsername() {
-        return username;
+    
+    public String getName() {
+        return name;
     }
 
-    /**
-     * Set username for profile
-     *
-     * @param username
-     */
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    /**
-     * Get password from profile
-     *
-     * @return password
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * Set password for profile
-     *
-     * @param password
-     */
-    public void setPassword(String password) {
-        this.password = password;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -251,6 +158,14 @@ public class Profile implements Serializable {
         this.posts = posts;
     }
 
+    public String getAccess_token() {
+        return access_token;
+    }
+
+    public void setAccess_token(String access_token) {
+        this.access_token = access_token;
+    }
+
     /**
      * Add the post to the list
      *
@@ -259,5 +174,5 @@ public class Profile implements Serializable {
     public void addPost(Post p) {
         getPosts().add(p);
         p.setProfile(this);
-    }
+    }    
 }
