@@ -17,7 +17,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 /**
  *
@@ -34,11 +36,14 @@ public class Comment implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
-    @JsonIgnore
+    @JsonBackReference
     private Post post;
     
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, 
+            orphanRemoval = true, 
+            fetch = FetchType.EAGER)
     @JoinColumn(name = "comment_id")
+    @JsonManagedReference
     private List<SubComment> subComments;
     
     /**
@@ -51,16 +56,8 @@ public class Comment implements Serializable {
      * @param content
      */
     public Comment(String content){
-        setContent(content);
-        setSubComments(new ArrayList<SubComment>());
-    }
-
-    /**
-     * Get the post the comment is for
-     * @return post
-     */
-    public Post getPost() {
-        return post;
+        this.content = content;
+        this.subComments = new ArrayList<>();
     }
 
     /**

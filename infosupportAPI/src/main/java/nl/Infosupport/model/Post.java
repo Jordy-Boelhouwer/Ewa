@@ -18,7 +18,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 /**
  *
@@ -42,14 +44,15 @@ public class Post implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")
-    @JsonIgnore
+    @JsonBackReference
     private Profile profile;
     
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, 
+            orphanRemoval = true, 
+            fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id")
+    @JsonManagedReference
     private List<Comment> comments;
-    //private int currentId = 0;
-    //Voter votes = new Voter();
     
     /**
      * No argument post constructor
@@ -62,10 +65,16 @@ public class Post implements Serializable {
      * @param content
      */
     public Post(String title, String content){
-        setTitle(title);
-        setContent(content);
-        setComments(new ArrayList<Comment>());
-        setVotes();
+        this.title = title;
+        this.content = content;
+        this.comments = new ArrayList<>();
+        this.votes = 0;
+    }
+
+    public Post(String title, String content, byte[] image) {
+        this.title = title;
+        this.content = content;
+        this.image = image;
     }
 
     /**
@@ -74,14 +83,6 @@ public class Post implements Serializable {
      */
     public void setProfile(Profile profile) {
         this.profile = profile;
-    }
-
-    /**
-     * Get profile which posted the post
-     * @return profile
-     */
-    public Profile getProfile() {
-        return profile;
     }
 
     /**

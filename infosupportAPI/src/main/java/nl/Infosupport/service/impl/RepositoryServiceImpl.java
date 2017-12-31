@@ -59,7 +59,7 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public Profile getProfileFromId(int profileId) {
+    public Profile getProfileFromId(String profileId) {
         EntityManager em = getEntityManager();
 
         Profile p = em.find(Profile.class, profileId);
@@ -70,17 +70,15 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public Boolean addProfile(Profile profile) {
-        if (!accessTokenExists(profile)) {
-            EntityManager em = getEntityManager();
+    public Profile addProfile(Profile profile) {
+        EntityManager em = getEntityManager();
 
-            em.getTransaction().begin();
-            em.persist(profile);
-            em.getTransaction().commit();
-            em.close();
-            return true;
-        }
-        return false;
+        em.getTransaction().begin();
+        em.persist(profile);
+        em.getTransaction().commit();
+        em.close();
+
+        return profile;
     }
 
     @Override
@@ -205,18 +203,18 @@ public class RepositoryServiceImpl implements RepositoryService {
 
         return subComments;
     }
-    
+
     /**
      *
      * @param profile profile to be checked
      * @return true or false
      */
-    public boolean accessTokenExists(Profile profile){
+    public boolean accessTokenExists(Profile profile) {
         EntityManager em = getEntityManager();
-        
+
         Query query = getEntityManager().createQuery("SELECT p FROM Profile p WHERE p.access_token = :accessToken");
         query.setParameter("accessToken", profile.getAccess_token());
-        
+
         Profile profileWithToken = null;
         try {
             profileWithToken = (Profile) query.getSingleResult();

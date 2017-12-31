@@ -32,9 +32,16 @@ public class SubCommentResource {
         service = RepositoryServiceImpl.getInstance();
     }
     
+    /**
+     *
+     * @param profileId
+     * @param postId
+     * @param commentId
+     * @return
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllSubComments(@PathParam("profileId") int profileId,
+    public Response getAllSubComments(@PathParam("profileId") String profileId,
             @PathParam("postId") int postId,
             @PathParam("commentId") int commentId){
         
@@ -72,7 +79,7 @@ public class SubCommentResource {
      */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addSubComment(@PathParam("profileId") int profileId, @PathParam("postId") int postId, 
+    public Response addSubComment(@PathParam("profileId") String profileId, @PathParam("postId") int postId, 
             @PathParam("commentId") int commentId, SubComment subComment) {
         Profile profile = service.getProfileFromId(profileId);
         

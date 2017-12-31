@@ -42,7 +42,7 @@ public class CommentResource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllComments(@PathParam("profileId") int profileId,
+    public Response getAllComments(@PathParam("profileId") String profileId,
             @PathParam("postId") int postId) {
 
         //Getting the Profile
@@ -78,7 +78,7 @@ public class CommentResource {
     @Path("/{commentId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getComment(
-            @PathParam("profileId") int profileId,
+            @PathParam("profileId") String profileId,
             @PathParam("postId") int postId,
             @PathParam("commentId") int commentId) {
         Response resp;
@@ -119,7 +119,7 @@ public class CommentResource {
      */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addComment(@PathParam("profileId") int profileId, @PathParam("postId") int postId, Comment comment) {
+    public Response addComment(@PathParam("profileId") String profileId, @PathParam("postId") int postId, Comment comment) {
         Profile profile = service.getProfileFromId(profileId);
 
         if (profile == null) {

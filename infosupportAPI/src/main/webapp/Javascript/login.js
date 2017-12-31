@@ -1,9 +1,3 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 function requestToken(){
     let url="https://slack.com/api/oauth.access?client_id=288788460883.288345855217&client_secret=2bb324796aabf0d0c0885eeed7ccb828&code=" + getAllUrlParams().code;
     $.ajax({
@@ -13,7 +7,9 @@ function requestToken(){
       success: function(data){
         var test = {data};
         if(test.data.ok) {
-            addProfile(test);
+            //sessionStorage.access_token = test.data.access_token;
+            sessionStorage.setItem("access_token", test.data.access_token);
+            window.location.href = "index.html";
         } else {
             window.location.href = "login.html";
         }
@@ -86,42 +82,6 @@ function getAllUrlParams(url) {
 
   return obj;
 }
-
-function addProfile(profiledata){
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth()+1; //January is 0!
-    var yyyy = today.getFullYear();
-
-    if(dd<10) {
-        dd = '0'+dd
-    } 
-
-    if(mm<10) {
-        mm = '0'+mm
-    } 
-
-    today = mm + '/' + dd + '/' + yyyy;
-    $.ajax({
-            type: 'POST',
-            url: "/infosupportAPI/services/rest/profiles",
-            contentType: "application/json",
-            data: JSON.stringify({
-                "name": profiledata.data.user.name,
-                "date_joined": today,
-                "access_token": profiledata.data.access_token
-            }),
-            success: function () {
-                window.location.href = "index.html";
-            },
-            error: function (request) {
-                alert(request.responseText);
-            }
-        });
-}
-
-
-
 
 
 

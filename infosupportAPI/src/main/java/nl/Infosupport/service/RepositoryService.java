@@ -29,14 +29,14 @@ public interface RepositoryService {
      * @param profileId the id of the specific profile
      * @return profile with specified id
      */
-    Profile getProfileFromId(int profileId);
+    Profile getProfileFromId(String profileId);
     
     
     /**
      * add a profile
      * @param profile profile to be added
      */
-    Boolean addProfile(Profile profile);  
+    Profile addProfile(Profile profile);  
     
     /**
      * edit a profile

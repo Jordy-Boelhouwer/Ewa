@@ -1,6 +1,7 @@
 $( document ).ready(function() {
 getPosts(); 
-getSlackUser();
+getCurrentUser();
+$('#addPost').click(submitForm);
 });
 
 function getPosts(){
@@ -18,30 +19,30 @@ function getPosts(){
         $(window).scrollTop(scroll);
         },
         error: function(request){
-          alert(request.responseText + 'door getposts');
-          alert('error loading messages');
+          console.log(request.responseText + 'door getposts');
         }
     });
 };
 
-$('#addPost').on('click', function (e) {
-        $.ajax({
-            type: 'POST',
-            url: "/infosupportAPI/services/rest/profiles/1/posts",
-            contentType: "application/json",
-            data: JSON.stringify({
-                "title": $('#newPostTitle').val(),
-                "content": $('#newPost').val(),
-            }),
-            dataType: "text",
-            success: function (data, textStatus, jqXHR) {
-                      getPosts();
-            },
-            error: function (request) {
-                alert(request.responseText);
-            }
-        });
-});
+//$('#addPost').on('click', function (e) {
+//        $.ajax({
+//            type: 'POST',
+//            url: "/infosupportAPI/services/rest/profiles/" + sessionStorage.id + "/posts",
+//            contentType: "application/json",
+//            data: JSON.stringify({
+//                "title": $('#newPostTitle').val(),
+//                "content": $('#newPost').val(),
+//            }),
+//            dataType: "text",
+//            success: function () {
+//                      getPosts();
+//                      sendNotification();
+//            },
+//            error: function (request) {
+//                alert(request.responseText);
+//            }
+//        });
+//});
 
     $('#addLike').on('click', function(){
       $.ajax({
@@ -191,15 +192,74 @@ function append(data) {
     return;
 };
 
-function getSlackUser() {
-    let url="https://slack.com/api/users.identity?token=xoxp-288788460883-289005432293-290997151330-4930cfd22d5c074565f5efd33030bb8b";
+function addProfile(profiledata){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if(dd<10) {
+        dd = '0'+dd;
+    } 
+
+    if(mm<10) {
+        mm = '0'+mm;
+    } 
+
+    today = mm + '/' + dd + '/' + yyyy;
+    $.ajax({
+            type: 'POST',
+            url: "/infosupportAPI/services/rest/profiles",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "id": profiledata.data.user.id,
+                "name": profiledata.data.user.name,
+                "date_joined": today,
+                "access_token": sessionStorage.access_token
+            }),
+            success: function () {
+            },
+            error: function (request) {
+                alert(request.responseText);
+            }
+        });
+}
+
+function checkIfUserExists(){
+    let url="/infosupportAPI/services/rest/profiles";
     $.ajax({
       type: 'GET',
       url: url,
       dataType:'json',
       success: function(data){
+            for (i = 0; i < data.length; i++) { 
+                if(data[i].access_token === sessionStorage.access_token){
+                    console.log("gevonden!");
+                    return true;
+                }
+            }
+            return false;
+        },
+        error: function(request){
+          console.log(request.responseText);
+        }
+    });
+}
+
+function getCurrentUser() {
+    let url="https://slack.com/api/users.identity?token=" + sessionStorage.access_token;
+    $.ajax({
+      type: 'GET',
+      url: url,
+      dataType:'json',
+      success: function(data){
+        sessionStorage.name = data.user.name;
+        sessionStorage.id = data.user.id;
         var test = {data};
-        console.log(data);
+        if(checkIfUserExists() === false){
+            addProfile(test);
+        }
+        console.log(test);
         },
         error: function(request){
           alert(request.responseText + 'door requestToken');
@@ -207,4 +267,53 @@ function getSlackUser() {
         }
     });
 }
+
+function sendNotification() {
+    let url="https://hooks.slack.com/services/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";
+    $.ajax({
+            type: 'POST',
+            url: url,
+            data: JSON.stringify({
+                "text": sessionStorage.name +" has uploaded a new article! Check it <http://localhost:8080/infosupportAPI/login.html|here>"
+            }),
+            success: function () {
+                console.log("slack heeft het gehoord!");
+            },
+            error: function (request) {
+                alert(request.responseText);
+            }
+        });
+}
+
+function submitForm() {
+  var file = $('#image')[0].files[0];
+  
+  var formData = new FormData();
+  formData.append('title', $('#newPostTitle').val());
+  formData.append('content', $('#newPost').val());
+  formData.append('image', file);
+  $.ajax({
+      url: "/infosupportAPI/services/rest/profiles/" + sessionStorage.id + "/posts",
+      type: 'POST',
+      xhr: function() {  // Custom XMLHttpRequest
+        var myXhr = $.ajaxSettings.xhr();
+        return myXhr;
+      },
+      // beforeSend: beforeSendHandler,
+      success: function(data) {
+        sendNotification();
+      },
+      error: function(request){
+          console.log(request.responseText + 'door getposts');
+        },
+      // Form data
+      data: formData,
+      //Options to tell jQuery not to process data or worry about content-type.
+      cache: false,
+      contentType: false,
+      processData: false
+    });
+}
+
+
 

@@ -14,10 +14,12 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 /**
  *
@@ -27,8 +29,7 @@ import javax.persistence.OneToMany;
 public class Profile implements Serializable {
 
     @Id
-    @GeneratedValue
-    private int id;
+    private String id;
 
     private String name;
 
@@ -40,9 +41,11 @@ public class Profile implements Serializable {
     
     private String access_token;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,
+    @OneToMany(cascade = CascadeType.ALL, 
+            orphanRemoval = true, 
             fetch = FetchType.EAGER)
     @JoinColumn(name = "profile_id")
+    @JsonManagedReference 
     private List<Post> posts;
 
     public Profile() {
@@ -50,17 +53,19 @@ public class Profile implements Serializable {
 
     /**
      *
+     * @param id id of the user
      * @param name name of the user
      * @param access_token access token provided by Slack
      * @param date_joined Date the profile was created
      */
-    public Profile(String name,
+    public Profile(String id, String name,
             String date_joined, 
             String access_token) {
-        setName(name);
+        this.id = id;
+        this.name = name;
         setDate_joined();
-        setAccess_token(access_token);
-        setPosts(new ArrayList<Post>());
+        this.access_token = access_token;
+        this.posts = new ArrayList<>();
     }
 
     /**
@@ -68,7 +73,7 @@ public class Profile implements Serializable {
      *
      * @return id of profile
      */
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -77,7 +82,7 @@ public class Profile implements Serializable {
      *
      * @param id id for profile
      */
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

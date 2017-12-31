@@ -12,7 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 /**
  *
@@ -28,14 +30,14 @@ public class SubComment implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
-    @JsonIgnore
+    @JsonBackReference
     private Comment comment;
 
     public SubComment() {
     }
 
     public SubComment(String content) {
-        setContent(content);
+        this.content = content;
     }
 
     public int getId() {
@@ -44,10 +46,6 @@ public class SubComment implements Serializable {
 
     public String getContent() {
         return content;
-    }
-
-    public Comment getComment() {
-        return comment;
     }
 
     public void setId(int id) {
