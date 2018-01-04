@@ -16,9 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
 /**
@@ -26,7 +24,6 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
  * @author Jordy
  */
 @Entity
-@Table(name = "comment")
 public class Comment implements Serializable {
     @Id
     @GeneratedValue
@@ -39,10 +36,15 @@ public class Comment implements Serializable {
     @JsonBackReference
     private Post post;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_id")
+    @JsonBackReference
+    private Profile profile;
+    
     @OneToMany(cascade = CascadeType.ALL, 
             orphanRemoval = true, 
-            fetch = FetchType.EAGER)
-    @JoinColumn(name = "comment_id")
+            fetch = FetchType.EAGER,
+            mappedBy="comment")
     @JsonManagedReference
     private List<SubComment> subComments;
     
@@ -56,8 +58,8 @@ public class Comment implements Serializable {
      * @param content
      */
     public Comment(String content){
-        this.content = content;
-        this.subComments = new ArrayList<>();
+        setContent(content);
+        setSubComments();
     }
 
     /**
@@ -104,12 +106,20 @@ public class Comment implements Serializable {
         return subComments;
     }
 
+    public void setSubComments() {
+        this.subComments = new ArrayList<>();
+    }
+
     public void setSubComments(List<SubComment> subComments) {
         this.subComments = subComments;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
     
     public void addSubComment(SubComment s){
         s.setComment(this);
-        getSubComments().add(s);
+        this.subComments.add(s);
     }
 }

@@ -17,6 +17,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 public class App extends ResourceConfig {
     public App() {
         register(MultiPartFeature.class);
-        packages("nl.Infosupport.rest.resource");
+        packages("nl.Infosupport");
     }
 }

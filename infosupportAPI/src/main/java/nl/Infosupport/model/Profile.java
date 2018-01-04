@@ -6,19 +6,15 @@
 package nl.Infosupport.model;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
-import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
 /**
@@ -40,13 +36,36 @@ public class Profile implements Serializable {
     private String job;
     
     private String access_token;
+    
+    private String image;
 
     @OneToMany(cascade = CascadeType.ALL, 
             orphanRemoval = true, 
-            fetch = FetchType.EAGER)
-    @JoinColumn(name = "profile_id")
+            fetch = FetchType.EAGER,
+            mappedBy="profile")
     @JsonManagedReference 
     private List<Post> posts;
+    
+    @OneToMany(cascade = CascadeType.ALL, 
+            orphanRemoval = true, 
+            fetch = FetchType.EAGER,
+            mappedBy="profile")
+    @JsonManagedReference 
+    private List<Vote> votes;
+    
+    @OneToMany(cascade = CascadeType.ALL, 
+            orphanRemoval = true, 
+            fetch = FetchType.EAGER,
+            mappedBy="profile")
+    @JsonManagedReference 
+    private List<Comment> comments;
+    
+    @OneToMany(cascade = CascadeType.ALL, 
+            orphanRemoval = true, 
+            fetch = FetchType.EAGER,
+            mappedBy="profile")
+    @JsonManagedReference 
+    private List<SubComment> subComments;
 
     public Profile() {
     }
@@ -60,12 +79,17 @@ public class Profile implements Serializable {
      */
     public Profile(String id, String name,
             String date_joined, 
-            String access_token) {
-        this.id = id;
-        this.name = name;
-        setDate_joined();
-        this.access_token = access_token;
-        this.posts = new ArrayList<>();
+            String access_token,
+            String image) {
+        setId(id);
+        setName(name);
+        setDate_joined(date_joined);
+        setAccess_token(access_token);
+        setImage(image);
+        setPosts(new ArrayList<Post>());
+        setVotes(new ArrayList<Vote>());
+        setComments(new ArrayList<Comment>());
+        setSubComments(new ArrayList<SubComment>());
     }
 
     /**
@@ -94,6 +118,8 @@ public class Profile implements Serializable {
     public String getBio() {
         return bio;
     }
+    
+    
 
     /**
      * Set the bio of the profile
@@ -111,12 +137,6 @@ public class Profile implements Serializable {
      */
     public String getDate_joined() {
         return date_joined;
-    }
-
-    public void setDate_joined() {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = new Date();
-        this.date_joined = dateFormat.format(date);
     }
 
     /**
@@ -145,24 +165,6 @@ public class Profile implements Serializable {
         this.name = name;
     }
 
-    /**
-     * Get posts from profile
-     *
-     * @return posts
-     */
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    /**
-     * Set the list of posts
-     *
-     * @param posts The list op posts
-     */
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
-
     public String getAccess_token() {
         return access_token;
     }
@@ -171,13 +173,72 @@ public class Profile implements Serializable {
         this.access_token = access_token;
     }
 
+    public void setDate_joined(String date_joined) {
+        this.date_joined = date_joined;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public List<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public List<SubComment> getSubComments() {
+        return subComments;
+    }
+
+    public void setSubComments(List<SubComment> subComments) {
+        this.subComments = subComments;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String profileImage) {
+        this.image = profileImage;
+    }
+    
     /**
      * Add the post to the list
      *
      * @param p The post to be added
      */
     public void addPost(Post p) {
-        getPosts().add(p);
+        this.posts.add(p);
         p.setProfile(this);
-    }    
+    }  
+    
+    public void addProfileVote(Vote v) {
+        this.votes.add(v);
+        v.setProfile(this);
+    }
+    
+    public void addComment(Comment c) {
+        this.comments.add(c);
+        c.setProfile(this);
+    }
+    
+    public void addSubComment(SubComment s) {
+        this.subComments.add(s);
+        s.setProfile(this);
+    }
 }

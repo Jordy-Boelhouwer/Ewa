@@ -19,7 +19,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
 /**
@@ -36,8 +35,6 @@ public class Post implements Serializable {
     
     private String content;
     
-    private int votes;
-    
     @Lob
     @Column(columnDefinition="longblob")
     private byte[] image;
@@ -49,10 +46,17 @@ public class Post implements Serializable {
     
     @OneToMany(cascade = CascadeType.ALL, 
             orphanRemoval = true, 
-            fetch = FetchType.EAGER)
-    @JoinColumn(name = "post_id")
+            fetch = FetchType.EAGER,
+            mappedBy="post")
     @JsonManagedReference
     private List<Comment> comments;
+    
+    @OneToMany(cascade = CascadeType.ALL, 
+            orphanRemoval = true, 
+            fetch = FetchType.EAGER,
+            mappedBy="post")
+    @JsonManagedReference 
+    private List<Vote> votes;
     
     /**
      * No argument post constructor
@@ -65,16 +69,17 @@ public class Post implements Serializable {
      * @param content
      */
     public Post(String title, String content){
-        this.title = title;
-        this.content = content;
-        this.comments = new ArrayList<>();
-        this.votes = 0;
+        setTitle(title);
+        setContent(content);
+        setComments();
+        setVotes();
     }
 
     public Post(String title, String content, byte[] image) {
-        this.title = title;
-        this.content = content;
-        this.image = image;
+        setTitle(title);
+        setContent(content);
+        setImage(image);
+        setVotes();
     }
 
     /**
@@ -134,43 +139,36 @@ public class Post implements Serializable {
         this.content = content;
     }
 
-    /**
-     * Get list of comments from post
-     * @return comments
-     */
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    /**
-     * Set the list of comments for post
-     * @param comments
-     */
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
-
-    /**
-     * Get the votes from a profile
-     * @return votes
-     */
-    public int getVotes() {
-        return votes;
-    }
-
-    /**
-     * Set the votes for a profile
-     */
-    public void setVotes() {
-        votes = 0;
-    }
-
     public byte[] getImage() {
         return image;
     }
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments() {
+        this.comments = new ArrayList<>();
+    }
+
+    public List<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes() {
+        this.votes = new ArrayList<>();
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
     }
     
     /**
@@ -179,6 +177,11 @@ public class Post implements Serializable {
      */
     public void addComment(Comment c){
         c.setPost(this);
-        getComments().add(c);
+        this.comments.add(c);
+    }
+    
+    public void addPostVote(Vote v) {
+        v.setPost(this);
+        this.votes.add(v);
     }
 }

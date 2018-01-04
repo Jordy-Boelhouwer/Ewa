@@ -192,7 +192,8 @@ function append(data) {
     return;
 };
 
-function addProfile(profiledata){
+function addProfile(){
+    console.log("aan het opslaan");
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
@@ -212,12 +213,14 @@ function addProfile(profiledata){
             url: "/infosupportAPI/services/rest/profiles",
             contentType: "application/json",
             data: JSON.stringify({
-                "id": profiledata.data.user.id,
-                "name": profiledata.data.user.name,
+                "id": sessionStorage.id,
+                "name": sessionStorage.name,
                 "date_joined": today,
-                "access_token": sessionStorage.access_token
+                "access_token": sessionStorage.access_token,
+                "image": sessionStorage.image
             }),
             success: function () {
+                console.log("opgeslagen!");
             },
             error: function (request) {
                 alert(request.responseText);
@@ -226,19 +229,29 @@ function addProfile(profiledata){
 }
 
 function checkIfUserExists(){
+    console.log("begin met checken");
+    console.log(sessionStorage.id);
+    console.log(sessionStorage.name);
+    console.log(sessionStorage.image);
     let url="/infosupportAPI/services/rest/profiles";
     $.ajax({
       type: 'GET',
       url: url,
       dataType:'json',
       success: function(data){
+          if(data && data.length){
             for (i = 0; i < data.length; i++) { 
                 if(data[i].access_token === sessionStorage.access_token){
                     console.log("gevonden!");
-                    return true;
+                } else {
+                    console.log("niet gevonden");
+                    addProfile();
                 }
             }
-            return false;
+          } else {
+              console.log("geen profielen opgeslagen");
+              addProfile();
+          }
         },
         error: function(request){
           console.log(request.responseText);
@@ -253,13 +266,14 @@ function getCurrentUser() {
       url: url,
       dataType:'json',
       success: function(data){
+        console.log(data.user.name);
         sessionStorage.name = data.user.name;
+        console.log(sessionStorage.name);
         sessionStorage.id = data.user.id;
+        sessionStorage.image = data.user.image_192;
         var test = {data};
-        if(checkIfUserExists() === false){
-            addProfile(test);
-        }
         console.log(test);
+        checkIfUserExists();
         },
         error: function(request){
           alert(request.responseText + 'door requestToken');

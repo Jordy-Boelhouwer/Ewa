@@ -6,7 +6,6 @@
 package nl.Infosupport.service.impl;
 
 import java.util.List;
-import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
@@ -16,6 +15,7 @@ import nl.Infosupport.model.Comment;
 import nl.Infosupport.model.Post;
 import nl.Infosupport.model.Profile;
 import nl.Infosupport.model.SubComment;
+import nl.Infosupport.model.Vote;
 import nl.Infosupport.service.RepositoryService;
 
 /**
@@ -38,9 +38,6 @@ public class RepositoryServiceImpl implements RepositoryService {
     public static RepositoryService getInstance() {
         return instance;
     }
-
-    // An attribute that stores all cards (in memory)
-    private Map<Integer, Profile> elements;
 
     private RepositoryServiceImpl() {
         entityManagerFactory = Persistence.createEntityManagerFactory("infosupportPU");
@@ -94,6 +91,23 @@ public class RepositoryServiceImpl implements RepositoryService {
         em.close();
 
         return post;
+    }
+    
+    @Override
+    public Vote addVote(Profile profile, Post post, Vote vote) {
+        profile.addProfileVote(vote);
+        post.addPostVote(vote);
+        
+        EntityManager em = getEntityManager();
+
+        em.getTransaction().begin();
+        em.persist(vote);
+        em.getTransaction().commit();
+
+        em.close();
+
+        return vote;
+        
     }
 
     @Override
@@ -158,7 +172,7 @@ public class RepositoryServiceImpl implements RepositoryService {
         query.setParameter("postId", post.getId());
         query.setParameter("id", commentId);
 
-        Comment comment = null;
+        Comment comment;
         try {
             comment = (Comment) query.getSingleResult();
         } catch (NoResultException e) {
@@ -169,24 +183,55 @@ public class RepositoryServiceImpl implements RepositoryService {
 
         return comment;
     }
-
+    
     @Override
-    public int getVotesFromPost(int postId) {
+    public long getVotesCount(Post post) {
         EntityManager em = getEntityManager();
-
-        Query query = em.createQuery("SELECT p.votes FROM Post p WHERE p.id = :postId");
-
-        query.setParameter("postId", postId);
-
-        int votes = 0;
+        
+        Query query = em.createQuery("SELECT sum(v.voted) FROM Vote v WHERE v.post.id = :postId");
+        
+        query.setParameter("postId", post.getId());
+        
+        long votes;
         try {
-            votes = (int) query.getSingleResult();
+            votes = (long) query.getSingleResult();
         } catch (NoResultException e) {
             votes = 0;
         }
 
         em.close();
+        
+        return votes;
+    }
+    
+    @Override
+    public List<Vote> getVotesFromPost(Post post) {
+        EntityManager em = getEntityManager();
+        
+        Query query = em.createQuery("SELECT v FROM Vote v WHERE v.post.id = :postId");
+        
+        query.setParameter("postId", post.getId());
+        
+        List<Vote> votes = query.getResultList();
 
+
+        em.close();
+        
+        return votes;
+    }
+    
+    @Override
+    public List<Vote> getVotesFromProfile(Profile profile) {
+        EntityManager em = getEntityManager();
+        
+        Query query = em.createQuery("SELECT v FROM Vote v WHERE v.profile.id = :profileId");
+        
+        query.setParameter("profileId", profile.getId());
+        
+        List<Vote> votes = query.getResultList();
+
+        em.close();
+        
         return votes;
     }
 
@@ -228,8 +273,9 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public Comment addComment(Post post, Comment comment) {
+    public Comment addComment(Profile profile, Post post, Comment comment) {
         post.addComment(comment);
+        profile.addComment(comment);
 
         EntityManager em = getEntityManager();
 
@@ -243,8 +289,9 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public SubComment addSubComment(Comment comment, SubComment subComment) {
+    public SubComment addSubComment(Profile profile, Comment comment, SubComment subComment) {
         comment.addSubComment(subComment);
+        profile.addSubComment(subComment);
 
         EntityManager em = getEntityManager();
 
@@ -255,28 +302,6 @@ public class RepositoryServiceImpl implements RepositoryService {
         em.close();
 
         return subComment;
-    }
-
-    @Override
-    public void addUpvote(Post post) {
-        EntityManager em = getEntityManager();
-        Query query = em.createQuery("UPDATE Post p set p.votes = p.votes + 1 WHERE p.id = :postId");
-        query.setParameter("postId", post.getId());
-        em.getTransaction().begin();
-        query.executeUpdate();
-        em.getTransaction().commit();
-        em.close();
-    }
-
-    @Override
-    public void addDownVote(Post post) {
-        EntityManager em = getEntityManager();
-        Query query = em.createQuery("UPDATE Post p set p.votes = p.votes - 1 WHERE p.id = :postId");
-        query.setParameter("postId", post.getId());
-        em.getTransaction().begin();
-        query.executeUpdate();
-        em.getTransaction().commit();
-        em.close();
     }
 
     @Override

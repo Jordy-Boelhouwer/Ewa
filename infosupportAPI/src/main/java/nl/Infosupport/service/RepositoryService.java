@@ -10,6 +10,7 @@ import nl.Infosupport.model.Comment;
 import nl.Infosupport.model.Post;
 import nl.Infosupport.model.Profile;
 import nl.Infosupport.model.SubComment;
+import nl.Infosupport.model.Vote;
 
 /**
  *
@@ -35,11 +36,13 @@ public interface RepositoryService {
     /**
      * add a profile
      * @param profile profile to be added
+     * @return 
      */
     Profile addProfile(Profile profile);  
     
     /**
      * edit a profile
+     * @param updatedProfile
      * @param profile Profile to be added
      * @return profile
      */
@@ -54,12 +57,28 @@ public interface RepositoryService {
     Post addPost(Profile profile, Post post);
     
     /**
+     * Add vote
+     * @param profile profile that has voted
+     * @param post post that is voted on
+     * @param vote vote to be added
+     * @return vote
+     */
+    Vote addVote(Profile profile, Post post, Vote vote);
+    
+    long getVotesCount(Post post);
+    
+    List<Vote> getVotesFromPost(Post post);
+    
+    List<Vote> getVotesFromProfile(Profile profile);
+    
+    /**
      * Add a comment to a post
+     * @param profile writer of the comment
      * @param post Post to add the comment to
      * @param comment Comment to add
      * @return
      */
-    Comment addComment(Post post, Comment comment);
+    Comment addComment(Profile profile, Post post, Comment comment);
     
     /**
      * Add a subcomment to a comment
@@ -68,7 +87,7 @@ public interface RepositoryService {
      * @param subComment subcomment to add
      * @return
      */
-    SubComment addSubComment(Comment comment, SubComment subComment);
+    SubComment addSubComment(Profile profile, Comment comment, SubComment subComment);
     
     /**
      * Get posts from a profile
@@ -101,10 +120,4 @@ public interface RepositoryService {
     Comment getCommentOfPost(Post post, int commentId);
     
     List<SubComment> getSubCommentsOfComment(Comment comment);
-    
-    void addUpvote(Post post);
-    
-    void addDownVote(Post post);
-    
-    int getVotesFromPost(int postId);
 }

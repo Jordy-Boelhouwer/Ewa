@@ -38,6 +38,9 @@ public class PostResource {
 
     private final RepositoryService service;
 
+    /**
+     * Constructor which initializes RepositoryService
+     */
     public PostResource() {
         service = RepositoryServiceImpl.getInstance();
     }
@@ -122,23 +125,13 @@ public class PostResource {
     }
 
     /**
-     * Get the votes from a post
-     *
-     * @param postId id of the post
-     * @return votes
-     */
-    @GET
-    @Path("/{postId}/votes")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getVotes(@PathParam("postId") int postId) {
-        int votes = service.getVotesFromPost(postId);
-        return Response.status(Response.Status.OK).entity(votes).build();
-    }
-
-    /**
      * Add a post
      *
      * @param profileId
+     * @param title
+     * @param content
+     * @param uploadedInputStream
+     * @param fileDetail
      * @param post
      * @return A response, either a client error or a 200 message
      */
@@ -158,54 +151,6 @@ public class PostResource {
 //
 //        return Response.status(Response.Status.CREATED).entity(p).build();
 //    }
-
-    @POST
-    @Path("/{postId}/upvote")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response UpVote(@PathParam("profileId") String profileId, @PathParam("postId") int postId) {
-        Profile profile = service.getProfileFromId(profileId);
-
-        if (profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Profile not found for id " + profileId)).build();
-        }
-
-        Post post = service.getPostOffProfile(profile, postId);
-
-        if (post == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Post not found for id " + postId)).build();
-        }
-
-        service.addUpvote(post);
-
-        return Response.status(Response.Status.OK).build();
-
-    }
-
-    @POST
-    @Path("/{postId}/downvote")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response DownVote(@PathParam("profileId") String profileId, @PathParam("postId") int postId) {
-        Profile profile = service.getProfileFromId(profileId);
-
-        if (profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Profile not found for id " + profileId)).build();
-        }
-
-        Post post = service.getPostOffProfile(profile, postId);
-
-        if (post == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Post not found for id " + postId)).build();
-        }
-
-        service.addDownVote(post);
-        return Response.status(Response.Status.OK).build();
-    }
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -240,7 +185,8 @@ public class PostResource {
         } catch (IOException e) {
         }
      
-        Post post = new Post(title, content, bFile);
+        Post post = new Post(title, content);
+        post.setImage(bFile);
 
         Post p = service.addPost(profile, post);
 
@@ -292,5 +238,14 @@ public class PostResource {
     @Path("/{postId}/comments")
     public CommentResource getComments() {
         return new CommentResource();
+    }
+    
+    /**
+     * Create a vote sub-resource
+     * @return
+     */
+    @Path("/{postId}/votes")
+    public VoteResource getVotes() {
+        return new VoteResource();
     }
 }

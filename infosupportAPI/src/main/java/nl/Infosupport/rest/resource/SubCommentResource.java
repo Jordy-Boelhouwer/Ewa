@@ -8,6 +8,7 @@ package nl.Infosupport.rest.resource;
 import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -74,13 +75,18 @@ public class SubCommentResource {
      * @param profileId The profile which created the post
      * @param postId The post with comments
      * @param commentId The id of the comment to add a subcomment to
+     * @param writerId
      * @param subComment The subcomment to add
      * @return
      */
     @POST
+    @Path("/{writer}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addSubComment(@PathParam("profileId") String profileId, @PathParam("postId") int postId, 
-            @PathParam("commentId") int commentId, SubComment subComment) {
+    public Response addSubComment(@PathParam("profileId") String profileId, 
+            @PathParam("postId") int postId, 
+            @PathParam("commentId") int commentId, 
+            @PathParam("writer") String writerId,
+            SubComment subComment) {
         Profile profile = service.getProfileFromId(profileId);
         
         if(profile == null){
@@ -102,7 +108,9 @@ public class SubCommentResource {
                     entity(new ClientError("Comment not found for id " + commentId)).build();
         }
         
-        SubComment s = service.addSubComment(comment, subComment);
+        Profile writer = service.getProfileFromId(writerId);
+        
+        SubComment s = service.addSubComment(writer, comment, subComment);
         //comment.addSubComment(subComment);
         
         return Response.status(Response.Status.CREATED).entity(s).build();
