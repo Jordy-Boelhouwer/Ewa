@@ -59,7 +59,7 @@ public class Comment implements Serializable {
      */
     public Comment(String content){
         setContent(content);
-        setSubComments();
+        setSubComments(new ArrayList<SubComment>());
     }
 
     /**
@@ -104,10 +104,6 @@ public class Comment implements Serializable {
 
     public List<SubComment> getSubComments() {
         return subComments;
-    }
-
-    public void setSubComments() {
-        this.subComments = new ArrayList<>();
     }
 
     public void setSubComments(List<SubComment> subComments) {

@@ -307,11 +307,9 @@ public class RepositoryServiceImpl implements RepositoryService {
     @Override
     public void editProfile(Profile updatedProfile, Profile profile) {
         EntityManager em = getEntityManager();
-        Query query = em.createQuery("UPDATE Profile p set p.name = :name, "
-                + " p.bio = :bio, p.job = :job, "
-                + "p.username = :user, p.password = :pass "
+        Query query = em.createQuery("UPDATE Profile p set p.bio = :bio, "
+                + "p.job = :job "
                 + "WHERE p.id = :profileId");
-        query.setParameter("name", profile.getName());
         query.setParameter("bio", profile.getBio());
         query.setParameter("job", profile.getJob());
         query.setParameter("profileId", updatedProfile.getId());

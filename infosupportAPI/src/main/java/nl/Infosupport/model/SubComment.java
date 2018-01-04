@@ -42,7 +42,7 @@ public class SubComment implements Serializable {
     }
 
     public SubComment(String content) {
-        this.content = content;
+        setContent(content);
     }
 
     public int getId() {
