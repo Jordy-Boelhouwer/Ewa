@@ -70,22 +70,7 @@ public class VoteResource {
     @Path("/count")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getVotesCount(@PathParam("profileId") String profileId, @PathParam("postId") int postId) {
-        Profile profile = service.getProfileFromId(profileId);
-
-        if (profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("resource " + profileId + " not found")).build();
-        }
-        
-        Post post = service.getPostOffProfile(profile, postId);
-        
-        if (post == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("resource " + postId + " not found")).build();
-        }
-        
-        long voteCount = service.getVotesCount(post);
-
+        long voteCount = service.getVotesCount(postId);
         return Response.status(Response.Status.OK).entity(voteCount).build();
     }
     
@@ -93,15 +78,7 @@ public class VoteResource {
     @Path("/getPostVotes")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getVotesFromPosts(@PathParam("postId") int postId) {        
-        Post post = service.getPostFromId(postId);
-        
-        if (post == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("resource " + postId + " not found")).build();
-        }
-        
-        List<Vote> votes = service.getVotesFromPost(post);
-
+        List<Vote> votes = service.getVotesFromPost(postId);
         return Response.status(Response.Status.OK).entity(votes).build();
     }
     
@@ -109,15 +86,7 @@ public class VoteResource {
     @Path("/getProfileVotes")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getVotesFromProfile(@PathParam("profileId") String profileId) {
-        Profile profile = service.getProfileFromId(profileId);
-
-        if (profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("resource " + profileId + " not found")).build();
-        }
-        
-        List<Vote> votes = service.getVotesFromProfile(profile);
-
+        List<Vote> votes = service.getVotesFromProfile(profileId);
         return Response.status(Response.Status.OK).entity(votes).build();
     }
 }

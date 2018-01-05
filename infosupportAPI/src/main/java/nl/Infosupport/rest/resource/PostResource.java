@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -28,6 +30,7 @@ import nl.Infosupport.service.RepositoryService;
 import nl.Infosupport.service.impl.RepositoryServiceImpl;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import sun.misc.IOUtils;
 
 /**
  * The Post REST resource Note that this is a sub-resource of Profile
@@ -54,14 +57,7 @@ public class PostResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllPosts(@PathParam("profileId") String profileId) {
-        Profile profile = service.getProfileFromId(profileId);
-
-        if (profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("resource " + profileId + " not found")).build();
-        }
-
-        List<Post> posts = service.getPostsOffProfile(profile);
+        List<Post> posts = service.getPostsOffProfile(profileId);
 
         return Response.status(Response.Status.OK).entity(posts).build();
     }
@@ -80,16 +76,7 @@ public class PostResource {
             @PathParam("profileId") String profileId,
             @PathParam("postId") int postId) {
         Response resp;
-
-        //Getting the profile
-        Profile profile = service.getProfileFromId(profileId);
-
-        if (profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Profile not found for id " + profileId)).build();
-        }
-
-        Post post = service.getPostOffProfile(profile, postId);
+        Post post = service.getPostOffProfile(profileId, postId);
 
         if (post == null) {
             resp = Response.status(Response.Status.NOT_FOUND).
@@ -124,34 +111,6 @@ public class PostResource {
         return Response.status(Response.Status.OK).entity(profile.getName()).build();
     }
 
-    /**
-     * Add a post
-     *
-     * @param profileId
-     * @param title
-     * @param content
-     * @param uploadedInputStream
-     * @param fileDetail
-     * @param post
-     * @return A response, either a client error or a 200 message
-     */
-//    @POST
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response addPost(@PathParam("profileId") String profileId, Post post
-//    ) {
-//        Profile profile = service.getProfileFromId(profileId);
-//
-//        if (profile == null) {
-//            return Response.status(Response.Status.NOT_FOUND).
-//                    entity(new ClientError("Profile not found for id " + profileId)).build();
-//        }
-//
-//        Post p = service.addPost(profile, post);
-//
-//        return Response.status(Response.Status.CREATED).entity(p).build();
-//    }
-
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
@@ -167,22 +126,13 @@ public class PostResource {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Profile not found for id " + profileId)).build();
         }
-
-        String uploadedFileLocation = "D:\\" + fileDetail.getFileName();
-
-        writeToFile(uploadedInputStream, uploadedFileLocation);
         
         //save image into database
-    	File file = new File(uploadedFileLocation);
-        byte[] bFile = new byte[(int) file.length()];
-        
+        byte[] bFile = null;
         try {
-            //convert file into array of bytes
-            try (FileInputStream fileInputStream = new FileInputStream(file)) {
-                //convert file into array of bytes
-                fileInputStream.read(bFile);
-            }
-        } catch (IOException e) {
+            bFile = getBytesFromInputStream(uploadedInputStream);
+        } catch (IOException ex) {
+            Logger.getLogger(PostResource.class.getName()).log(Level.SEVERE, null, ex);
         }
      
         Post post = new Post(title, content);
@@ -193,19 +143,19 @@ public class PostResource {
         return Response.status(Response.Status.CREATED).entity(p).build();
     }
 
-//    private byte[] getBytesFromInputStream(InputStream is) throws IOException {
-//        try (ByteArrayOutputStream os = new ByteArrayOutputStream();) {
-//            byte[] buffer = new byte[0xFFFF];
-//
-//            for (int len; (len = is.read(buffer)) != -1;) {
-//                os.write(buffer, 0, len);
-//            }
-//
-//            os.flush();
-//
-//            return os.toByteArray();
-//        }
-//    }
+    private byte[] getBytesFromInputStream(InputStream is) throws IOException {
+        try (ByteArrayOutputStream os = new ByteArrayOutputStream();) {
+            byte[] buffer = new byte[0xFFFF];
+
+            for (int len; (len = is.read(buffer)) != -1;) {
+                os.write(buffer, 0, len);
+            }
+
+            os.flush();
+
+            return os.toByteArray();
+        }
+    }
 
     // save uploaded file to new location
     private void writeToFile(InputStream uploadedInputStream,

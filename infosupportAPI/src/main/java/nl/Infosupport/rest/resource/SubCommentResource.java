@@ -33,18 +33,14 @@ public class SubCommentResource {
     
     /**
      *
-     * @param postId
      * @param commentId
      * @return
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllSubComments(@PathParam("commentId") int commentId){      
-        Comment comment = service.getCommentFromId(commentId);
-        
         //Retrieving the comments
-        List<SubComment> subComments = service.getSubCommentsOfComment(comment);
-        
+        List<SubComment> subComments = service.getSubCommentsOfComment(commentId);
         return Response.status(Response.Status.OK).entity(subComments).build();
     }
     

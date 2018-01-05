@@ -73,11 +73,11 @@ public interface RepositoryService {
      */
     Vote addVote(Profile profile, Post post, Vote vote);
     
-    long getVotesCount(Post post);
+    long getVotesCount(int postId);
     
-    List<Vote> getVotesFromPost(Post post);
+    List<Vote> getVotesFromPost(int postId);
     
-    List<Vote> getVotesFromProfile(Profile profile);
+    List<Vote> getVotesFromProfile(String profileId);
     
     /**
      * Add a comment to a post
@@ -102,7 +102,7 @@ public interface RepositoryService {
      * @param profile profile to get posts from
      * @return List of posts from profile
      */
-    List<Post> getPostsOffProfile(Profile profile);
+    List<Post> getPostsOffProfile(String profileId);
 
     /**
      * Get single post from profile
@@ -110,14 +110,14 @@ public interface RepositoryService {
      * @param postId id of post to return
      * @return post with specified id
      */
-    Post getPostOffProfile(Profile profile, int postId);
+    Post getPostOffProfile(String profileId, int postId);
     
     /**
      * Get all the comments from a post
      * @param post The post to get the comments from
      * @return List of comments
      */
-    List<Comment> getCommentsOfPost(Post post);
+    List<Comment> getCommentsOfPost(int postId);
     
     /**
      *
@@ -125,7 +125,7 @@ public interface RepositoryService {
      * @param commentId
      * @return
      */
-    Comment getCommentOfPost(Post post, int commentId);
+    Comment getCommentOfPost(int postId, int commentId);
     
-    List<SubComment> getSubCommentsOfComment(Comment comment);
+    List<SubComment> getSubCommentsOfComment(int commentId);
 }

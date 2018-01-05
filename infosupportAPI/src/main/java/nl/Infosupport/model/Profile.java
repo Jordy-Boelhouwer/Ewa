@@ -43,7 +43,6 @@ public class Profile implements Serializable {
             orphanRemoval = true, 
             fetch = FetchType.EAGER,
             mappedBy="profile")
-    @Fetch(FetchMode.JOIN)
     @JsonManagedReference 
     private Set<Post> posts;
     
@@ -51,7 +50,6 @@ public class Profile implements Serializable {
             orphanRemoval = true, 
             fetch = FetchType.EAGER,
             mappedBy="profile")
-    @Fetch(FetchMode.JOIN)
     @JsonManagedReference 
     private Set<Vote> votes;
     
@@ -59,7 +57,6 @@ public class Profile implements Serializable {
             orphanRemoval = true, 
             fetch = FetchType.EAGER,
             mappedBy="profile")
-    @Fetch(FetchMode.JOIN)
     @JsonManagedReference 
     private Set<Comment> comments;
     
@@ -67,7 +64,6 @@ public class Profile implements Serializable {
             orphanRemoval = true, 
             fetch = FetchType.EAGER,
             mappedBy="profile")
-    @Fetch(FetchMode.JOIN)
     @JsonManagedReference 
     private Set<SubComment> subComments;
 
@@ -189,10 +185,6 @@ public class Profile implements Serializable {
         this.posts = posts;
     }
 
-    public Set<Vote> getVotes() {
-        return votes;
-    }
-
     public void setVotes(Set<Vote> votes) {
         this.votes = votes;
     }
@@ -203,10 +195,6 @@ public class Profile implements Serializable {
 
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
-    }
-
-    public Set<SubComment> getSubComments() {
-        return subComments;
     }
 
     public void setSubComments(Set<SubComment> subComments) {

@@ -52,7 +52,6 @@ public class Post implements Serializable {
             orphanRemoval = true, 
             fetch = FetchType.EAGER,
             mappedBy="post")
-    @Fetch(FetchMode.JOIN)
     @JsonManagedReference
     private Set<Comment> comments;
     
@@ -60,7 +59,6 @@ public class Post implements Serializable {
             orphanRemoval = true, 
             fetch = FetchType.EAGER,
             mappedBy="post")
-    @Fetch(FetchMode.JOIN)
     @JsonManagedReference 
     private Set<Vote> votes;
     

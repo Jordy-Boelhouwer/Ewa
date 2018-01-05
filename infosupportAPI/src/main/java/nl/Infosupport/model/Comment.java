@@ -47,7 +47,6 @@ public class Comment implements Serializable {
             orphanRemoval = true, 
             fetch = FetchType.EAGER,
             mappedBy="comment")
-    @Fetch(FetchMode.JOIN)
     @JsonManagedReference
     private Set<SubComment> subComments;
     

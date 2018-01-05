@@ -59,22 +59,40 @@ public class RepositoryServiceImpl implements RepositoryService {
     public Profile getProfileFromId(String profileId) {
         EntityManager em = getEntityManager();
 
-        Profile p = em.find(Profile.class, profileId);
+        Query query = em.createQuery("SELECT p FROM Profile p WHERE p.id = :profileId");
+
+        query.setParameter("profileId", profileId);
+
+        Profile profile;
+        try {
+            profile = (Profile) query.getSingleResult();
+        } catch (NoResultException e) {
+            profile = null;
+        }
 
         em.close();
 
-        return p;
+        return profile;
     }
     
     @Override
     public Post getPostFromId(int postId) {
         EntityManager em = getEntityManager();
 
-        Post p = em.find(Post.class, postId);
+        Query query = em.createQuery("SELECT p FROM Post p WHERE p.id = :postId");
+
+        query.setParameter("postId", postId);
+
+        Post post;
+        try {
+            post = (Post) query.getSingleResult();
+        } catch (NoResultException e) {
+            post = null;
+        }
 
         em.close();
 
-        return p;
+        return post;
     }
     
     
@@ -82,11 +100,20 @@ public class RepositoryServiceImpl implements RepositoryService {
     public Comment getCommentFromId(int commentId) {
         EntityManager em = getEntityManager();
 
-        Comment c = em.find(Comment.class, commentId);
+        Query query = em.createQuery("SELECT c FROM Comment c WHERE c.id = :commentId");
+
+        query.setParameter("commentId", commentId);
+
+        Comment comment;
+        try {
+            comment = (Comment) query.getSingleResult();
+        } catch (NoResultException e) {
+            comment = null;
+        }
 
         em.close();
 
-        return c;
+        return comment;
     }
 
     @Override
@@ -134,13 +161,13 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public List<Post> getPostsOffProfile(Profile profile) {
+    public List<Post> getPostsOffProfile(String profileId) {
         EntityManager em = getEntityManager();
 
         Query query = em.createQuery(
                 "SELECT p FROM Post p WHERE p.profile.id = :profileId");
 
-        query.setParameter("profileId", profile.getId());
+        query.setParameter("profileId", profileId);
 
         List<Post> result = query.getResultList();
 
@@ -150,16 +177,16 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public Post getPostOffProfile(Profile profile, int postId) {
+    public Post getPostOffProfile(String profileId, int postId) {
         EntityManager em = getEntityManager();
 
         Query query = em.createQuery("SELECT p FROM Post p WHERE p.profile.id = :profileId AND"
                 + " p.id = :id");
 
-        query.setParameter("profileId", profile.getId());
+        query.setParameter("profileId", profileId);
         query.setParameter("id", postId);
 
-        Post post = null;
+        Post post;
         try {
             post = (Post) query.getSingleResult();
         } catch (NoResultException e) {
@@ -172,11 +199,11 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public List<Comment> getCommentsOfPost(Post post) {
+    public List<Comment> getCommentsOfPost(int postId) {
         EntityManager em = getEntityManager();
 
         Query query = getEntityManager().createQuery("SELECT c FROM Comment c WHERE c.post.id = :postId");
-        query.setParameter("postId", post.getId());
+        query.setParameter("postId", postId);
 
         List<Comment> comments = query.getResultList();
 
@@ -186,13 +213,13 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public Comment getCommentOfPost(Post post, int commentId) {
+    public Comment getCommentOfPost(int postId, int commentId) {
         EntityManager em = getEntityManager();
 
         Query query = em.createQuery("SELECT c FROM Comment c WHERE c.post.id = :postId AND"
                 + " c.id = :id");
 
-        query.setParameter("postId", post.getId());
+        query.setParameter("postId", postId);
         query.setParameter("id", commentId);
 
         Comment comment;
@@ -208,12 +235,12 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
     
     @Override
-    public long getVotesCount(Post post) {
+    public long getVotesCount(int postId) {
         EntityManager em = getEntityManager();
         
         Query query = em.createQuery("SELECT sum(v.voted) FROM Vote v WHERE v.post.id = :postId");
         
-        query.setParameter("postId", post.getId());
+        query.setParameter("postId", postId);
         
         long votes;
         try {
@@ -228,12 +255,12 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
     
     @Override
-    public List<Vote> getVotesFromPost(Post post) {
+    public List<Vote> getVotesFromPost(int postId) {
         EntityManager em = getEntityManager();
         
         Query query = em.createQuery("SELECT v FROM Vote v WHERE v.post.id = :postId");
         
-        query.setParameter("postId", post.getId());
+        query.setParameter("postId", postId);
         
         List<Vote> votes = query.getResultList();
 
@@ -244,12 +271,12 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
     
     @Override
-    public List<Vote> getVotesFromProfile(Profile profile) {
+    public List<Vote> getVotesFromProfile(String profileId) {
         EntityManager em = getEntityManager();
         
         Query query = em.createQuery("SELECT v FROM Vote v WHERE v.profile.id = :profileId");
         
-        query.setParameter("profileId", profile.getId());
+        query.setParameter("profileId", profileId);
         
         List<Vote> votes = query.getResultList();
 
@@ -259,11 +286,11 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public List<SubComment> getSubCommentsOfComment(Comment comment) {
+    public List<SubComment> getSubCommentsOfComment(int commentId) {
         EntityManager em = getEntityManager();
 
         Query query = getEntityManager().createQuery("SELECT s FROM SubComment s WHERE s.comment.id = :commentId");
-        query.setParameter("commentId", comment.getId());
+        query.setParameter("commentId", commentId);
 
         List<SubComment> subComments = query.getResultList();
 

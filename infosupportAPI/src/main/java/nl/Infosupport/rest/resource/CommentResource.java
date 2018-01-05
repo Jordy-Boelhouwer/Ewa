@@ -43,16 +43,8 @@ public class CommentResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllComments(@PathParam("postId") int postId) {
-        Post post = service.getPostFromId(postId);
-
-        if (post == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Post not found for id " + postId)).build();
-        }
-
         //Retrieving the comments
-        List<Comment> comments = service.getCommentsOfPost(post);
-
+        List<Comment> comments = service.getCommentsOfPost(postId);
         return Response.status(Response.Status.OK).entity(comments).build();
     }
 
@@ -73,22 +65,7 @@ public class CommentResource {
             @PathParam("commentId") int commentId) {
         Response resp;
 
-        //Getting the profile
-        Profile profile = service.getProfileFromId(profileId);
-
-        if (profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Profile not found for id " + profileId)).build();
-        }
-
-        Post post = service.getPostOffProfile(profile, postId);
-
-        if (post == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Post not found for id " + postId)).build();
-        }
-
-        Comment comment = service.getCommentOfPost(post, commentId);
+        Comment comment = service.getCommentOfPost(postId, commentId);
 
         if (comment == null) {
             resp = Response.status(Response.Status.NOT_FOUND).
