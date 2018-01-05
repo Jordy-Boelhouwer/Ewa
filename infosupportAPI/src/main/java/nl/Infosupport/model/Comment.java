@@ -6,8 +6,8 @@
 package nl.Infosupport.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  *
@@ -45,8 +47,9 @@ public class Comment implements Serializable {
             orphanRemoval = true, 
             fetch = FetchType.EAGER,
             mappedBy="comment")
+    @Fetch(FetchMode.JOIN)
     @JsonManagedReference
-    private List<SubComment> subComments;
+    private Set<SubComment> subComments;
     
     /**
      * No argument constructor for comment
@@ -59,7 +62,7 @@ public class Comment implements Serializable {
      */
     public Comment(String content){
         setContent(content);
-        setSubComments(new ArrayList<SubComment>());
+        setSubComments(new HashSet<SubComment>());
     }
 
     /**
@@ -102,11 +105,11 @@ public class Comment implements Serializable {
         this.content = content;
     }
 
-    public List<SubComment> getSubComments() {
+    public Set<SubComment> getSubComments() {
         return subComments;
     }
 
-    public void setSubComments(List<SubComment> subComments) {
+    public void setSubComments(Set<SubComment> subComments) {
         this.subComments = subComments;
     }
 
@@ -118,4 +121,28 @@ public class Comment implements Serializable {
         s.setComment(this);
         this.subComments.add(s);
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Comment other = (Comment) obj;
+        return this.id == other.id;
+    }
+    
+    
 }

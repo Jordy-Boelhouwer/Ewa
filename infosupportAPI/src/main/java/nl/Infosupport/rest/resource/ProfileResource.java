@@ -102,14 +102,4 @@ public class ProfileResource {
     public PostResource getPostResource() {
         return new PostResource();
     }
-    
-     /**
-     * Get the vote sub-resource
-     *
-     * @return
-     */
-    @Path("/{profileId}/votes")
-    public VoteResource getVoteResource() {
-        return new VoteResource();
-    }
 }

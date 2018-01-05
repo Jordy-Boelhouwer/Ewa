@@ -32,6 +32,14 @@ public interface RepositoryService {
      */
     Profile getProfileFromId(String profileId);
     
+    /**
+     *
+     * @param postId
+     * @return
+     */
+    Post getPostFromId(int postId);
+    
+    Comment getCommentFromId(int commentId);
     
     /**
      * add a profile

@@ -7,7 +7,9 @@ package nl.Infosupport.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +22,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  *
@@ -48,15 +52,17 @@ public class Post implements Serializable {
             orphanRemoval = true, 
             fetch = FetchType.EAGER,
             mappedBy="post")
+    @Fetch(FetchMode.JOIN)
     @JsonManagedReference
-    private List<Comment> comments;
+    private Set<Comment> comments;
     
     @OneToMany(cascade = CascadeType.ALL, 
             orphanRemoval = true, 
             fetch = FetchType.EAGER,
             mappedBy="post")
+    @Fetch(FetchMode.JOIN)
     @JsonManagedReference 
-    private List<Vote> votes;
+    private Set<Vote> votes;
     
     /**
      * No argument post constructor
@@ -71,15 +77,15 @@ public class Post implements Serializable {
     public Post(String title, String content){
         setTitle(title);
         setContent(content);
-        setComments();
-        setVotes();
+        setComments(new HashSet<Comment>());
+        setVotes(new HashSet<Vote>());
     }
 
     public Post(String title, String content, byte[] image) {
         setTitle(title);
         setContent(content);
         setImage(image);
-        setVotes();
+        setVotes(new HashSet<Vote>());
     }
 
     /**
@@ -147,27 +153,19 @@ public class Post implements Serializable {
         this.image = image;
     }
 
-    public List<Comment> getComments() {
+    public Set<Comment> getComments() {
         return comments;
     }
 
-    public void setComments() {
-        this.comments = new ArrayList<>();
-    }
-
-    public List<Vote> getVotes() {
-        return votes;
-    }
-
-    public void setVotes() {
-        this.votes = new ArrayList<>();
-    }
-
-    public void setComments(List<Comment> comments) {
+    public void setComments(Set<Comment> comments) {
         this.comments = comments;
     }
 
-    public void setVotes(List<Vote> votes) {
+    public Set<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(Set<Vote> votes) {
         this.votes = votes;
     }
     
@@ -184,4 +182,26 @@ public class Post implements Serializable {
         v.setPost(this);
         this.votes.add(v);
     }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Post other = (Post) obj;
+        return this.id == other.id;
+    }
+    
+    
 }

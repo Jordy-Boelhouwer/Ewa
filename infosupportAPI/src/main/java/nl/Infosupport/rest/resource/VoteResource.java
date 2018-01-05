@@ -53,7 +53,7 @@ public class VoteResource {
                     entity(new ClientError("Profile not found for id " + profileId)).build();
         }
 
-        Post post = service.getPostOffProfile(profile, postId);
+        Post post = service.getPostFromId(postId);
 
         if (post == null) {
             return Response.status(Response.Status.NOT_FOUND).
@@ -92,15 +92,8 @@ public class VoteResource {
     @GET
     @Path("/getPostVotes")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getVotesFromPosts(@PathParam("profileId") String profileId, @PathParam("postId") int postId) {
-        Profile profile = service.getProfileFromId(profileId);
-
-        if (profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("resource " + profileId + " not found")).build();
-        }
-        
-        Post post = service.getPostOffProfile(profile, postId);
+    public Response getVotesFromPosts(@PathParam("postId") int postId) {        
+        Post post = service.getPostFromId(postId);
         
         if (post == null) {
             return Response.status(Response.Status.NOT_FOUND).

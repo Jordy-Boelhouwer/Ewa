@@ -6,14 +6,16 @@
 package nl.Infosupport.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  *
@@ -41,29 +43,33 @@ public class Profile implements Serializable {
             orphanRemoval = true, 
             fetch = FetchType.EAGER,
             mappedBy="profile")
+    @Fetch(FetchMode.JOIN)
     @JsonManagedReference 
-    private List<Post> posts;
+    private Set<Post> posts;
     
     @OneToMany(cascade = CascadeType.ALL, 
             orphanRemoval = true, 
             fetch = FetchType.EAGER,
             mappedBy="profile")
+    @Fetch(FetchMode.JOIN)
     @JsonManagedReference 
-    private List<Vote> votes;
+    private Set<Vote> votes;
     
     @OneToMany(cascade = CascadeType.ALL, 
             orphanRemoval = true, 
             fetch = FetchType.EAGER,
             mappedBy="profile")
+    @Fetch(FetchMode.JOIN)
     @JsonManagedReference 
-    private List<Comment> comments;
+    private Set<Comment> comments;
     
     @OneToMany(cascade = CascadeType.ALL, 
             orphanRemoval = true, 
             fetch = FetchType.EAGER,
             mappedBy="profile")
+    @Fetch(FetchMode.JOIN)
     @JsonManagedReference 
-    private List<SubComment> subComments;
+    private Set<SubComment> subComments;
 
     public Profile() {
     }
@@ -84,10 +90,10 @@ public class Profile implements Serializable {
         setDate_joined(date_joined);
         setAccess_token(access_token);
         setImage(image);
-        setPosts(new ArrayList<Post>());
-        setVotes(new ArrayList<Vote>());
-        setComments(new ArrayList<Comment>());
-        setSubComments(new ArrayList<SubComment>());
+        setPosts(new HashSet<Post>());
+        setVotes(new HashSet<Vote>());
+        setComments(new HashSet<Comment>());
+        setSubComments(new HashSet<SubComment>());
     }
 
     /**
@@ -175,35 +181,35 @@ public class Profile implements Serializable {
         this.date_joined = date_joined;
     }
 
-    public List<Post> getPosts() {
+    public Set<Post> getPosts() {
         return posts;
     }
 
-    public List<Vote> getVotes() {
-        return votes;
-    }
-
-    public void setVotes(List<Vote> votes) {
-        this.votes = votes;
-    }
-
-    public void setPosts(List<Post> posts) {
+    public void setPosts(Set<Post> posts) {
         this.posts = posts;
     }
 
-    public List<Comment> getComments() {
+    public Set<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(Set<Vote> votes) {
+        this.votes = votes;
+    }
+
+    public Set<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<Comment> comments) {
+    public void setComments(Set<Comment> comments) {
         this.comments = comments;
     }
 
-    public List<SubComment> getSubComments() {
+    public Set<SubComment> getSubComments() {
         return subComments;
     }
 
-    public void setSubComments(List<SubComment> subComments) {
+    public void setSubComments(Set<SubComment> subComments) {
         this.subComments = subComments;
     }
 

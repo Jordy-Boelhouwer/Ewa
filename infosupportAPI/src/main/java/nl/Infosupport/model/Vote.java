@@ -20,7 +20,6 @@ import org.codehaus.jackson.annotate.JsonBackReference;
  *
  * @author Jordy
  */
-@Access(value=AccessType.FIELD)
 @Entity
 public class Vote implements Serializable {
     
@@ -28,7 +27,7 @@ public class Vote implements Serializable {
     @GeneratedValue
     private int id;
     
-    private long voted;
+    private int voted;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")
@@ -43,7 +42,7 @@ public class Vote implements Serializable {
     public Vote() {
     }
 
-    public Vote(long voted) {
+    public Vote(int voted) {
         this.voted = voted;
     }
     
@@ -63,11 +62,37 @@ public class Vote implements Serializable {
         this.id = id;
     }
 
-    public long getVoted() {
+    public int getVoted() {
         return voted;
     }
 
-    public void setVoted(long voted) {
+    /**
+     *
+     * @param voted
+     */
+    public void setVoted(int voted) {
         this.voted = voted;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 83 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Vote other = (Vote) obj;
+        return this.id == other.id;
     }
 }

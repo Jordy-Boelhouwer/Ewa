@@ -65,6 +65,29 @@ public class RepositoryServiceImpl implements RepositoryService {
 
         return p;
     }
+    
+    @Override
+    public Post getPostFromId(int postId) {
+        EntityManager em = getEntityManager();
+
+        Post p = em.find(Post.class, postId);
+
+        em.close();
+
+        return p;
+    }
+    
+    
+    @Override
+    public Comment getCommentFromId(int commentId) {
+        EntityManager em = getEntityManager();
+
+        Comment c = em.find(Comment.class, commentId);
+
+        em.close();
+
+        return c;
+    }
 
     @Override
     public Profile addProfile(Profile profile) {

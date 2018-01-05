@@ -42,18 +42,8 @@ public class CommentResource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllComments(@PathParam("profileId") String profileId,
-            @PathParam("postId") int postId) {
-
-        //Getting the Profile
-        Profile profile = service.getProfileFromId(profileId);
-
-        if (profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Profile not found for id " + profileId)).build();
-        }
-
-        Post post = service.getPostOffProfile(profile, postId);
+    public Response getAllComments(@PathParam("postId") int postId) {
+        Post post = service.getPostFromId(postId);
 
         if (post == null) {
             return Response.status(Response.Status.NOT_FOUND).
@@ -114,16 +104,13 @@ public class CommentResource {
      *
      * @param profileId The profile which created the post
      * @param postId The post with comments
-     * @param writerId
      * @param comment The id of the comment to get
      * @return
      */
     @POST
-    @Path("/{writer}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response addComment(@PathParam("profileId") String profileId, 
             @PathParam("postId") int postId,
-            @PathParam("writer") String writerId,
             Comment comment) {
         Profile profile = service.getProfileFromId(profileId);
 
@@ -132,16 +119,14 @@ public class CommentResource {
                     entity(new ClientError("Profile not found for id " + profileId)).build();
         }
 
-        Post post = service.getPostOffProfile(profile, postId);
+        Post post = service.getPostFromId(postId);
 
         if (post == null) {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Post not found for id " + postId)).build();
         }
-        
-        Profile writer = service.getProfileFromId(writerId);
 
-        Comment c = service.addComment(writer, post, comment);
+        Comment c = service.addComment(profile, post, comment);
 
         return Response.status(Response.Status.CREATED).entity(c).build();
 
