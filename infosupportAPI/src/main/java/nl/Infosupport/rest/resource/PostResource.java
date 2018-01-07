@@ -5,11 +5,16 @@
  */
 package nl.Infosupport.rest.resource;
 
-
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -23,6 +28,9 @@ import nl.Infosupport.model.Profile;
 import nl.Infosupport.rest.model.ClientError;
 import nl.Infosupport.service.RepositoryService;
 import nl.Infosupport.service.impl.RepositoryServiceImpl;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import sun.misc.IOUtils;
 
 /**
  * The Post REST resource Note that this is a sub-resource of Profile
@@ -31,11 +39,13 @@ import nl.Infosupport.service.impl.RepositoryServiceImpl;
  */
 public class PostResource {
 
-    private RepositoryService service;
+    private final RepositoryService service;
 
+    /**
+     * Constructor which initializes RepositoryService
+     */
     public PostResource() {
         service = RepositoryServiceImpl.getInstance();
-
     }
 
     /**
@@ -46,15 +56,8 @@ public class PostResource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllPosts(@PathParam("profileId") int profileId) {
-        Profile profile = service.getProfileFromId(profileId);
-
-        if (profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("resource " + profileId + " not found")).build();
-        }
-
-        List<Post> posts = service.getPostsOffProfile(profile);
+    public Response getAllPosts(@PathParam("profileId") String profileId) {
+        List<Post> posts = service.getPostsOffProfile(profileId);
 
         return Response.status(Response.Status.OK).entity(posts).build();
     }
@@ -70,19 +73,10 @@ public class PostResource {
     @Path("/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPost(
-            @PathParam("profileId") int profileId,
+            @PathParam("profileId") String profileId,
             @PathParam("postId") int postId) {
         Response resp;
-
-        //Getting the profile
-        Profile profile = service.getProfileFromId(profileId);
-
-        if (profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Profile not found for id " + profileId)).build();
-        }
-
-        Post post = service.getPostOffProfile(profile, postId);
+        Post post = service.getPostOffProfile(profileId, postId);
 
         if (post == null) {
             resp = Response.status(Response.Status.NOT_FOUND).
@@ -93,9 +87,10 @@ public class PostResource {
 
         return resp;
     }
-    
+
     /**
      * Get the writer of a post
+     *
      * @param profileId id of the writer
      * @return profile
      */
@@ -103,7 +98,7 @@ public class PostResource {
     @Path("/{postId}/writer")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getWriter(
-            @PathParam("profileId") int profileId) {
+            @PathParam("profileId") String profileId) {
 
         //Getting the profile
         Profile profile = service.getProfileFromId(profileId);
@@ -113,132 +108,76 @@ public class PostResource {
                     entity(new ClientError("Profile not found for id " + profileId)).build();
         }
 
-        return Response.status(Response.Status.OK).entity(profile.getUsername()).build();
+        return Response.status(Response.Status.OK).entity(profile.getName()).build();
     }
-    
-    /**
-     * Get the votes from a post
-     * @param postId id of the post
-     * @return votes
-     */
-    @GET
-    @Path("/{postId}/votes")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getVotes(@PathParam("postId") int postId) {    
-        int votes = service.getVotesFromPost(postId);
-        return Response.status(Response.Status.OK).entity(votes).build();
-    }
-    
-    /**
-     * Add a post
-     *
-     * @param profileId
-     * @param post
-     * @return A response, either a client error or a 200 message
-     */
+
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addPost(@PathParam("profileId") int profileId, Post post
-    ) {
+    public Response addPost(
+            @PathParam("profileId") String profileId,
+            @FormDataParam("title") String title,
+            @FormDataParam("content") String content,
+            @FormDataParam("image") InputStream uploadedInputStream,
+            @FormDataParam("image") FormDataContentDisposition fileDetail) {
         Profile profile = service.getProfileFromId(profileId);
 
         if (profile == null) {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Profile not found for id " + profileId)).build();
         }
+        
+        //save image into database
+        byte[] bFile = null;
+        try {
+            bFile = getBytesFromInputStream(uploadedInputStream);
+        } catch (IOException ex) {
+            Logger.getLogger(PostResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     
+        Post post = new Post(title, content);
+        post.setImage(bFile);
 
         Post p = service.addPost(profile, post);
 
         return Response.status(Response.Status.CREATED).entity(p).build();
     }
 
-    @POST
-    @Path("/{postId}/upvote")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response UpVote(@PathParam("profileId") int profileId, @PathParam("postId") int postId) {
-        Profile profile = service.getProfileFromId(profileId);
+    private byte[] getBytesFromInputStream(InputStream is) throws IOException {
+        try (ByteArrayOutputStream os = new ByteArrayOutputStream();) {
+            byte[] buffer = new byte[0xFFFF];
 
-        if (profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Profile not found for id " + profileId)).build();
+            for (int len; (len = is.read(buffer)) != -1;) {
+                os.write(buffer, 0, len);
+            }
+
+            os.flush();
+
+            return os.toByteArray();
         }
-
-        Post post = service.getPostOffProfile(profile, postId);
-
-        if (post == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Post not found for id " + postId)).build();
-        }
-
-        service.addUpvote(post);
-
-        return Response.status(Response.Status.OK).build();
-
     }
 
-    @POST
-    @Path("/{postId}/downvote")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response DownVote(@PathParam("profileId") int profileId, @PathParam("postId") int postId) {
-        Profile profile = service.getProfileFromId(profileId);
+    // save uploaded file to new location
+    private void writeToFile(InputStream uploadedInputStream,
+            String uploadedFileLocation) {
 
-        if (profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Profile not found for id " + profileId)).build();
-        }
-
-        Post post = service.getPostOffProfile(profile, postId);
-
-        if (post == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Post not found for id " + postId)).build();
-        }
-
-        service.addDownVote(post);
-        return Response.status(Response.Status.OK).build();
-    }
-
-    @POST
-    @Path("/{fileName}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response uploadFile(
-            @PathParam("profileId") int profileId, 
-            @PathParam("fileName") String fileName,
-            Post post) {
-        
-        Profile profile = service.getProfileFromId(profileId);
-
-        if (profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Profile not found for id " + profileId)).build();
-        }
-
-        String uploadedFileLocation = "C:\\" + fileName;
-        
-        File file = new File(uploadedFileLocation);
-        byte[] bFile = new byte[(int) file.length()];
-        
         try {
+            OutputStream out = new FileOutputStream(new File(
+                    uploadedFileLocation));
+            int read = 0;
+            byte[] bytes = new byte[1024];
 
-            FileInputStream fileInputStream = new FileInputStream(file);
-
-            fileInputStream.read(bFile);
-
-            fileInputStream.close();
-
+            out = new FileOutputStream(new File(uploadedFileLocation));
+            while ((read = uploadedInputStream.read(bytes)) != -1) {
+                out.write(bytes, 0, read);
+            }
+            out.flush();
+            out.close();
         } catch (IOException e) {
 
             e.printStackTrace();
         }
-        post.setImage(bFile);
-        
-        Post p = service.addPost(profile, post);
-        
-        return Response.status(Response.Status.CREATED).entity(p).build();
+
     }
 
     /**
@@ -249,5 +188,14 @@ public class PostResource {
     @Path("/{postId}/comments")
     public CommentResource getComments() {
         return new CommentResource();
+    }
+    
+    /**
+     * Create a vote sub-resource
+     * @return
+     */
+    @Path("/{postId}/votes")
+    public VoteResource getVotes() {
+        return new VoteResource();
     }
 }

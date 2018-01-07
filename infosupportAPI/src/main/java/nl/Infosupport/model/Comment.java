@@ -6,8 +6,8 @@
 package nl.Infosupport.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,15 +16,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  *
  * @author Jordy
  */
 @Entity
-@Table(name = "comment")
 public class Comment implements Serializable {
     @Id
     @GeneratedValue
@@ -34,12 +35,20 @@ public class Comment implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
-    @JsonIgnore
+    @JsonBackReference
     private Post post;
     
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JoinColumn(name = "comment_id")
-    private List<SubComment> subComments;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_id")
+    @JsonBackReference
+    private Profile profile;
+    
+    @OneToMany(cascade = CascadeType.ALL, 
+            orphanRemoval = true, 
+            fetch = FetchType.EAGER,
+            mappedBy="comment")
+    @JsonManagedReference
+    private Set<SubComment> subComments;
     
     /**
      * No argument constructor for comment
@@ -52,15 +61,7 @@ public class Comment implements Serializable {
      */
     public Comment(String content){
         setContent(content);
-        setSubComments(new ArrayList<SubComment>());
-    }
-
-    /**
-     * Get the post the comment is for
-     * @return post
-     */
-    public Post getPost() {
-        return post;
+        setSubComments(new HashSet<SubComment>());
     }
 
     /**
@@ -103,16 +104,44 @@ public class Comment implements Serializable {
         this.content = content;
     }
 
-    public List<SubComment> getSubComments() {
+    public Set<SubComment> getSubComments() {
         return subComments;
     }
 
-    public void setSubComments(List<SubComment> subComments) {
+    public void setSubComments(Set<SubComment> subComments) {
         this.subComments = subComments;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
     
     public void addSubComment(SubComment s){
         s.setComment(this);
-        getSubComments().add(s);
+        this.subComments.add(s);
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Comment other = (Comment) obj;
+        return this.id == other.id;
+    }
+    
+    
 }

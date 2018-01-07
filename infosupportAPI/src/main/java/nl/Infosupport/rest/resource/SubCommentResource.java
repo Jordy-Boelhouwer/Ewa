@@ -13,7 +13,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import nl.Infosupport.model.Comment;
-import nl.Infosupport.model.Post;
 import nl.Infosupport.model.Profile;
 import nl.Infosupport.model.SubComment;
 import nl.Infosupport.rest.model.ClientError;
@@ -32,48 +31,31 @@ public class SubCommentResource {
         service = RepositoryServiceImpl.getInstance();
     }
     
+    /**
+     *
+     * @param commentId
+     * @return
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllSubComments(@PathParam("profileId") int profileId,
-            @PathParam("postId") int postId,
-            @PathParam("commentId") int commentId){
-        
-        //Getting the Profile
-        Profile profile = service.getProfileFromId(profileId);
-        
-        if(profile == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Profile not found for id " + profileId)).build();
-        }
-        
-        //Get the post from the profile
-        Post post = service.getPostOffProfile(profile, postId);
-        
-        if(post == null) {
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Post not found for id " + postId)).build();
-        }
-        
-        Comment comment = service.getCommentOfPost(post, commentId);
-        
+    public Response getAllSubComments(@PathParam("commentId") int commentId){      
         //Retrieving the comments
-        List<SubComment> subComments = service.getSubCommentsOfComment(comment);
-        
+        List<SubComment> subComments = service.getSubCommentsOfComment(commentId);
         return Response.status(Response.Status.OK).entity(subComments).build();
     }
     
     /**
      *
      * @param profileId The profile which created the post
-     * @param postId The post with comments
      * @param commentId The id of the comment to add a subcomment to
      * @param subComment The subcomment to add
      * @return
      */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addSubComment(@PathParam("profileId") int profileId, @PathParam("postId") int postId, 
-            @PathParam("commentId") int commentId, SubComment subComment) {
+    public Response addSubComment(@PathParam("profileId") String profileId, 
+            @PathParam("commentId") int commentId, 
+            SubComment subComment) {
         Profile profile = service.getProfileFromId(profileId);
         
         if(profile == null){
@@ -81,21 +63,14 @@ public class SubCommentResource {
                     entity(new ClientError("Profile not found for id " + profileId)).build();
         }
         
-        Post post = service.getPostOffProfile(profile, postId);
-        
-        if(post == null){
-            return Response.status(Response.Status.NOT_FOUND).
-                    entity(new ClientError("Post not found for id " + postId)).build();
-        }
-        
-        Comment comment = service.getCommentOfPost(post, commentId);
+        Comment comment = service.getCommentFromId(commentId);
         
         if(comment == null){
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Comment not found for id " + commentId)).build();
         }
         
-        SubComment s = service.addSubComment(comment, subComment);
+        SubComment s = service.addSubComment(profile, comment, subComment);
         //comment.addSubComment(subComment);
         
         return Response.status(Response.Status.CREATED).entity(s).build();

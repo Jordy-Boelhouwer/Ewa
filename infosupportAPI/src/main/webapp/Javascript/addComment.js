@@ -3,7 +3,7 @@
 function addComment(id, content) {
     
 
-    url = "http://localhost:8080/infosupportAPI/services/rest/profiles/1/posts/"+id+"/comments";
+    url = "/infosupportAPI/services/rest/profiles/"  + sessionStorage.id + "/posts/"+id+"/comments";
     $.ajax({
         type: 'POST',
         url: url,
@@ -13,11 +13,8 @@ function addComment(id, content) {
             "content": content
         }),
         dataType: "text",
-        success: function (data, textStatus, jqXHR) {
-            
+        success: function (data, textStatus, jqXHR) {    
              getPosts();
-             
-         
         },
         error: function (request, status, error) {
             console.log(request.responseText);

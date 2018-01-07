@@ -6,6 +6,7 @@
 package nl.Infosupport.rest.config;
 
 import javax.ws.rs.ApplicationPath;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 /**
@@ -15,5 +16,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 @ApplicationPath("services/rest")
 public class App extends ResourceConfig {
     public App() {
-    }  
+        register(MultiPartFeature.class);
+        packages("nl.Infosupport");
+    }
 }

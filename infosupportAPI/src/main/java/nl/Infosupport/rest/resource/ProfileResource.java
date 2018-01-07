@@ -54,7 +54,7 @@ public class ProfileResource {
     @GET
     @Path("/{profileId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getProfileFromId(@PathParam("profileId") int id) {
+    public Response getProfileFromId(@PathParam("profileId") String id) {
         Profile profile = service.getProfileFromId(id);
 
         if (profile == null) {
@@ -82,13 +82,13 @@ public class ProfileResource {
     @Path("/{profileId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response editProfile(@PathParam("profileId") int profileId, Profile profile) {
+    public Response editProfile(@PathParam("profileId") String profileId, Profile profile) {
         Profile updatedProfile = service.getProfileFromId(profileId);
         if (updatedProfile == null) {
             return Response.status(Response.Status.NOT_FOUND).
                     entity(new ClientError("Profile with id " + profileId + " was not found")).build();
         }
-        
+
         service.editProfile(updatedProfile, profile);
         return Response.status(Response.Status.CREATED).build();
     }

@@ -5,10 +5,7 @@
  */
 package nl.Infosupport.service.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
@@ -18,6 +15,7 @@ import nl.Infosupport.model.Comment;
 import nl.Infosupport.model.Post;
 import nl.Infosupport.model.Profile;
 import nl.Infosupport.model.SubComment;
+import nl.Infosupport.model.Vote;
 import nl.Infosupport.service.RepositoryService;
 
 /**
@@ -34,16 +32,12 @@ public class RepositoryServiceImpl implements RepositoryService {
     // An instance of the service is created during class initialisation
     static {
         instance = new RepositoryServiceImpl();
-        instance.loadExamples();
     }
 
     //  Method to get a reference to the instance (singleton)
     public static RepositoryService getInstance() {
         return instance;
     }
-
-    // An attribute that stores all cards (in memory)
-    private Map<Integer, Profile> elements;
 
     private RepositoryServiceImpl() {
         entityManagerFactory = Persistence.createEntityManagerFactory("infosupportPU");
@@ -62,14 +56,64 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public Profile getProfileFromId(int profileId) {
+    public Profile getProfileFromId(String profileId) {
         EntityManager em = getEntityManager();
 
-        Profile p = em.find(Profile.class, profileId);
+        Query query = em.createQuery("SELECT p FROM Profile p WHERE p.id = :profileId");
+
+        query.setParameter("profileId", profileId);
+
+        Profile profile;
+        try {
+            profile = (Profile) query.getSingleResult();
+        } catch (NoResultException e) {
+            profile = null;
+        }
 
         em.close();
 
-        return p;
+        return profile;
+    }
+    
+    @Override
+    public Post getPostFromId(int postId) {
+        EntityManager em = getEntityManager();
+
+        Query query = em.createQuery("SELECT p FROM Post p WHERE p.id = :postId");
+
+        query.setParameter("postId", postId);
+
+        Post post;
+        try {
+            post = (Post) query.getSingleResult();
+        } catch (NoResultException e) {
+            post = null;
+        }
+
+        em.close();
+
+        return post;
+    }
+    
+    
+    @Override
+    public Comment getCommentFromId(int commentId) {
+        EntityManager em = getEntityManager();
+
+        Query query = em.createQuery("SELECT c FROM Comment c WHERE c.id = :commentId");
+
+        query.setParameter("commentId", commentId);
+
+        Comment comment;
+        try {
+            comment = (Comment) query.getSingleResult();
+        } catch (NoResultException e) {
+            comment = null;
+        }
+
+        em.close();
+
+        return comment;
     }
 
     @Override
@@ -79,12 +123,11 @@ public class RepositoryServiceImpl implements RepositoryService {
         em.getTransaction().begin();
         em.persist(profile);
         em.getTransaction().commit();
-
         em.close();
 
         return profile;
     }
-    
+
     @Override
     public Post addPost(Profile profile, Post post) {
         profile.addPost(post);
@@ -99,15 +142,32 @@ public class RepositoryServiceImpl implements RepositoryService {
 
         return post;
     }
+    
+    @Override
+    public Vote addVote(Profile profile, Post post, Vote vote) {
+        profile.addProfileVote(vote);
+        post.addPostVote(vote);
+        
+        EntityManager em = getEntityManager();
+
+        em.getTransaction().begin();
+        em.persist(vote);
+        em.getTransaction().commit();
+
+        em.close();
+
+        return vote;
+        
+    }
 
     @Override
-    public List<Post> getPostsOffProfile(Profile profile) {
+    public List<Post> getPostsOffProfile(String profileId) {
         EntityManager em = getEntityManager();
 
         Query query = em.createQuery(
                 "SELECT p FROM Post p WHERE p.profile.id = :profileId");
 
-        query.setParameter("profileId", profile.getId());
+        query.setParameter("profileId", profileId);
 
         List<Post> result = query.getResultList();
 
@@ -117,16 +177,16 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public Post getPostOffProfile(Profile profile, int postId) {
+    public Post getPostOffProfile(String profileId, int postId) {
         EntityManager em = getEntityManager();
 
         Query query = em.createQuery("SELECT p FROM Post p WHERE p.profile.id = :profileId AND"
                 + " p.id = :id");
 
-        query.setParameter("profileId", profile.getId());
+        query.setParameter("profileId", profileId);
         query.setParameter("id", postId);
 
-        Post post = null;
+        Post post;
         try {
             post = (Post) query.getSingleResult();
         } catch (NoResultException e) {
@@ -139,11 +199,11 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public List<Comment> getCommentsOfPost(Post post) {
+    public List<Comment> getCommentsOfPost(int postId) {
         EntityManager em = getEntityManager();
 
         Query query = getEntityManager().createQuery("SELECT c FROM Comment c WHERE c.post.id = :postId");
-        query.setParameter("postId", post.getId());
+        query.setParameter("postId", postId);
 
         List<Comment> comments = query.getResultList();
 
@@ -152,57 +212,17 @@ public class RepositoryServiceImpl implements RepositoryService {
         return comments;
     }
 
-    private void loadExamples() {
-
-        File file = new File("C:\\smileyface.jpg");
-        byte[] bFile = new byte[(int) file.length()];
-
-        try {
-
-            FileInputStream fileInputStream = new FileInputStream(file);
-
-            fileInputStream.read(bFile);
-
-            fileInputStream.close();
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-
-        Profile p = new Profile("Jor", "Boelhouwer", "Jordybo123", "Jordy1995");
-
-        Post p1 = new Post("Titel1", "testie");
-        p1.setImage(bFile);
-        
-        Comment c1 = new Comment("test1");
-        p1.addComment(c1);
-        
-        Comment c2 = new Comment("test2");
-        p1.addComment(c2);
-
-        Post p2 = new Post("Titel2", "Ola!");
-        
-        Comment c3 = new Comment("Amigo!");
-        p2.addComment(c3);
-
-        p.addPost(p1);
-        p.addPost(p2);
-
-        addProfile(p);
-    }
-
     @Override
-    public Comment getCommentOfPost(Post post, int commentId) {
+    public Comment getCommentOfPost(int postId, int commentId) {
         EntityManager em = getEntityManager();
 
         Query query = em.createQuery("SELECT c FROM Comment c WHERE c.post.id = :postId AND"
                 + " c.id = :id");
 
-        query.setParameter("postId", post.getId());
+        query.setParameter("postId", postId);
         query.setParameter("id", commentId);
 
-        Comment comment = null;
+        Comment comment;
         try {
             comment = (Comment) query.getSingleResult();
         } catch (NoResultException e) {
@@ -214,32 +234,63 @@ public class RepositoryServiceImpl implements RepositoryService {
         return comment;
     }
     
-     @Override
-    public int getVotesFromPost(int postId) {
+    @Override
+    public long getVotesCount(int postId) {
         EntityManager em = getEntityManager();
-
-        Query query = em.createQuery("SELECT p.votes FROM Post p WHERE p.id = :postId");
-
+        
+        Query query = em.createQuery("SELECT sum(v.voted) FROM Vote v WHERE v.post.id = :postId");
+        
         query.setParameter("postId", postId);
-
-        int votes = 0;
+        
+        long votes;
         try {
-            votes = (int) query.getSingleResult();
+            votes = (long) query.getSingleResult();
         } catch (NoResultException e) {
             votes = 0;
         }
 
         em.close();
+        
+        return votes;
+    }
+    
+    @Override
+    public List<Vote> getVotesFromPost(int postId) {
+        EntityManager em = getEntityManager();
+        
+        Query query = em.createQuery("SELECT v FROM Vote v WHERE v.post.id = :postId");
+        
+        query.setParameter("postId", postId);
+        
+        List<Vote> votes = query.getResultList();
 
+
+        em.close();
+        
+        return votes;
+    }
+    
+    @Override
+    public List<Vote> getVotesFromProfile(String profileId) {
+        EntityManager em = getEntityManager();
+        
+        Query query = em.createQuery("SELECT v FROM Vote v WHERE v.profile.id = :profileId");
+        
+        query.setParameter("profileId", profileId);
+        
+        List<Vote> votes = query.getResultList();
+
+        em.close();
+        
         return votes;
     }
 
     @Override
-    public List<SubComment> getSubCommentsOfComment(Comment comment) {
+    public List<SubComment> getSubCommentsOfComment(int commentId) {
         EntityManager em = getEntityManager();
 
         Query query = getEntityManager().createQuery("SELECT s FROM SubComment s WHERE s.comment.id = :commentId");
-        query.setParameter("commentId", comment.getId());
+        query.setParameter("commentId", commentId);
 
         List<SubComment> subComments = query.getResultList();
 
@@ -248,9 +299,33 @@ public class RepositoryServiceImpl implements RepositoryService {
         return subComments;
     }
 
+    /**
+     *
+     * @param profile profile to be checked
+     * @return true or false
+     */
+    public boolean accessTokenExists(Profile profile) {
+        EntityManager em = getEntityManager();
+
+        Query query = getEntityManager().createQuery("SELECT p FROM Profile p WHERE p.access_token = :accessToken");
+        query.setParameter("accessToken", profile.getAccess_token());
+
+        Profile profileWithToken = null;
+        try {
+            profileWithToken = (Profile) query.getSingleResult();
+            em.close();
+            return true;
+        } catch (NoResultException e) {
+            profileWithToken = null;
+            em.close();
+            return false;
+        }
+    }
+
     @Override
-    public Comment addComment(Post post, Comment comment) {
+    public Comment addComment(Profile profile, Post post, Comment comment) {
         post.addComment(comment);
+        profile.addComment(comment);
 
         EntityManager em = getEntityManager();
 
@@ -264,8 +339,9 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public SubComment addSubComment(Comment comment, SubComment subComment) {
+    public SubComment addSubComment(Profile profile, Comment comment, SubComment subComment) {
         comment.addSubComment(subComment);
+        profile.addSubComment(subComment);
 
         EntityManager em = getEntityManager();
 
@@ -279,36 +355,13 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
 
     @Override
-    public void addUpvote(Post post) {
-        EntityManager em = getEntityManager();
-        Query query = em.createQuery("UPDATE Post p set p.votes = p.votes + 1 WHERE p.id = :postId");
-        query.setParameter("postId", post.getId());
-        em.getTransaction().begin();
-        query.executeUpdate();
-        em.getTransaction().commit();
-        em.close();
-    }
-
-    @Override
-    public void addDownVote(Post post) {
-        EntityManager em = getEntityManager();
-        Query query = em.createQuery("UPDATE Post p set p.votes = p.votes - 1 WHERE p.id = :postId");
-        query.setParameter("postId", post.getId());
-        em.getTransaction().begin();
-        query.executeUpdate();
-        em.getTransaction().commit();
-        em.close();
-    }
-
-    @Override
     public void editProfile(Profile updatedProfile, Profile profile) {
         EntityManager em = getEntityManager();
-        Query query = em.createQuery("UPDATE Profile p set p.first_name = :firstname, "
-                + "p.last_name = :lastname, p.username = :user, p.password = :pass WHERE p.id = :profileId");
-        query.setParameter("firstname", profile.getFirst_name());
-        query.setParameter("lastname", profile.getLast_name());
-        query.setParameter("user", profile.getUsername());
-        query.setParameter("pass", profile.getPassword());
+        Query query = em.createQuery("UPDATE Profile p set p.bio = :bio, "
+                + "p.job = :job "
+                + "WHERE p.id = :profileId");
+        query.setParameter("bio", profile.getBio());
+        query.setParameter("job", profile.getJob());
         query.setParameter("profileId", updatedProfile.getId());
         em.getTransaction().begin();
         query.executeUpdate();

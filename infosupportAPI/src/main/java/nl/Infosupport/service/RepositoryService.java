@@ -10,6 +10,7 @@ import nl.Infosupport.model.Comment;
 import nl.Infosupport.model.Post;
 import nl.Infosupport.model.Profile;
 import nl.Infosupport.model.SubComment;
+import nl.Infosupport.model.Vote;
 
 /**
  *
@@ -29,17 +30,27 @@ public interface RepositoryService {
      * @param profileId the id of the specific profile
      * @return profile with specified id
      */
-    Profile getProfileFromId(int profileId);
+    Profile getProfileFromId(String profileId);
     
+    /**
+     *
+     * @param postId
+     * @return
+     */
+    Post getPostFromId(int postId);
+    
+    Comment getCommentFromId(int commentId);
     
     /**
      * add a profile
      * @param profile profile to be added
+     * @return 
      */
     Profile addProfile(Profile profile);  
     
     /**
      * edit a profile
+     * @param updatedProfile
      * @param profile Profile to be added
      * @return profile
      */
@@ -54,13 +65,28 @@ public interface RepositoryService {
     Post addPost(Profile profile, Post post);
     
     /**
+     * Add vote
+     * @param profile profile that has voted
+     * @param post post that is voted on
+     * @param vote vote to be added
+     * @return vote
+     */
+    Vote addVote(Profile profile, Post post, Vote vote);
+    
+    long getVotesCount(int postId);
+    
+    List<Vote> getVotesFromPost(int postId);
+    
+    List<Vote> getVotesFromProfile(String profileId);
+    
+    /**
      * Add a comment to a post
-     * @param profile Writer of comment
+     * @param profile writer of the comment
      * @param post Post to add the comment to
      * @param comment Comment to add
      * @return
      */
-    Comment addComment(Post post, Comment comment);
+    Comment addComment(Profile profile, Post post, Comment comment);
     
     /**
      * Add a subcomment to a comment
@@ -69,14 +95,14 @@ public interface RepositoryService {
      * @param subComment subcomment to add
      * @return
      */
-    SubComment addSubComment(Comment comment, SubComment subComment);
+    SubComment addSubComment(Profile profile, Comment comment, SubComment subComment);
     
     /**
      * Get posts from a profile
      * @param profile profile to get posts from
      * @return List of posts from profile
      */
-    List<Post> getPostsOffProfile(Profile profile);
+    List<Post> getPostsOffProfile(String profileId);
 
     /**
      * Get single post from profile
@@ -84,14 +110,14 @@ public interface RepositoryService {
      * @param postId id of post to return
      * @return post with specified id
      */
-    Post getPostOffProfile(Profile profile, int postId);
+    Post getPostOffProfile(String profileId, int postId);
     
     /**
      * Get all the comments from a post
      * @param post The post to get the comments from
      * @return List of comments
      */
-    List<Comment> getCommentsOfPost(Post post);
+    List<Comment> getCommentsOfPost(int postId);
     
     /**
      *
@@ -99,13 +125,7 @@ public interface RepositoryService {
      * @param commentId
      * @return
      */
-    Comment getCommentOfPost(Post post, int commentId);
+    Comment getCommentOfPost(int postId, int commentId);
     
-    List<SubComment> getSubCommentsOfComment(Comment comment);
-    
-    void addUpvote(Post post);
-    
-    void addDownVote(Post post);
-    
-    int getVotesFromPost(int postId);
+    List<SubComment> getSubCommentsOfComment(int commentId);
 }
