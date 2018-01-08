@@ -90,10 +90,12 @@ function getPosts(){
 
 function append(data) {
     var name = "";
+    var commenternName = "";
     var postsArr = {posts:[]};
     profile = data;
     $.each(data, function (i, profile) {
         name = profile.name;
+        
         for (var i = 0; i < profile.posts.length; i++) {
             postsArr.posts.push(profile.posts[i]);
         }
@@ -124,6 +126,7 @@ function append(data) {
           <hr>
 
           <!-- Preview Image -->
+        
           <img src="`+ postsArr.posts[i].imagePath +`" height="50%" width="50%">
 
           <hr>
@@ -150,29 +153,21 @@ function append(data) {
           </div>
 
           <!-- Single Comment -->
-        <div id="comments`+i+`">
-          
-        </div>
-        
-          
+            <div id="comments`+i+`">
 
-           
-
+            </div>
         </div>
         <div class="col-md-4 mt-4"></div>`);
         
      
         $.each(postsArr.posts[i].comments, function (j) {
 
-            //var commentArray = {comments: []};
-            //commentArray.comments.push(postsArr.posts[i].comments[j].content);
-            //console.log(commentArray.comments[j].content);
             commentID = "#comments"+i
             $(commentID).append(`<div class="media mb-4">
-               <img class="d-flex mr-3 rounded-circle" src="https://secure.gravatar.com/avatar/eb0bbdfc4207739ef704af131096090f.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F66f9%2Fimg%2Favatars%2Fava_0023-48.png" alt="">
+               <img class="d-flex mr-3 rounded-circle" src="`+sessionStorage.smallImage+`" alt="">
                <div id="comments" class="media-body">
-                 <h5 class="mt-0">Commenter Name</h5>
-                 <p>`+ postsArr.posts[i].comments[j].content +`</p>
+                 <h5 class="mt-0">`+sessionStorage.name+`</h5>
+                 <p>`+ postsArr.posts[i].comments[j].writer +`</p>
                </div>
              </div>`
 
@@ -294,6 +289,7 @@ function sendNotification() {
 }
 
 function submitForm() {
+    
   var file = $('#image')[0].files[0];
   
   var formData = new FormData();
