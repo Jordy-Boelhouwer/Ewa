@@ -117,16 +117,16 @@ public class RepositoryServiceImpl implements RepositoryService {
     }
     
         @Override
-    public Profile getWriterOfComment(int commentId) {
+    public Object getWriterOfComment(int commentId) {
         EntityManager em = getEntityManager();
 
-        Query query = em.createQuery("SELECT c.profile FROM Comment c WHERE c.id = :commentId");
+        Query query = em.createQuery("SELECT c.profile.name, c.profile.small_image FROM Comment c WHERE c.id = :commentId");
 
         query.setParameter("commentId", commentId);
 
-        Profile profile;
+        Object profile;
         try {
-            profile = (Profile) query.getSingleResult();
+            profile = query.getSingleResult();
         } catch (NoResultException e) {
             profile = null;
         }

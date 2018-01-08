@@ -41,7 +41,7 @@ public interface RepositoryService {
     
     Comment getCommentFromId(int commentId);
     
-    Profile getWriterOfComment(int commentId);
+    Object getWriterOfComment(int commentId);
     
     /**
      * add a profile
