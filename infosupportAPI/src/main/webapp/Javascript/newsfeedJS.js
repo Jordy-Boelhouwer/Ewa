@@ -164,10 +164,9 @@ function append(data) {
             commentID = "#comments"+i
             $(commentID).append(`<div class="media mb-4">
                <img class="d-flex mr-3 rounded-circle" src="`+sessionStorage.smallImage+`" alt="">
-               <img class="d-flex mr-3 rounded-circle" src="https://avatars.slack-edge.com/2018-01-08/295629552467_b4a62cbf73e8f2ef2d49_48.png" alt="">
                <div id="comments" class="media-body">
                  <h5 class="mt-0">`+sessionStorage.name+`</h5>
-                 <p>`+ postsArr.posts[i].comments[j].writer +`</p>
+                 <p>`+ postsArr.posts[i].comments[j].content +`</p>
                </div>
              </div>`
 
