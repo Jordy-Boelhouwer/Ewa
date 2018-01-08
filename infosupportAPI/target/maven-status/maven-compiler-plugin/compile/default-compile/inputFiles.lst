@@ -1,37 +1,16 @@
-<<<<<<< HEAD
 C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\model\Comment.java
 C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\SubCommentResource.java
 C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\model\ClientError.java
 C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\model\Vote.java
 C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\CommentResource.java
-C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\model\UpVote.java
 C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\CorsFilter.java
 C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\service\impl\LogIn.java
-C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\model\DownVote.java
 C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\service\impl\RepositoryServiceImpl.java
 C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\service\RepositoryService.java
 C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\PostResource.java
+C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\VoteResource.java
 C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\model\Profile.java
 C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\model\SubComment.java
 C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\model\Post.java
 C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\ProfileResource.java
-C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\model\Voter.java
 C:\Users\Leonard\Documents\Ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\config\App.java
-=======
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\model\SubComment.java
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\service\impl\LogIn.java
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\model\Comment.java
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\config\App.java
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\CorsFilter.java
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\model\ClientError.java
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\service\RepositoryService.java
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\model\Profile.java
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\service\impl\RepositoryServiceImpl.java
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\VoteResource.java
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\model\Post.java
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\PostResource.java
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\model\Vote.java
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\CommentResource.java
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\SubCommentResource.java
-D:\Users\Jordy\Documents\HvA\Jaar 2\ewa\infosupportAPI\src\main\java\nl\Infosupport\rest\resource\ProfileResource.java
->>>>>>> b70cbdac590d0cdc6c5c38ff89df6f12ab50dd75
