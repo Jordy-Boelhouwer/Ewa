@@ -1,6 +1,7 @@
 $( document ).ready(function() {
-getPosts(); 
+ 
 getCurrentUser();
+getPosts();
 $('#addPost').click(submitForm);
 });
 
@@ -19,7 +20,7 @@ function getPosts(){
         $(window).scrollTop(scroll);
         },
         error: function(request){
-          console.log(request.responseText + 'door getposts');
+          console.log(request.responseText + ' door getposts');
         }
     });
 };
@@ -88,9 +89,11 @@ function getPosts(){
 
 
 function append(data) {
-    var postsArr = { posts:[]};
+    var name = "";
+    var postsArr = {posts:[]};
     profile = data;
     $.each(data, function (i, profile) {
+        name = profile.name;
         for (var i = 0; i < profile.posts.length; i++) {
             postsArr.posts.push(profile.posts[i]);
         }
@@ -102,8 +105,7 @@ function append(data) {
 
 
     for (var i = 0; i < postsArr.posts.length; i++) {
-        
-            
+        console.log(postsArr.posts[i].image);
         $("#posts").append(`<!-- Post Content Column -->
         <div>
 
@@ -112,7 +114,7 @@ function append(data) {
           <!-- Author -->
           <p class="lead">
             by
-            <a href="#">` + postsArr.posts[i].username + `</a>
+            <a href="#">` + name + `</a>
           </p>
         
           <hr>
@@ -123,15 +125,19 @@ function append(data) {
           <hr>
 
           <!-- Preview Image -->
-          <img class="img-fluid rounded" src="images/sample_img.jpg" height="200px;" alt="">
+          <img class="img-fluid rounded" src="data:image/jpeg;base64," height="200px;" alt="">
 
           <hr>
 
           <!-- Post Content -->
           <p class="lead">` + postsArr.posts[i].content + `</p>
           <hr>
-
-          <!-- Comments Form -->
+        <div class="mb-4" id="like_div" style="min-height: 50px;">
+            <p class="float-right">0x geliked</p>
+            <input class="float-right" type="image" src="images/like_button.png" width="50px" height="50px" border="0" alt="Submit" />
+        <span></span>
+        </div>
+  <!-- Comments Form -->
           <div class="card my-4">
             <h5 class="card-header bg-dark text-white">Leave a Comment:</h5>
             <div class="card-body">
@@ -148,23 +154,10 @@ function append(data) {
         <div id="comments`+i+`">
           
         </div>
-          <!-- Comment with nested comments -->
-          <div class="media mb-4">
-            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-            <div class="media-body">
-              <h5 class="mt-0">Commenter Name</h5>
-              Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+        
+          
 
-              <div class="media mt-4">
-                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-                <div class="media-body">
-                  <h5 class="mt-0">Commenter Name</h5>
-                  Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                </div>
-              </div>
-
-            </div>
-          </div>
+           
 
         </div>
         <div class="col-md-4 mt-4"></div>`);
@@ -176,7 +169,7 @@ function append(data) {
             //commentArray.comments.push(postsArr.posts[i].comments[j].content);
             //console.log(commentArray.comments[j].content);
             commentID = "#comments"+i
-            $(commentID).append(`<div  class="media mb-4">
+            $(commentID).append(`<div class="media mb-4">
                <img class="d-flex mr-3 rounded-circle" src="https://secure.gravatar.com/avatar/eb0bbdfc4207739ef704af131096090f.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F66f9%2Fimg%2Favatars%2Fava_0023-48.png" alt="">
                <div id="comments" class="media-body">
                  <h5 class="mt-0">Commenter Name</h5>
@@ -294,7 +287,7 @@ function sendNotification() {
                 console.log("slack heeft het gehoord!");
             },
             error: function (request) {
-                alert(request.responseText);
+               console.log("error");
             }
         });
 }
@@ -315,6 +308,7 @@ function submitForm() {
       },
       // beforeSend: beforeSendHandler,
       success: function(data) {
+            getPosts();
         sendNotification();
       },
       error: function(request){
