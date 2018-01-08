@@ -105,9 +105,9 @@ function append(data) {
 
 
     for (var i = 0; i < postsArr.posts.length; i++) {
+        console.log(postsArr.posts[i].imagePath);
         $("#posts").append(`<!-- Post Content Column -->
         <div>
-
           <!-- Title -->
           <h1 class="mt-4">` + postsArr.posts[i].title + `</h1>
           <!-- Author -->
@@ -124,19 +124,19 @@ function append(data) {
           <hr>
 
           <!-- Preview Image -->
-          <img class="img-fluid rounded" src="data:image/jpeg;base64," height="200px;" alt="">
+          <img src="`+ postsArr.posts[i].imagePath +`" height="50%" width="50%">
 
           <hr>
 
           <!-- Post Content -->
           <p class="lead">` + postsArr.posts[i].content + `</p>
           <hr>
-        <div class="mb-4" id="like_div" style="min-height: 50px;">
+   <!--       <div class="mb-4" id="like_div" style="min-height: 50px;">
             <p class="float-right">0x geliked</p>
             <input class="float-right" type="image" src="images/like_button.png" width="50px" height="50px" border="0" alt="Submit" />
         <span></span>
         </div>
-  <!-- Comments Form -->
+ Comments Form -->
           <div class="card my-4">
             <h5 class="card-header bg-dark text-white">Leave a Comment:</h5>
             <div class="card-body">
