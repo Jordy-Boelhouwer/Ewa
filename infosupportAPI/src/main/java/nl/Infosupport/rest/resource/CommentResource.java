@@ -85,7 +85,7 @@ public class CommentResource {
             @PathParam("commentId") int commentId) {
         Response resp;
 
-        Profile profile = service.getWriterOfComment(commentId);
+        Object profile = service.getWriterOfComment(commentId);
 
         if (profile == null) {
             resp = Response.status(Response.Status.NOT_FOUND).
