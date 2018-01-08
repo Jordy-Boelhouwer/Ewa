@@ -209,7 +209,8 @@ function addProfile(){
                 "name": sessionStorage.name,
                 "date_joined": today,
                 "access_token": sessionStorage.access_token,
-                "image": sessionStorage.image
+                "small_image": sessionStorage.smallImage,
+                "big_image": sessionStorage.bigImage
             }),
             success: function () {
                 console.log("opgeslagen!");
@@ -262,7 +263,8 @@ function getCurrentUser() {
         sessionStorage.name = data.user.name;
         console.log(sessionStorage.name);
         sessionStorage.id = data.user.id;
-        sessionStorage.image = data.user.image_192;
+        sessionStorage.smallImage = data.user.image_48;
+        sessionStorage.bigImage = data.user.image_192;
         var test = {data};
         console.log(test);
         checkIfUserExists();

@@ -37,7 +37,9 @@ public class Profile implements Serializable {
     
     private String access_token;
     
-    private String image;
+    private String small_image;
+    
+    private String big_image;
 
     @OneToMany(cascade = CascadeType.ALL, 
             orphanRemoval = true, 
@@ -80,12 +82,14 @@ public class Profile implements Serializable {
     public Profile(String id, String name,
             String date_joined, 
             String access_token,
-            String image) {
+            String small_image, 
+            String big_image) {
         setId(id);
         setName(name);
         setDate_joined(date_joined);
         setAccess_token(access_token);
-        setImage(image);
+        setSmall_image(small_image);
+        setBig_image(big_image);
         setPosts(new HashSet<Post>());
         setVotes(new HashSet<Vote>());
         setComments(new HashSet<Comment>());
@@ -201,12 +205,20 @@ public class Profile implements Serializable {
         this.subComments = subComments;
     }
 
-    public String getImage() {
-        return image;
+    public String getSmall_image() {
+        return small_image;
     }
 
-    public void setImage(String profileImage) {
-        this.image = profileImage;
+    public void setSmall_image(String small_image) {
+        this.small_image = small_image;
+    }
+
+    public String getBig_image() {
+        return big_image;
+    }
+
+    public void setBig_image(String big_image) {
+        this.big_image = big_image;
     }
     
     /**
