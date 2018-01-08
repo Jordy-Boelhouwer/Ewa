@@ -77,6 +77,25 @@ public class CommentResource {
         return resp;
     }
 
+    @GET
+    @Path("/{commentId}/writer")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getWriterOfComment(
+            @PathParam("commentId") int commentId) {
+        Response resp;
+
+        Profile profile = service.getWriterOfComment(commentId);
+
+        if (profile == null) {
+            resp = Response.status(Response.Status.NOT_FOUND).
+                    entity(new ClientError("Resource not found for post id " + commentId)).build();
+        } else {
+            resp = Response.status(Response.Status.OK).entity(profile).build();
+        }
+
+        return resp;
+    }
+
     /**
      *
      * @param profileId The profile which created the post
@@ -86,7 +105,7 @@ public class CommentResource {
      */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addComment(@PathParam("profileId") String profileId, 
+    public Response addComment(@PathParam("profileId") String profileId,
             @PathParam("postId") int postId,
             Comment comment) {
         Profile profile = service.getProfileFromId(profileId);
