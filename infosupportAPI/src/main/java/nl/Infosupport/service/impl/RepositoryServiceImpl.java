@@ -49,7 +49,7 @@ public class RepositoryServiceImpl implements RepositoryService {
 
     @Override
     public List<Profile> getAllProfiles() {
-        EntityManager em = entityManagerFactory.createEntityManager();
+        EntityManager em = getEntityManager();
         List<Profile> profiles = em.createQuery("SELECT p FROM Profile p").getResultList();
         em.close();
         return profiles;
@@ -145,8 +145,8 @@ public class RepositoryServiceImpl implements RepositoryService {
     
     @Override
     public Vote addVote(Profile profile, Post post, Vote vote) {
-        profile.addProfileVote(vote);
         post.addPostVote(vote);
+        profile.addProfileVote(vote);
         
         EntityManager em = getEntityManager();
 
