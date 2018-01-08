@@ -177,9 +177,9 @@ function append(data) {
             //console.log(commentArray.comments[j].content);
             commentID = "#comments"+i
             $(commentID).append(`<div  class="media mb-4">
-               <img class="d-flex mr-3 rounded-circle" src="https://secure.gravatar.com/avatar/eb0bbdfc4207739ef704af131096090f.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F66f9%2Fimg%2Favatars%2Fava_0023-48.png" alt="">
+               <img class="d-flex mr-3 rounded-circle" src="https://avatars.slack-edge.com/2018-01-08/295629552467_b4a62cbf73e8f2ef2d49_48.png" alt="">
                <div id="comments" class="media-body">
-                 <h5 class="mt-0">Commenter Name</h5>
+                 <h5 class="mt-0">Jordy Boelhouwer</h5>
                  <p>`+ postsArr.posts[i].comments[j].content +`</p>
                </div>
              </div>`
