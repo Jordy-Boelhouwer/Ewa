@@ -25,6 +25,7 @@ import nl.Infosupport.service.impl.RepositoryServiceImpl;
  *
  * @author Jordy
  */
+@Path("comments")
 public class CommentResource {
 
     private RepositoryService service;
