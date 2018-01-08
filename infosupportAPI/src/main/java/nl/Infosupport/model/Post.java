@@ -6,9 +6,7 @@
 package nl.Infosupport.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,8 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonManagedReference;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 /**
  *
@@ -39,9 +35,7 @@ public class Post implements Serializable {
     
     private String content;
     
-    @Lob
-    @Column(columnDefinition="longblob")
-    private byte[] image;
+    private String imagePath;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")
@@ -79,10 +73,10 @@ public class Post implements Serializable {
         setVotes(new HashSet<Vote>());
     }
 
-    public Post(String title, String content, byte[] image) {
+    public Post(String title, String content, String imagePath) {
         setTitle(title);
         setContent(content);
-        setImage(image);
+        setImagePath(imagePath);
         setVotes(new HashSet<Vote>());
     }
 
@@ -143,12 +137,12 @@ public class Post implements Serializable {
         this.content = content;
     }
 
-    public byte[] getImage() {
-        return image;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public Set<Comment> getComments() {

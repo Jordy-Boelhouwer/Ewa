@@ -127,16 +127,19 @@ public class PostResource {
                     entity(new ClientError("Profile not found for id " + profileId)).build();
         }
         
+        String uploadedFileLocation = "D:\\Users\\Jordy\\Documents\\HvA\\Jaar 2\\ewa\\infosupportAPI\\src\\main\\webapp\\images\\" + fileDetail.getFileName();
+        
+        writeToFile(uploadedInputStream, uploadedFileLocation);
+        
         //save image into database
-        byte[] bFile = null;
-        try {
-            bFile = getBytesFromInputStream(uploadedInputStream);
-        } catch (IOException ex) {
-            Logger.getLogger(PostResource.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        byte[] bFile = null;
+//        try {
+//            bFile = getBytesFromInputStream(uploadedInputStream);
+//        } catch (IOException ex) {
+//            Logger.getLogger(PostResource.class.getName()).log(Level.SEVERE, null, ex);
+//        }
      
-        Post post = new Post(title, content);
-        post.setImage(bFile);
+        Post post = new Post(title, content, uploadedFileLocation);
 
         Post p = service.addPost(profile, post);
 

@@ -105,7 +105,6 @@ function append(data) {
 
 
     for (var i = 0; i < postsArr.posts.length; i++) {
-        console.log(postsArr.posts[i].image);
         $("#posts").append(`<!-- Post Content Column -->
         <div>
 

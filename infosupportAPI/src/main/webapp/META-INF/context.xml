@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/infosupportAPI">
+<<<<<<< HEAD
     <Resource	auth="Container"
 
                 driverClassName="com.mysql.jdbc.Driver"	maxActive="20"
@@ -8,4 +9,15 @@
                 password="lappie"	
 />
   <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" maxTotal="20" maxIdle="10" maxWaitMillis="-1" name="jdbc/infosupportDb" password="Jordy1995" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/ewa?createDatabaseIfNotExist=true&amp;serverTimezone=CET" username="root"/>
+=======
+  <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" 
+            maxTotal="20" 
+            maxIdle="10" 
+            maxWaitMillis="-1" 
+            name="jdbc/infosupportDb" 
+            password="Jordy1995" 
+            type="javax.sql.DataSource" 
+            url="jdbc:mysql://localhost:3306/ewa?createDatabaseIfNotExist=true&amp;serverTimezone=CET" 
+            username="root"/>
+>>>>>>> 78509c9b692efd3f91da9c10451344fb26a1a5be
 </Context>
