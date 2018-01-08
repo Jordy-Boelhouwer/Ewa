@@ -7,7 +7,10 @@
       <property name="javax.persistence.sql-load-script-source" value="sql/data.sql"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
       <property name="hibernate.show_sql" value="true"/>
+<<<<<<< HEAD
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
+=======
+>>>>>>> b28430804d3642dbe86947f0bd1f6cec77ed7971
     </properties>
   </persistence-unit>
 </persistence>

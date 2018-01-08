@@ -1,5 +1,4 @@
 $( document ).ready(function() {
- 
 getCurrentUser();
 getPosts();
 $('#addPost').click(submitForm);
@@ -164,7 +163,11 @@ function append(data) {
 
             commentID = "#comments"+i
             $(commentID).append(`<div class="media mb-4">
+<<<<<<< HEAD
                <img class="d-flex mr-3 rounded-circle" src="`+sessionStorage.smallImage+`" alt="">
+=======
+               <img class="d-flex mr-3 rounded-circle" src="https://avatars.slack-edge.com/2018-01-08/295629552467_b4a62cbf73e8f2ef2d49_48.png" alt="">
+>>>>>>> b28430804d3642dbe86947f0bd1f6cec77ed7971
                <div id="comments" class="media-body">
                  <h5 class="mt-0">`+sessionStorage.name+`</h5>
                  <p>`+ postsArr.posts[i].comments[j].writer +`</p>
@@ -220,7 +223,7 @@ function checkIfUserExists(){
     console.log("begin met checken");
     console.log(sessionStorage.id);
     console.log(sessionStorage.name);
-    console.log(sessionStorage.image);
+    console.log(sessionStorage.access_token);
     let url="/infosupportAPI/services/rest/profiles";
     $.ajax({
       type: 'GET',
@@ -305,7 +308,7 @@ function submitForm() {
       },
       // beforeSend: beforeSendHandler,
       success: function(data) {
-            getPosts();
+        getPosts();
         sendNotification();
       },
       error: function(request){
